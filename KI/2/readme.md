@@ -1,3 +1,7 @@
+# Tree / Graph search
+
+Graph search remembers already visited nodes. Tree search does not. This means that tree search can get stuck in a cycle
+
 
 # Depth-First-Search (DFS)
 Check child childs first
@@ -35,8 +39,21 @@ Repeat detection, check if the node was already added with lower path cost?
 
 
 # Best-First
-Works like Branch-and-Bound except that the path remaining cost to the target node is used as priority.
-The remaining cost must be somehow estimated.
+Similar to Branch-and-Bound, except that the Heuristic (estimated remaining cost) is used 
+instead of the already acumulated cost.
 
-Calculating the actual Path cost from the target would only make sense if this node is search for from different nodes. 
-This also only works if the data structur allows access to the "parent" nodes.
+Heuristic example: Airline from the current position to the target position.
+
+
+# A*
+
+## Zulässigkeit
+Die Heuristic (Schätzfunktion) darf den tatsächlichen wert nicht Überschätzen.
+(zb. Luftlinie ist der kürzeste mögliche weg
+
+## Konsistenz
+Die Heuristik eines Knotens muss kleiner gleich sein, als die Heuristik + Pfadkosten des Nachfolgenden Knotes
+
+
+
+

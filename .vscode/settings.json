@@ -1,0 +1,4 @@
+{
+    // Set this in app settings for podman
+    "dev.containers.mountWaylandSocket": false
+}
