@@ -14,6 +14,4 @@ Der tatsächliche Stundenplan ist irrelevant, wichtig ist, dass der gefundene St
 Der Suchalgorithmus folgt immer dem größten Gradienten. (Größten Steigung im aktuellen moment)
 
 
-# Annealing
 
-Gradienten-suche. Bei einem maximum wird aber noch einmal "geschüttelt", um ein eventuelles lokales maximum auszuschließen.
