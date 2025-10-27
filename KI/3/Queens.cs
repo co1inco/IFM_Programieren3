@@ -7,14 +7,15 @@ using GeneticSharp;
 
 
 
-var selection = new RankSelection();
+// var selection = new RankSelection();
+var selection = new EliteSelection();
 var crossover = new TwoPointCrossover();
 var mutation = new DisplacementMutation();
 var fitness = new FuncFitness(x => x.Fitness ?? 0);
 var population = new Population(10, 40, new QueensChromosom(5));
 var termination = new OrTermination(
     new FitnessThresholdTermination(100),
-    new GenerationNumberTermination(2000));
+    new GenerationNumberTermination(200_000));
 // var termination = new FitnessStagnationTermination();
 // var termination = new GenerationNumberTermination(2000);
 
