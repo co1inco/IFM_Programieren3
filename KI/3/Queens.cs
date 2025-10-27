@@ -10,9 +10,11 @@ using GeneticSharp;
 // var selection = new RankSelection();
 var selection = new EliteSelection();
 var crossover = new TwoPointCrossover();
-var mutation = new DisplacementMutation();
+// var mutation = new DisplacementMutation();
+var mutation = new FlipBitMutation();
 var fitness = new FuncFitness(x => x.Fitness ?? 0);
-var population = new Population(10, 40, new QueensChromosom(5));
+// var population = new Population(10, 40, new QueensChromosom(5));
+var population = new Population(100, 400, new QueensChromosom(8));
 var termination = new OrTermination(
     new FitnessThresholdTermination(100),
     new GenerationNumberTermination(200_000));
@@ -25,13 +27,15 @@ var ga = new GeneticAlgorithm(population, fitness, selection, crossover, mutatio
 };
 
 
-var oldBest = 100000.0;
+var oldBest = -100000.0;
 ga.GenerationRan += delegate
 {
     // DrawSampleName(selectedSampleName);
     var bestChromosome = ga.Population.BestChromosome;
-    if (oldBest == bestChromosome.Fitness)
+    if (oldBest >= bestChromosome.Fitness)
         return;
+
+    // if (bestChromosome.Fitness > oldBest)
     oldBest = bestChromosome.Fitness ?? 0;
 
     // Console.WriteLine("Termination: {0}", termination);
@@ -49,13 +53,14 @@ ga.TerminationReached += (_, _) =>
 ga.Start();
 Console.WriteLine($"R: {ga.IsRunning}");
 
+Console.WriteLine("====");
 var final = ga.Population.BestChromosome;
 Console.WriteLine("Generations: {0}", ga.Population.GenerationsNumber);
 Console.WriteLine("Fitness: {0,10}", final.Fitness);
 ((QueensChromosom)final).DrawBoard();
 
 
-class QueensChromosom : IChromosome
+class QueensChromosom : IChromosome, IBinaryChromosome
 {
     private bool[][] _map;
     private readonly int _queens;
@@ -181,6 +186,13 @@ class QueensChromosom : IChromosome
             }
             Console.WriteLine();
         }
+    }
+
+    public void FlipGene(int index)
+    {
+        for (int i = 0; i < _queens; i++)
+            _map[index][i] = false;
+        _map[index][Random.Shared.Next(_queens)] = true;
     }
 }
 
