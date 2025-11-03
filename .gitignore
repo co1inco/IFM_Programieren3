@@ -2,3 +2,5 @@
 openweathermap_api.txt
 
 user*.png
+obj/
+bin/
