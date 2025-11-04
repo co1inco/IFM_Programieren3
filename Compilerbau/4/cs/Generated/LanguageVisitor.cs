@@ -57,6 +57,36 @@ public interface ILanguageVisitor<Result> : IParseTreeVisitor<Result> {
 	/// <return>The visitor result.</return>
 	Result VisitExpression([NotNull] LanguageParser.ExpressionContext context);
 	/// <summary>
+	/// Visit a parse tree produced by <see cref="LanguageParser.if"/>.
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	/// <return>The visitor result.</return>
+	Result VisitIf([NotNull] LanguageParser.IfContext context);
+	/// <summary>
+	/// Visit a parse tree produced by <see cref="LanguageParser.while"/>.
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	/// <return>The visitor result.</return>
+	Result VisitWhile([NotNull] LanguageParser.WhileContext context);
+	/// <summary>
+	/// Visit a parse tree produced by <see cref="LanguageParser.doBlock"/>.
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	/// <return>The visitor result.</return>
+	Result VisitDoBlock([NotNull] LanguageParser.DoBlockContext context);
+	/// <summary>
+	/// Visit a parse tree produced by <see cref="LanguageParser.elseBlock"/>.
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	/// <return>The visitor result.</return>
+	Result VisitElseBlock([NotNull] LanguageParser.ElseBlockContext context);
+	/// <summary>
+	/// Visit a parse tree produced by <see cref="LanguageParser.end"/>.
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	/// <return>The visitor result.</return>
+	Result VisitEnd([NotNull] LanguageParser.EndContext context);
+	/// <summary>
 	/// Visit a parse tree produced by <see cref="LanguageParser.comparison"/>.
 	/// </summary>
 	/// <param name="context">The parse tree.</param>
@@ -68,6 +98,12 @@ public interface ILanguageVisitor<Result> : IParseTreeVisitor<Result> {
 	/// <param name="context">The parse tree.</param>
 	/// <return>The visitor result.</return>
 	Result VisitBinaryOperation([NotNull] LanguageParser.BinaryOperationContext context);
+	/// <summary>
+	/// Visit a parse tree produced by <see cref="LanguageParser.condition"/>.
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	/// <return>The visitor result.</return>
+	Result VisitCondition([NotNull] LanguageParser.ConditionContext context);
 	/// <summary>
 	/// Visit a parse tree produced by <see cref="LanguageParser.literal"/>.
 	/// </summary>

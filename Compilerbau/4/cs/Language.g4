@@ -4,7 +4,9 @@
 start : statement* EOF;
 
 
-statement : assignment comment?; 
+statement : assignment comment?
+		  | if
+		  | while; 
 
 assignment : IDENTIFIER ASSIGNMENT expression; 
 
@@ -12,6 +14,15 @@ expression : expression comparison expression
 		   | expression binaryOperation expression
 		   | literal
 		   | identifier;
+
+
+if : 'if' condition doBlock elseBlock? end; 
+while : 'while' condition doBlock end;
+
+doBlock : 'do' statement*;
+elseBlock : 'else' doBlock;
+
+end : 'end';
 
 comparison : EQUALS
 		   | NOT_EQUALS
@@ -26,6 +37,8 @@ binaryOperation : MULTIPLY
 				| MODULO 
 				| ADD
 				| SUBTRACT;
+
+condition : expression;
 
 literal : INT
 		| STRING

@@ -18,6 +18,19 @@ ttt := abc >    123
    ttt := abc < 123
 a := 1  +   2
 a := 3 + 4 * 5
+
+a     := 0
+    if    10 < 1
+       do
+a    :=     42      # Zuweisung des Wertes 42 an die Variable a
+else do
+        a :=      7
+              while    10 < 1
+       do
+a    :=     42      # Zuweisung des Wertes 42 an die Variable a
+  end
+  end
+
 """;
 
 
@@ -80,6 +93,42 @@ class PrettyPrinter(TextWriter writer) : IParseTreeListener
                 break;
             case LanguageParser.CommentContext comment:
                 writer.Write($" {comment.GetText()}");
+                break;
+            
+            case LanguageParser.IfContext ifContext:
+                if (ifContext.children is [var ifToken, ..])
+                    writer.Write($"{ifToken.GetText()} ");
+                break;
+            
+            case LanguageParser.WhileContext whileContext:
+                if (whileContext.children is [var whileToken, ..])
+                    writer.Write($"{whileToken.GetText()} ");
+                break;
+            
+            case LanguageParser.DoBlockContext doContext:
+                if (doContext.children is [var doToken, ..])
+                    writer.WriteLine($" {doToken.GetText()}");
+                
+                IndentCount++;
+                break;
+            
+            case LanguageParser.ElseBlockContext elseContext:
+                if (IndentCount > 0) IndentCount--;
+                
+                writer.Write(string.Repeat(IndentCount, Indent));
+                if (elseContext.children is [var elseToken, ..])
+                    writer.Write(elseToken.GetText());
+                break;
+            
+            case LanguageParser.EndContext end:
+                if (IndentCount > 0) IndentCount--;
+                
+                writer.Write(string.Repeat(IndentCount, Indent));
+                if (end.children is [var endToken, ..])
+                    writer.WriteLine(endToken.GetText());
+                break;
+            
+            case LanguageParser.ConditionContext:
                 break;
         }
         // Console.WriteLine(ctx);
