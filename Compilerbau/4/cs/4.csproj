@@ -1,0 +1,28 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+    <TargetFramework>net10.0</TargetFramework>
+    <RootNamespace>_4</RootNamespace>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Antlr4.Runtime.Standard" Version="4.13.1" />
+    <PackageReference Include="Antlr4BuildTasks" Version="12.11.0" />
+  </ItemGroup>
+
+    <ItemGroup>
+        <None Remove="Language.g4" />
+    </ItemGroup>
+
+    <ItemGroup>
+        <Antlr4 Include="Language.g4">
+            <Listener>False</Listener>
+            <AntOutDir>Generated</AntOutDir>
+            <Package>Language</Package>
+        </Antlr4>
+    </ItemGroup>
+
+</Project>
