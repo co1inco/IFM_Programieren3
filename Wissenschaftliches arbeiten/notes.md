@@ -22,7 +22,8 @@ Philippe Kahn added UserInterface and Editor to Pascal.
 Microsoft hire was not just money. Also had dispute with the engineering teem and felt that he was no longer an indispensable person. He also needed new challenges.
 
 
-
+interview
+https://www.youtube.com/watch?v=6udlQakSXZY
 
 
 https://en.wikipedia.org/wiki/Anders_Hejlsberg
@@ -86,6 +87,10 @@ From Turbo Pascal to C#, Anders Hejlsberg has made significant contributions to 
 https://web.archive.org/web/20140708060629/https://www.drdobbs.com/windows/dr-dobbs-excellence-in-programming-award/184404602
 
 
+## 2001
+C# offiziell released
+
+
 ## 2012 Typescript
 in 2012 kündigt er ein neues Projekt an.
 Das Projekt is TypeScript, ein JavaScript superset, dass nach JavaScript Transpiriert wird.
@@ -93,6 +98,12 @@ TypeScript wurde von dem Team begonnen, da C# auf den Roslyn compiler umgestellt
 Das Designteam hatte während dieser Zeit nicht viel zu tun und hat in der Zeit TypeScript entwickelt.
 Hejlsberg arbeitet seitdem an TypeScript, wärend Torgesen nach C# zurückgekehrt ist.
 
+
+Hejlsberg on the typescript compiler
+https://www.youtube.com/watch?v=nhVA0-iDbF4
+
+typescript go
+https://medium.com/codex/a-10x-faster-typescript-f72964d62b12
 
 
 Hejlsberg 2008
