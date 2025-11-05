@@ -200,6 +200,7 @@ CLR - Common Language Runtime [1, 20:00]
  * Leitender Designer
  * Einfachheit von VisualBasic
  * Stärke von C++
+ * Übergabe an ECMA
 
 
 <!--
@@ -211,7 +212,11 @@ Jeder der die Vergangenheit ignoriert wird dafür bestraft. [1, 10:26]
 
 Entwickler wollten die Einfachheit / "Ease of use" von VisualBasic und die Stärke von C++. [1, 11:00]
 
+Die Spezifikation von C# wurde an ECMA übergeben und somit öffentlich und frei verfügbar. [2]
+Führte zhu Projekten wie der Mono Runtime.
+
 [1] 05.11.2025 https://www.youtube.com/watch?v=6udlQakSXZY
+[2] 05.11.2025 https://ecma-international.org/publications-and-standards/standards/ecma-334/
 -->
 
 ---
@@ -318,6 +323,12 @@ public static class MyClass<T>
 Öffentlich Verfügbar auf BUILD 2014 [1]
 Hejlsberg veröffentlichte das repo live. [1]
 Erster release Visual Studio 2015 [1]
+Apache License in Version 2.0 [1]
+
+Git repo heute unter MIT [3]
+
+richtige "Änderungen erwünscht" Lizenz, nicht nur "nur gucken, nicht anfassen" [2]
+
 
 Während dieser Zeit hat das Design team nicht viel zu tun.
 Was machen Langauge Designer wen sie nichts zu tun haben?
@@ -333,6 +344,7 @@ Er hat mit C# nicht mehr viel selbst Programmiert
 
 [1] 05.11.2025 https://www.heise.de/hintergrund/Neues-zu-Roslyn-und-C-2292919.html
 [2] 05.11.2025 https://www.youtube.com/watch?v=6udlQakSXZY
+[3] 05.11.2025 https://github.com/dotnet/roslyn
 -->
 
 ---
