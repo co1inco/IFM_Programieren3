@@ -21,7 +21,7 @@ a := 3 + 4 * 5
 
 if a > b do
 
-else
+else do
     b := a
 end
 
@@ -47,7 +47,7 @@ var lexer = new LanguageLexer(CharStreams.fromString(testInput));
 var parser = new LanguageParser(new CommonTokenStream(lexer));
 
 var tree = parser.start();
-Console.WriteLine(tree.ToStringTree());
+// Console.WriteLine(tree.ToStringTree());
 
 var astVisitor = new AstVisitor();
 var ast = (IAstNode)astVisitor.Visit(tree);

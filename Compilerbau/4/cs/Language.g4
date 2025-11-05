@@ -11,10 +11,13 @@ statement : assignment comment?
 assignment : IDENTIFIER ASSIGNMENT expression; 
 
 expression : expression comparison expression
-		   | expression binaryOperation expression
+		   | expression MULTIPLY expression // all alternatives must be here. Otherwise operator priorities will not work correctly 
+           | expression DIVIDE expression   // ie: expression binaryOperation expression
+           | expression MODULO expression
+           | expression ADD expression
+           | expression SUBTRACT expression
 		   | literal
 		   | identifier;
-
 
 if : 'if' condition doBlock elseBlock? end; 
 while : 'while' condition doBlock end;

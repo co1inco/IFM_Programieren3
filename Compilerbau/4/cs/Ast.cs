@@ -54,7 +54,8 @@ public partial class Expression : OneOfBase<
 
     public record BinaryOperation(BinaryOperand Operation, Expression Left, Expression Right) : IAstNode
     {
-        public IEnumerable<string> BuildSource() => Merge(Operation.GetDescription(), Left, Right);
+        public IEnumerable<string> BuildSource() => 
+            Merge(Operation.GetDescription(), Left, Right);
     }
 
     private static IEnumerable<string> Merge(string between, Expression left, Expression right)
@@ -300,13 +301,29 @@ public class AstVisitor : LanguageBaseVisitor<object>
 
     public override object VisitExpression(LanguageParser.ExpressionContext context)
     {
+        if (context.children is [LanguageParser.ExpressionContext l, ITerminalNode term, LanguageParser.ExpressionContext r])
+            return new Expression(
+                new Expression.BinaryOperation(
+                    term.GetText() switch
+                    {
+                        "+" => BinaryOperand.Add,  
+                        "-" => BinaryOperand.Subtract,  
+                        "*" => BinaryOperand.Multiply,  
+                        "/" => BinaryOperand.Divide,  
+                        "%" => BinaryOperand.Modulo,  
+                        _ => throw new Exception($"Unsupported Binary operand: {term.GetText()}")
+                    },
+                    (Expression)VisitExpression(l),
+                    (Expression)VisitExpression(r)
+                ));
+            
         return VisitChildren(context) switch
         {
             IList and [Expression left, ComparisonOperand c, Expression right] => 
                 new Expression(new Expression.Comparison(c, left, right)),
             IList and [Expression left, BinaryOperand op, Expression right] =>
                 new Expression(new Expression.BinaryOperation(op, left, right)),
-            Literal l => new Expression(l),
+            Literal literal => new Expression(literal),
             Identifier id => new Expression(id),
             var unsupportedExp => throw new Exception($"Unsupported expression type: {unsupportedExp}")
         };
