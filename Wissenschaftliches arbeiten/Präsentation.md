@@ -81,7 +81,7 @@ Erste Programiersprache: Algol [1, 1:10]
  * Borland
  * Erste IDE
 
-![bg left width: 30%](BOrlandTurbo.png)
+![bg left width: 30%](BorlandTurbo.png)
 
 <!--
  * Pascal compiler.
