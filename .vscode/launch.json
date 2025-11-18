@@ -1,0 +1,18 @@
+{
+    "configurations": [
+        {
+            "name": "C#: Manual parser Debug",
+            "type": "dotnet",
+            "request": "launch",
+            "projectPath": "${workspaceFolder}/Compilerbau/5/cs/cs.csproj"
+        },
+        {
+            "type": "antlr-debug",
+            "request": "launch",
+            "name": "Debug Current Grammar",
+            "grammar": "${file}",
+            "input": "${fileDirname}/input.txt",
+            "visualParseTree": true
+        }
+    ]
+}

@@ -17,6 +17,18 @@
                 "panel": "shared"
             },
             "problemMatcher": []
+        },
+        {
+            "label": "dotnet-build-single-file",
+            "type": "shell",
+            "command": "dotnet",
+            "args": [
+                "compile",
+                "${file}",
+                "-o",
+                "bin"
+            ],
+            "problemMatcher": []
         }
     ]
 }
