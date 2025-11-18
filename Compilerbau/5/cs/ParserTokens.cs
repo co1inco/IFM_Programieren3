@@ -20,10 +20,6 @@ public record PList(PExpr[] Expressions)
     public override string ToString() => $"{nameof(PList)} {{{string.Join(", ", Expressions)}}}";
 };
 
-public record PQuotedList(PExpr[] Expressions)
-{
-    public override string ToString() => $"{nameof(PQuotedList)} {{{string.Join(", ", Expressions)}}}";
-}
 
 public record PDottedList(PExpr[] Expressions, PExpr Expression)
 {
@@ -32,7 +28,7 @@ public record PDottedList(PExpr[] Expressions, PExpr Expression)
 
 
 [GenerateOneOf]
-public partial class PExpr : OneOfBase<PNumber, PBool, PString, PAtom, PQuotedList, PList, PDottedList>
+public partial class PExpr : OneOfBase<PNumber, PBool, PString, PAtom, PList, PDottedList>
 {
     public PComment? Comment { get; set; }
 

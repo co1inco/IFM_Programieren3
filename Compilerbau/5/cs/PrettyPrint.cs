@@ -33,7 +33,6 @@ public class PrettyPrint
             Write,
             Write,
             Write,
-            Write,
             Write
         );
     }
@@ -57,16 +56,6 @@ public class PrettyPrint
     public void Write(PAtom a)
     {
         _sw.Write(a.Name);
-    }
-
-    public void Write(PQuotedList q)
-    {
-        _sw.Write("'(");
-        foreach (var expr in q.Expressions)
-        {
-            Write(expr);
-        }
-        _sw.Write(")");
     }
 
     public void Write(PDottedList d)

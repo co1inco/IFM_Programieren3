@@ -204,14 +204,16 @@ public class Parser
         return new PList(expressions.ToArray());
     }
     
-    public PQuotedList QuotedList()
+    public PList Quote()
     {
         if (_lookahead is not Token.Quote)
             throw ParserException("Expected quote token");
         Next();
 
-        var list = List();
-        return new PQuotedList(list.Expressions);
+        return new PList([
+            new PAtom("quote"),
+            Expression()
+        ]);
     }
 
     public PExpr Expression()
@@ -227,7 +229,7 @@ public class Parser
                 { Name: "false"} => new PBool(false),
                 var a => a
             },
-            Token.Quote => QuotedList(),
+            Token.Quote => Quote(),
             Token.LParen => ListOrDottedList(),
             _ => throw ParserException("Expected expression")
         };
