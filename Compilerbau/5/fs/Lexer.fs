@@ -32,6 +32,17 @@ open fs.LexerTokens
         | error -> raise error
              
     
+    let nextTokens (ts : TokenStream) validChar =    
+        let rec atomList ts acc =
+            if validChar ((char)ts.State.Token)
+            then atomList (consume ts) (((char)ts.State.Token)::acc)
+            else (ts, acc)
+        
+        let (ts', rawAtom) = atomList ts []
+        rawAtom
+        |> Seq.rev
+        |> (fun s -> (ts', s))
+    
     
     let nextString (ts : TokenStream) =
         let rec stringList (ts : TokenStream) (acc : list<char>) : (TokenStream * list<char>) =
@@ -52,25 +63,25 @@ open fs.LexerTokens
        
     let nextAtom (ts : TokenStream) : (TokenStream * LexerToken) =
         let symbols = System.Collections.Generic.HashSet<char>("!#$%&|*+-/:<=>?@^_~")
-        let validAtomChar c = (c >= 'a' && c <= 'z') || (c >= 'A' && c <= 'Z') || symbols.Contains(c)    
-        let rec atomList ts acc =
-            if validAtomChar ((char)ts.State.Token)
-            then atomList (consume ts) (((char)ts.State.Token)::acc)
-            else (ts, acc)
+        let validAtomChar c = (c >= 'a' && c <= 'z') || (c >= 'A' && c <= 'Z') || symbols.Contains(c)
         
-        let (ts', rawAtom) = atomList ts []
+        let (ts', rawAtom) = nextTokens ts validAtomChar
         rawAtom
-        |> Seq.rev
         |> Seq.map string
         |> String.concat ""
         |> (fun s -> (ts', LAtom(s)))
         
        
     let nextNumber (ts : TokenStream) : (TokenStream * LexerToken) =
-        raise <| NotImplementedException ""
+        let validAtomChar c = (c >= '0' && c <= '9')
+        
+        let (ts', rawAtom) = nextTokens ts validAtomChar
+        rawAtom
+        |> Seq.map string
+        |> String.concat ""
+        |> Int32.Parse
+        |> (fun i -> (ts', LNumber(i)))
     
-    // let next (ts : TokenStream) =
-    //     raise <| NotImplementedException ""
         
         
     let rec next (ts : TokenStream) =        
@@ -93,6 +104,7 @@ open fs.LexerTokens
             | '!' | '#' | '$' | '%' | '&' | '|' | '*'
             | '+' | '-' | '/' | ':' | '<' | '=' | '>'
             | '?' | '@' | '^' | '_' | '~' -> nextAtom ts
+            | c when c >= '0' && c <= '9' -> nextNumber ts
             | c -> raise <| LexerException (ts.State, $"Unexpected token: {c}")
             // | c -> nextChar ((char)c) 
            
