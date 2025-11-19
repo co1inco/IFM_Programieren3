@@ -6,9 +6,11 @@
         | LLParen
         | LRParen
         | LString of string
-        | LSymbol of char
-        | LDigit of char
-        | LLetter of char
+        | LAtom of string
+        | LNumber of int
+        // | LSymbol of char
+        // | LDigit of char
+        // | LLetter of char
         | LQuote
         | LComment of string
     

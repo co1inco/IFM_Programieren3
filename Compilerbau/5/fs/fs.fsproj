@@ -9,6 +9,9 @@
     <Compile Include="LexerTokens.fs" />
     <Compile Include="Lexer.fs" />
     <Compile Include="Program.fs" />
+    <Content Include="..\input.txt">
+      <Link>input.txt</Link>
+    </Content>
   </ItemGroup>
 
 </Project>

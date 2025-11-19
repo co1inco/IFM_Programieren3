@@ -4,53 +4,95 @@ open System
 open System.IO
 open fs.LexerTokens
 
-    type TokenStream = { Stream : StreamReader; Line : int; Column : int; Token : int; }
+    type TokenStreamState = { Stream : StreamReader; Line : int; Column : int; Token : int; }
     
-    let tokenStream sr =
-        { TokenStream.Stream = sr; Line = 1; Column = 1; Token = sr.Read() }
+    type TokenStream = { State: TokenStreamState; Function : TokenStreamState -> TokenStreamState }
     
-    let consume (ts : TokenStream) : TokenStream =
+    let consumeToken (ts : TokenStreamState) : TokenStreamState =
         let token = ts.Stream.Read()
         let line c = if ((char)c) = '\n' then ts.Line + 1 else ts.Line
         let column c = if ((char)c) = '\n' then 0 else ts.Column + 1
-        let build c = { TokenStream.Stream = ts.Stream; Token = c; Line = line c; Column = column c; }
+        let build c = { TokenStreamState.Stream = ts.Stream; Token = c; Line = line c; Column = column c; }
         build token
     
+    let consume (ts : TokenStream) : TokenStream =
+        { ts with State = ts.Function ts.State }
+    
+    let createTokenStream sr =
+        { TokenStream.State = { TokenStreamState.Stream = sr; Line = 1; Column = 1; Token = sr.Read() }
+        ; TokenStream.Function = consumeToken
+        }
+    
+    
+    exception LexerException of TokenStreamState * string
+    
+    let showLexerError =
+        function
+        | LexerException (ts, msg) -> sprintf "%s at %i:%i" msg ts.Line ts.Column
+        | error -> raise error
+             
+    
+    
     let nextString (ts : TokenStream) =
-        let rec stringList ts (acc : list<char>) : (TokenStream * list<char>) =
-            if ts.Token = -1
-            then raise <| Exception "Unexpected EOF. Expected closing \""
+        let rec stringList (ts : TokenStream) (acc : list<char>) : (TokenStream * list<char>) =
+            if ts.State.Token = -1
+            then raise <| LexerException (ts.State, "Unexpected EOF. Expected closing \"")
             else
-                match (char)ts.Token with
-                | '"' -> (consume ts, [])
+                match (char)ts.State.Token with
+                | '"' -> (consume ts, acc)
                 | c -> stringList (consume ts) (c::acc)
         
-        let makeString (ts', l : list<char>) : (TokenStream * LexerToken) =
+        let makeString (ts', l) =
             List.rev l
             |> List.map string
             |> String.concat ""
             |> (fun s -> (ts', LString(s)))
             
         stringList (consume ts) [] |> makeString
+       
+    let nextAtom (ts : TokenStream) : (TokenStream * LexerToken) =
+        let symbols = System.Collections.Generic.HashSet<char>("!#$%&|*+-/:<=>?@^_~")
+        let validAtomChar c = (c >= 'a' && c <= 'z') || (c >= 'A' && c <= 'Z') || symbols.Contains(c)    
+        let rec atomList ts acc =
+            if validAtomChar ((char)ts.State.Token)
+            then atomList (consume ts) (((char)ts.State.Token)::acc)
+            else (ts, acc)
+        
+        let (ts', rawAtom) = atomList ts []
+        rawAtom
+        |> Seq.rev
+        |> Seq.map string
+        |> String.concat ""
+        |> (fun s -> (ts', LAtom(s)))
+        
+       
+    let nextNumber (ts : TokenStream) : (TokenStream * LexerToken) =
+        raise <| NotImplementedException ""
+    
+    // let next (ts : TokenStream) =
+    //     raise <| NotImplementedException ""
         
         
-    let rec next (ts : TokenStream) acc : seq<LexerToken> =        
-        if ts.Token = -1
-        then [LEof]
+    let rec next (ts : TokenStream) =        
+        if ts.State.Token = -1
+        then (ts, LEof)
         else
-            match ((char)ts.Token) with
-            | '\000' -> next (consume ts) acc
-            | ' ' -> next (consume ts)(LSpace::acc)
-            | '\n' -> next (consume ts) (LSpace::acc)
-            | '\r' -> next (consume ts) (LSpace::acc)
-            | '\t' -> next (consume ts) (LSpace::acc)
-            | '\f' -> next (consume ts) (LSpace::acc)
-            | '(' -> next (consume ts) (LLParen::acc)
-            | ')' -> next (consume ts) (LRParen::acc)
+            match ((char)ts.State.Token) with
+            | '\000' -> next (consume ts)
+            | ' ' -> next (consume ts)
+            | '\n' -> next (consume ts)
+            | '\r' -> next (consume ts)
+            | '\t' -> next (consume ts)
+            | '\f' -> next (consume ts)
+            | '(' -> (consume ts, LLParen)
+            | ')' -> (consume ts, LRParen)
             // | '"' -> nextString ts |> (fun (ts', token) -> next ts' (token::acc)) 
-            | '"' ->
-                let (ts', token) = nextString ts
-                next ts' (token::acc) 
-            | c -> raise <| Exception($"Unexpected token: {c}")
+            | '"' -> nextString ts
+            | c when c >= 'a' && c <= 'z' -> nextAtom ts
+            | c when c >= 'A' && c <= 'Z' -> nextAtom ts
+            | '!' | '#' | '$' | '%' | '&' | '|' | '*'
+            | '+' | '-' | '/' | ':' | '<' | '=' | '>'
+            | '?' | '@' | '^' | '_' | '~' -> nextAtom ts
+            | c -> raise <| LexerException (ts.State, $"Unexpected token: {c}")
             // | c -> nextChar ((char)c) 
            
