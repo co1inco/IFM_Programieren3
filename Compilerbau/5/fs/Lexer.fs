@@ -44,6 +44,16 @@ open fs.LexerTokens
         |> (fun s -> (ts', s))
     
     
+    let separators = System.Collections.Generic.HashSet<char>(" \t\r\n()")
+    let isSeparator c = c = -1 || separators.Contains ((char)c)  
+    
+    let followedBySeparator (ts : TokenStream * LexerToken) : TokenStream * LexerToken =
+           let token = (fst ts).State.Token
+           if isSeparator token
+           then ts
+           else raise <| LexerException ((fst ts).State, $"Expected separator but got '{token |> char}'")
+    
+    
     let nextString (ts : TokenStream) =
         let rec stringList (ts : TokenStream) (acc : list<char>) : (TokenStream * list<char>) =
             if ts.State.Token = -1
@@ -82,7 +92,7 @@ open fs.LexerTokens
         |> Int32.Parse
         |> (fun i -> (ts', LNumber(i)))
     
-        
+            
         
     let rec next (ts : TokenStream) =        
         if ts.State.Token = -1
@@ -90,21 +100,17 @@ open fs.LexerTokens
         else
             match ((char)ts.State.Token) with
             | '\000' -> next (consume ts)
-            | ' ' -> next (consume ts)
-            | '\n' -> next (consume ts)
-            | '\r' -> next (consume ts)
-            | '\t' -> next (consume ts)
-            | '\f' -> next (consume ts)
+            | ' ' | '\n' | '\r' | '\t' | '\f' -> next (consume ts)
             | '(' -> (consume ts, LLParen)
             | ')' -> (consume ts, LRParen)
             // | '"' -> nextString ts |> (fun (ts', token) -> next ts' (token::acc)) 
-            | '"' -> nextString ts
-            | c when c >= 'a' && c <= 'z' -> nextAtom ts
-            | c when c >= 'A' && c <= 'Z' -> nextAtom ts
+            | '"' -> nextString ts |> followedBySeparator
+            | c when c >= 'a' && c <= 'z' -> nextAtom ts |> followedBySeparator
+            | c when c >= 'A' && c <= 'Z' -> nextAtom ts |> followedBySeparator
             | '!' | '#' | '$' | '%' | '&' | '|' | '*'
             | '+' | '-' | '/' | ':' | '<' | '=' | '>'
-            | '?' | '@' | '^' | '_' | '~' -> nextAtom ts
-            | c when c >= '0' && c <= '9' -> nextNumber ts
+            | '?' | '@' | '^' | '_' | '~' -> nextAtom ts |> followedBySeparator
+            | c when c >= '0' && c <= '9' -> nextNumber ts |> followedBySeparator
             | c -> raise <| LexerException (ts.State, $"Unexpected token: {c}")
             // | c -> nextChar ((char)c) 
            
