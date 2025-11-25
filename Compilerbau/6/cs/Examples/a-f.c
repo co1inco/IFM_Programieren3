@@ -7,6 +7,8 @@ void print(string message)
     bar = T;
     // bool bar = F;
     // foo = "test";
+    
+    // flupi();
 }
 
 

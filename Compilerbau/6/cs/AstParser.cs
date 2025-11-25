@@ -10,7 +10,7 @@ public class AstParserException : Exception
             ctx.Start.Line, 
             ctx.Start.Column, 
             message, 
-            ctx.Start.InputStream.GetText(new Interval(ctx.Start.StartIndex, ctx.Stop.StopIndex)))
+            ctx.Start.InputStream.GetText(new Interval(ctx.Start.StartIndex, ctx.Start.StopIndex)))
     {
     }
     
@@ -33,7 +33,7 @@ public class AstParserException : Exception
 
     private static string BuildMessage(int line, int column, string message, string text)
     {
-        return $"file:{line}:{column} {message}\n\t{text}";
+        return $"file:{line}:{column} {message}\n\t'{text}'";
     }
 }
 
@@ -111,7 +111,7 @@ public static class AstParser
 
         if (ctx is { left: { } left, right: { } right, binop: { } binop })
             return new Expr.Binop(
-                ParseOperator(binop, ctx),
+                ParseOperator(binop),
                 left.ParseExpression(),
                 right.ParseExpression()
                 );
@@ -135,7 +135,7 @@ public static class AstParser
 
     }
 
-    public static Operator ParseOperator(IToken token, ParserRuleContext ctx) => token.Text switch
+    public static Operator ParseOperator(IToken token) => token.Text switch
     {
         "+" => new Operator.Plus(),
         "-" => new Operator.Minus(),
@@ -147,7 +147,7 @@ public static class AstParser
         "<=" => new Operator.LessThanEqual(),
         ">" => new Operator.GreaterThan(),
         ">=" => new Operator.GreaterThanEqual(),
-        _ => throw new AstParserException(ctx, $"Unsupported operator '{token.Text}'")
+        _ => throw new AstParserException(token, $"Unsupported operator '{token.Text}'")
     };
     
     public static IfStmt ParseIf(this MiniCParser.CondContext ctx) => new(

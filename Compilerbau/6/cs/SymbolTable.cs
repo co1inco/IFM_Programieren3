@@ -134,4 +134,21 @@ public static class SymbolTable
 
         return null;
     }
+
+
+    public static void SecondPass(SymbolTable<Symbol> symbolTable)
+    {
+        // symbolTable.Ast.Switch();
+        if (symbolTable.Ast.TryPickT2(out var call, out _))
+        {
+            if (!symbolTable.Current.HasSymbol(call.Name))
+                throw new SymbolException(call, $"Function '{call.Name}' does not exist");
+               
+        }
+
+        foreach (var table in symbolTable.ChildScopes)
+        {
+            SecondPass(table);
+        }
+    }
 }

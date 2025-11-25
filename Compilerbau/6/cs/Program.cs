@@ -13,6 +13,7 @@ var tree = parser.program();
 var program = tree?.ParseProgram();
 
 var table = SymbolTable.GenerateScope(program!, null);
+SymbolTable.SecondPass(table);
 
 Console.WriteLine(table);
 // Console.WriteLine(program);
