@@ -2,12 +2,20 @@
 
 namespace cs;
 
+// public interface IToken
+// {
+//     
+// }
+//
+// public abstract record Token();
+
 
 public record PrimType(string Name)
 {
     public static readonly PrimType INT = new("int");
-    public static readonly  PrimType STRING = new("string");
+    public static readonly PrimType STRING = new("string");
     public static readonly PrimType BOOL = new("bool");
+    public static readonly PrimType VOID = new("void");
 };
 
 public record VarDecl(PrimType Type, string Name, Expr Initializer);
@@ -85,10 +93,4 @@ public sealed partial class Operator : OneOfBase<
     public record struct LessThanEqual();
     public record struct GreaterThan();
     public record struct GreaterThanEqual();
-}
-
-
-public class Ast
-{
-    
 }

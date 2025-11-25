@@ -4,6 +4,9 @@ int foo = "hello world";
 void print(string message)
 {
     bool bar = F;
+    bar = T;
+    // bool bar = F;
+    // foo = "test";
 }
 
 
@@ -14,6 +17,8 @@ int main() {
         string bar = "abc";
 	
         print("Hello world");
+        
+        wupi();
     }
 
 }

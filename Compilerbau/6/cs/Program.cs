@@ -6,11 +6,14 @@ using Language;
 
 Console.WriteLine("Hello, World!");
 
-var lexer = new MiniCLexer(CharStreams.fromPath("Examples/a.c"));
+var lexer = new MiniCLexer(CharStreams.fromPath("Examples/a-f.c"));
 var parser = new MiniCParser(new CommonTokenStream(lexer));
 var tree = parser.program();
 
-var progam = tree?.ParseProgram();
+var program = tree?.ParseProgram();
 
-Console.WriteLine(progam);
+var table = SymbolTable.GenerateScope(program!, null);
+
+Console.WriteLine(table);
+// Console.WriteLine(program);
 

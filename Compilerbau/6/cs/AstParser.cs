@@ -1,16 +1,40 @@
 ﻿using Antlr4.Runtime;
+using Antlr4.Runtime.Misc;
 using Language;
 
 namespace cs;
 
 public class AstParserException : Exception
 {
-    public AstParserException(ParserRuleContext ctx, string message) : base(message)
+    public AstParserException(ParserRuleContext ctx, string message) : this(
+            ctx.Start.Line, 
+            ctx.Start.Column, 
+            message, 
+            ctx.Start.InputStream.GetText(new Interval(ctx.Start.StartIndex, ctx.Stop.StopIndex)))
     {
-        Context = ctx;
     }
     
-    public ParserRuleContext Context { get; }
+    public AstParserException(IToken token, string message) : this(token.Line, token.Column, message, token.Text)
+    {
+    }
+
+    private AstParserException(int line, int column, string message, string text) 
+        : base(BuildMessage(line, column, message, text))
+    {
+        Line = line;
+        Column = column;
+        Text = text;
+    }
+    
+    public int Line { get; }
+    public int Column { get; }
+    
+    public string Text { get; }
+
+    private static string BuildMessage(int line, int column, string message, string text)
+    {
+        return $"file:{line}:{column} {message}\n\t{text}";
+    }
 }
 
 public static class AstParser
@@ -68,6 +92,7 @@ public static class AstParser
         "int" => PrimType.INT,
         "string" => PrimType.STRING,
         "bool" => PrimType.BOOL,
+        "void" => PrimType.VOID,
         _ => throw new AstParserException(ctx, "Unsupported type")
     };
 
@@ -76,7 +101,7 @@ public static class AstParser
         ctx.args().ParseArgs()
     );
     
-    public static Expr[] ParseArgs(this MiniCParser.ArgsContext ctx) => 
+    public static Expr[] ParseArgs(this MiniCParser.ArgsContext? ctx) => ctx is null ? [] : 
         ctx.expr().Select(ParseExpression).ToArray();
     
     public static Expr ParseExpression(this MiniCParser.ExprContext ctx)

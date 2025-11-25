@@ -43,7 +43,7 @@ expr
   | '(' expr ')'
   ;
 
-type : 'int' | 'string' | 'bool' ;
+type : 'int' | 'string' | 'bool' | 'void' ;
 
 
 // Lexer
@@ -52,4 +52,5 @@ NUMBER  : [0-9]+ ;
 STRING  : '"' (~[\n\r"])* '"' ;
 
 COMMENT : '#' ~[\n\r]* -> skip ;
+COMMENT2 : '//' ~[\n\r]* -> skip ;
 WS      : [ \t\n\r]+   -> skip ;
