@@ -8,7 +8,7 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-// Generated from G:/dev/IFM-Semester3/Compilerbau/6/cs/MiniC.g4 by ANTLR 4.13.1
+// Generated from C:/dev/IFM_Programieren3/Compilerbau/6/cs/MiniC.g4 by ANTLR 4.13.1
 
 // Unreachable code detected
 #pragma warning disable 0162
