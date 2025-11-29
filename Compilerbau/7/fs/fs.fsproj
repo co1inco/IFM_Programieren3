@@ -1,0 +1,19 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+    <TargetFramework>net10.0</TargetFramework>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Compile Include="TryParser.fs" />
+    <Compile Include="Ast.fs" />
+    <Compile Include="Variables.fs" />
+    <Compile Include="Parser\LexerTokens.fs" />
+    <Compile Include="Parser\Lexer.fs" />
+    <Compile Include="Parser\LispParser.fs" />
+    <Compile Include="Interpreter.fs" />
+    <Compile Include="Program.fs" />
+  </ItemGroup>
+
+</Project>
