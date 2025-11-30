@@ -6,9 +6,9 @@ void print(string message)
     bool bar = F;
     bar = T;
     // bool bar = F;
-    // foo = "test";
+    // foox = "test";
     
-    // flupi();
+    // fluppi();
 }
 
 
@@ -20,7 +20,7 @@ int main() {
 	
         print("Hello world");
         
-        wupi();
+        // wuppi();
     }
 
 }

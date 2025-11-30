@@ -43,12 +43,15 @@ public static class SymbolTable
             statement.Switch(
                 varDecl =>
                 {
+                    // TODO: check symbol is variable
                     if (!scope.TryAddSymbol(varDecl.Name, varDecl))
                         throw new SymbolException(varDecl, $"Variable '{varDecl.Name}' already exists");
+                    
                 },
                 assign =>
                 {
-                    if (!scope.HasSymbolLocal(assign.Name))
+                    // TODO: check variable type
+                    if (!scope.HasSymbol(assign.Name))
                         throw new SymbolException(assign, $"Variable '{assign.Name}' does not exist");
                 },
                 fnDecl =>
@@ -139,13 +142,16 @@ public static class SymbolTable
     public static void SecondPass(SymbolTable<Symbol> symbolTable)
     {
         // symbolTable.Ast.Switch();
-        if (symbolTable.Ast.TryPickT2(out var call, out _))
+        if (symbolTable.Ast.TryPickT4(out var call, out _))
         {
+            // Console.WriteLine(symbolTable.Ast);
+            
+            // TODO: check symbol type is function
             if (!symbolTable.Current.HasSymbol(call.Name))
                 throw new SymbolException(call, $"Function '{call.Name}' does not exist");
-               
+               //TODO check arguments
         }
-
+        
         foreach (var table in symbolTable.ChildScopes)
         {
             SecondPass(table);
