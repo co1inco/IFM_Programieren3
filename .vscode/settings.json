@@ -1,4 +1,7 @@
 {
     // Set this in app settings for podman
-    "dev.containers.mountWaylandSocket": false
+    "dev.containers.mountWaylandSocket": false,
+    "cSpell.words": [
+        "untershiedlichen"
+    ]
 }
