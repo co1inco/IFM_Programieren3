@@ -3,38 +3,24 @@
 open System.Linq
 open fs.Ast
 
-let nullEnv = new Environment()
+let nullEnv = new Environment(None)
 
 let isBound (envRef : Environment) (var : string) =
-    envRef.Keys
-    |> Seq.exists (fun x -> x = var)
+    envRef.isBound
 
 let getVar (envRef : Environment) var =
-    if isBound envRef var 
-    then
-        // envRef.Item(var)
-        envRef.Item(var).V
-    else
-        raise <| UnboundVar ("Getting an unbound variable", var)
+    match envRef.tryGetVar var with
+    | Some v -> v
+    | _ -> raise <| UnboundVar ("Getting an unbound variable", var)
 
 let setVar (envRef : Environment) (var : string) (value : AstValue) =
-    if isBound envRef var then
-        // envRef.Item(var) <- value 
-        envRef.Item(var).V <- value 
-        value
-    else
-        raise <| UnboundVar ("Setting an unbound variable", var)
-
+    match envRef.trySetVar var value with
+    | true -> value
+    | _ -> raise <| UnboundVar ("Setting an unbound variable", var)
+    
 let defineVar (envRef : Environment) var (value : AstValue) =
-    envRef.Item(var) <- new LispValClass(value)
+    envRef.tryBindVar var value |> ignore
     value
-    // if isBound envRef var 
-    // then 
-    //     setVar envRef var value
-    // else
-    //     // envRef.Item(var) <- value
-    //     envRef.Item(var) <- new LispValClass(value)
-    //     value
 
 let bindVars (envRef : Environment) (bindings : List<(string * AstValue)>) : Environment =
     let rec adder binding env =
@@ -44,6 +30,6 @@ let bindVars (envRef : Environment) (bindings : List<(string * AstValue)>) : Env
             adder xs env
         | [] -> env
 
-    new Environment(envRef)
+    new Environment(Some(envRef))
     |> adder bindings
     //envRef |> adder bindings

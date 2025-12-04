@@ -1,5 +1,7 @@
 ﻿module fs.Ast
 
+open fs.EnvironmentBase
+
 type AstValue =
     | Atom of string
     | AString of string
@@ -9,21 +11,22 @@ type AstValue =
     | AFunc of Func
     | APrimitiveFunc of (List<AstValue> -> AstValue)
 and Func = {Params : List<string>; Vararg: Option<string>; Body: List<AstValue>; Closure: Environment }
+and Environment = EnvironmentBase<AstValue>
 // and Environment = System.Collections.Generic.Dictionary<string, AstValue>
-and Environment = System.Collections.Generic.Dictionary<string, LispValClass>
-// class (reference type) this way, a value in an outer scope can be overwritten from an inner scope
-// this should also be possible by simply using nested scopes / environments
-and LispValClass(value: AstValue) = 
-    let mutable v = value
-    member this.V 
-        with get () = v
-        and set (value) = v <- value
+// and Environment = System.Collections.Generic.Dictionary<string, LispValClass>
+// // class (reference type) this way, a value in an outer scope can be overwritten from an inner scope
+// // this should also be possible by simply using nested scopes / environments
+// and LispValClass(value: AstValue) = 
+//     let mutable v = value
+//     member this.V 
+//         with get () = v
+//         and set (value) = v <- value
 
 
 exception UnboundVar of string * string
 exception NumArgs of int * List<AstValue>
 exception IndexOutOfBounds of int
-exception TypeMissmatch of string * AstValue
+exception TypeMismatch of string * AstValue
 exception BadSpecialForm of string * AstValue
 exception NotFunction of string * string
 exception DefaultException of string
@@ -35,7 +38,7 @@ let unpackString = function
     | AString s -> s
     | AInt i -> $"{i}"
     | ABool b -> $"{b}"
-    | notString -> raise <| TypeMissmatch ("string", notString)
+    | notString -> raise <| TypeMismatch ("string", notString)
 
 let rec unpackInt = function 
     | AInt i -> i
@@ -48,7 +51,7 @@ let rec unpackInt = function
         | true -> 1
         | false -> 0
     | AList [v] -> unpackInt v
-    | x -> raise <| TypeMissmatch ("number", x)
+    | x -> raise <| TypeMismatch ("number", x)
 
 let rec showValue = function
     | AString s -> $"\"{s}\""

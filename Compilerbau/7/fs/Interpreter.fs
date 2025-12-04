@@ -62,7 +62,7 @@ let boolBinop op args =
         | Gt -> a > b
         | GtEq -> a >= b
         |> ABool
-    | _ -> raise <| TypeMissmatch ("Both arguments must be of type string or int", AList args) 
+    | _ -> raise <| TypeMismatch ("Both arguments must be of type string or int", AList args) 
 
 let strOp args =
     args
@@ -128,12 +128,12 @@ let rec eval env value =
         match eval env condition with
         | ABool true -> eval env trueBody
         | ABool false -> ABool false
-        | _ -> raise <| TypeMissmatch ("bool", condition)
+        | _ -> raise <| TypeMismatch ("bool", condition)
     | AList(Atom "if"::condition::trueBody::falseBody::[]) ->
         match eval env condition with
         | ABool true -> eval env trueBody
         | ABool false -> eval env falseBody
-        | _ -> raise <| TypeMissmatch ("bool", condition)
+        | _ -> raise <| TypeMismatch ("bool", condition)
     | AList(Atom "do"::body) ->
         List.map (eval env) body
         |> List.last

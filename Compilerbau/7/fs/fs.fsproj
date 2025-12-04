@@ -6,6 +6,7 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Include="EnvironmentBase.fs" />
     <Compile Include="TryParser.fs" />
     <Compile Include="Ast.fs" />
     <Compile Include="Variables.fs" />
