@@ -3,4 +3,4 @@ project(SmartPointer)
 
 set(CMAKE_CXX_STANDARD 26)
 
-add_executable(SmartPointer main.cpp SharedPtr.cpp)
+add_executable(SmartPointer main.cpp SharedPtr.cpp Token.cpp)

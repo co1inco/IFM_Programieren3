@@ -4,6 +4,7 @@
 #include "UniquePtr.h"
 #include "SharedPtr.h"
 #include "MakeShared.h"
+#include "Token.h"
 
 class Test {
 
@@ -58,6 +59,20 @@ int main() {
     std::cout << "Test 2" << std::endl;
 
 
+    {
+        Token t("Hello world", 5, 5, 10);
+        std::cout << t.get_length() << ": " << t.get_lexem() << std::endl;
+    }
+
+    {
+        std::vector<Token> tokens;
+
+        tokenize("hello 123 world\0", tokens);
+
+        for (const Token& t : tokens) {
+            std::cout << "Token @" << t.get_row() << ":" << t.get_column() << " [" << t.get_lexem() << "]" << std::endl;
+        }
+    }
 
 
     std::cout << "Done!" << std::endl;

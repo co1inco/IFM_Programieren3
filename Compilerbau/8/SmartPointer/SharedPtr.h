@@ -124,7 +124,9 @@ private:
     void remove_reference() {
         rc->dec();
         if (rc->isZero()) {
-            delete pObj;
+            if (pObj != nullptr) {
+                delete pObj;
+            }
             delete rc;
         }
     }
