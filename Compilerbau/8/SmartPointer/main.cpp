@@ -5,6 +5,7 @@
 #include "SharedPtr.h"
 #include "MakeShared.h"
 #include "Token.h"
+#include "RingBuffer.h"
 
 class Test {
 
@@ -64,16 +65,29 @@ int main() {
         std::cout << t.get_length() << ": " << t.get_lexem() << std::endl;
     }
 
-    {
-        std::vector<Token> tokens;
+    std::vector<SharedPtr<Token>> tokens;
 
-        tokenize("hello 123 world\0", tokens);
+    tokenize("hello 123 world\0", tokens);
 
-        for (const Token& t : tokens) {
-            std::cout << "Token @" << t.get_row() << ":" << t.get_column() << " [" << t.get_lexem() << "]" << std::endl;
-        }
+    for (const SharedPtr<Token>& t : tokens) {
+        std::cout << "Token @" << t->get_row() << ":" << t->get_column() << " [" << t->get_lexem() << "]" << std::endl;
     }
 
+    RingBuffer b(5);
+    b.writeBuffer(tokens[0]);
+    b.writeBuffer(tokens[0]);
+    b.writeBuffer(tokens[0]);
+    b.writeBuffer(tokens[0]);
+    b.writeBuffer(tokens[0]);
+
+    std::cout << "expect Buffer full" << std::endl;
+    b.writeBuffer(tokens[0]);
+    std::cout << "Remove and add" << std::endl;
+
+    (void)b.readBuffer();
+    (void)b.readBuffer();
+    b.writeBuffer(tokens[0]);
+    b.writeBuffer(tokens[0]);
 
     std::cout << "Done!" << std::endl;
     return 0;

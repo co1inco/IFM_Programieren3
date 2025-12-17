@@ -5,6 +5,8 @@
 #ifndef SMARTPOINTER_SharedPtr_H
 #define SMARTPOINTER_SharedPtr_H
 
+#include <exception>
+
 class RefCounter {
 public:
     /**
@@ -48,7 +50,7 @@ public:
      *
      * @param p is a raw pointer to the token to be shared
      */
-    explicit SharedPtr(T* p) : pObj(p), rc(new RefCounter) {};
+    explicit SharedPtr(T* p = nullptr) : pObj(p), rc(new RefCounter) {};
 
     /**
      * Copy constructor
@@ -64,9 +66,9 @@ public:
         pObj = sp.pObj;
     }
 
-    SharedPtr(SharedPtr<T>&&) noexcept = default;
-
-    SharedPtr& operator=(SharedPtr<T>&&) noexcept = default;
+//    SharedPtr(SharedPtr<T>&&) noexcept = default;
+//
+//    SharedPtr& operator=(SharedPtr<T>&&) noexcept = default;
 
     /**
      * Destructor
@@ -87,12 +89,17 @@ public:
      * @param sp is another smart pointer
      */
     SharedPtr<T>& operator=(const SharedPtr<T>& sp){
-        if (sp == this) // self assignment
+        if (&sp == this)
+            return *this;
+        if (sp.pObj == this->pObj) // self assignment
             return *this;
 
+//        throw std::exception();
         remove_reference();
-        pObj = sp.pObj;
+
         rc = sp.rc;
+        rc->inc();
+        pObj = sp.pObj;
     }
 
     /**
@@ -100,14 +107,14 @@ public:
      *
      * @return a reference to the shared token
      */
-    T& operator*() { return *pObj; }
+    T& operator*() const { return *pObj; }
 
     /**
      * Dereferences the smart pointer
      *
      * @return a pointer to the shared token
      */
-    T* operator->() { return pObj; };
+    T* operator->() const { return pObj; };
 
     /**
      * Comparison
@@ -124,9 +131,7 @@ private:
     void remove_reference() {
         rc->dec();
         if (rc->isZero()) {
-            if (pObj != nullptr) {
-                delete pObj;
-            }
+            delete pObj;
             delete rc;
         }
     }

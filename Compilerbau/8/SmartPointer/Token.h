@@ -53,15 +53,15 @@ class Lexer {
 public:
     Lexer(const char* buffer) : char_buffer(buffer), position(0), row(0), column(0) {}
 
-    Token next_token();
+    SharedPtr<Token> next_token();
 
 private:
 
     char peek();
     void consume();
     void WS();
-    Token Number();
-    Token Word();
+    SharedPtr<Token> Number();
+    SharedPtr<Token> Word();
 
     const char* char_buffer;
     size_t position;
@@ -72,7 +72,7 @@ private:
 
 
 
-void tokenize(const std::string& input, std::vector<Token>& tokens);
+void tokenize(const std::string& input, std::vector<SharedPtr<Token>>& tokens);
 
 
 #endif //SMARTPOINTER_TOKEN_H

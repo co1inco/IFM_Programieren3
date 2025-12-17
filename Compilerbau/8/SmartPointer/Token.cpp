@@ -4,19 +4,23 @@
 
 #include "Token.h"
 #include "SharedPtr.h"
+#include "MakeShared.h"
 #include <string.h>
 #include <memory>
+#include <iostream>
 
 
 Token::Token(const char *l, size_t length, int r, int c)
     : lexem(nullptr), row(r), col(c) {
     const size_t len = strlen(l);
+//    std::cout << "Token created " << len << std::endl;
     lexem = new char[length + 1];
     strncpy_s(lexem, length + 1, l, length);
 }
 
 Token::~Token() {
-//    delete[] lexem;
+//    std::cout << "Token deleted" << std::endl;
+    delete[] lexem;
 }
 
 size_t Token::get_length() const {
@@ -65,20 +69,19 @@ Token::Token(const Token &p) {
 }
 
 
-void tokenize(const std::string &input, std::vector<Token> &tokens) {
+void tokenize(const std::string &input, std::vector<SharedPtr<Token>> &tokens) {
 
     Lexer lexer(input.c_str());
 
-    Token t = lexer.next_token();
-    while (!t.is_eof())
+    SharedPtr<Token> t = lexer.next_token();
+    while (!t->is_eof())
     {
-        Token test = t;
         tokens.push_back(t);
         t = lexer.next_token();
     }
 }
 
-Token Lexer::next_token() {
+SharedPtr<Token> Lexer::next_token() {
     while (peek() != '\0') {
         switch (peek()) {
             case ' ':
@@ -99,7 +102,7 @@ Token Lexer::next_token() {
         consume();
     }
 
-    return Token(char_buffer, 1, row, column);
+    return make_shared<Token>(char_buffer, 1, row, column);
 }
 
 void Lexer::consume() {
@@ -126,7 +129,7 @@ void Lexer::WS() {
     }
 }
 
-Token Lexer::Number() {
+SharedPtr<Token> Lexer::Number() {
     auto r = row;
     auto c = column;
     auto b = char_buffer;
@@ -136,10 +139,11 @@ Token Lexer::Number() {
         consume();
     }
 
-    return Token(b, position - p, r, c);
+    auto t = make_shared<Token>(b, position - p, r, c);
+    return t;
 }
 
-Token Lexer::Word() {
+SharedPtr<Token> Lexer::Word() {
     auto r = row;
     auto c = column;
     auto b = char_buffer;
@@ -149,5 +153,5 @@ Token Lexer::Word() {
         consume();
     }
 
-    return Token(b, position - p, r, c);
+    return make_shared<Token>(b, position - p, r, c);
 }
