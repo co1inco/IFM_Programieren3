@@ -88,6 +88,7 @@ int main() {
     (void)b.readBuffer();
     b.writeBuffer(tokens[0]);
     b.writeBuffer(tokens[0]);
+    b.writeBuffer(tokens[0]);
 
     std::cout << "Done!" << std::endl;
     return 0;

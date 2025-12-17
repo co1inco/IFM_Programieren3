@@ -27,7 +27,7 @@ auto RingBuffer::readBuffer() -> SharedPtr<Token> {
 auto RingBuffer::writeBuffer(const SharedPtr<Token> &data) -> void {
 
     if (count == size){
-        std::cout << "Buffer full" << std::endl;qqq
+        std::cout << "Buffer full" << std::endl;
 
         return;
     }
