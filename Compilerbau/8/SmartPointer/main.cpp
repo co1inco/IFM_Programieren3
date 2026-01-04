@@ -32,7 +32,9 @@ void use_test(SharedPtr<Test> test) {
 }
 
 
-
+std::string bar() {
+    return "Hello world";
+}
 
 
 int main() {
@@ -89,6 +91,12 @@ int main() {
     b.writeBuffer(tokens[0]);
     b.writeBuffer(tokens[0]);
     b.writeBuffer(tokens[0]);
+
+
+    std::string test;
+    test.size()
+
+    std::string& foo = bar();
 
     std::cout << "Done!" << std::endl;
     return 0;
