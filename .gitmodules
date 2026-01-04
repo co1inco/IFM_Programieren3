@@ -1,0 +1,3 @@
+[submodule "Compilerbau/8/cpp-interpreter"]
+	path = Compilerbau/8/cpp-interpreter
+	url = https://github.com/co1inco/IFM_Programieren3-CPP_interpreter.git
