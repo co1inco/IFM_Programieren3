@@ -85,7 +85,7 @@ Inhalt:
  * Admin / Gruppenleiter und User einer Gruppe
  * Ersteller ist der Gruppenleiter
  * Admin kann user entfehrnen
- * Admin kann user sperren
+ * Admin kann user sperren (Note: was ist der unterschied zwischen sperren und entfernen?)
  * Admin kann Gruppe verwalten
 
 ## Kommerziell
