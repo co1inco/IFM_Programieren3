@@ -20,6 +20,8 @@ Inhalt:
    + Benutzername, 
    + Password (zwei mal)
    + Bevorzugter Kommunikationsweg (SMS, E-Mail, Whatsapp)
+   + Captcha
+   + E-Mail Verifikation
  * Password: Hash und Salt
  * Password zurücksetzen
   
@@ -201,7 +203,14 @@ Inhalt:
  * Client Server System
  * "sehr Performant"
  * Einhalten der DSGVO (Sehr vertrauliche Informationen)
+   + Daten exportieren
+   + Löschen
+   + Aufbewahrungsfristen?
+   + Einwilligungs-Logging
  * Sensieble daten sollen nut verschlüsselt unter Nutzern ausgetausch werden
  * end to end verschlüsselung?
- * Ermutigung zu starken Passwörtern
- * 2-Faktor authentifizierung
+ * Authentifikation
+   + Ermutigung zu starken Passwörtern
+   + 2-Faktor authentifizierung
+   + Session-Timeouts
+   
