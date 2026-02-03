@@ -118,7 +118,7 @@ Inhalt:
  * 
   
 ### Mitarbeiter 
- * Mitarbeiter müssen blockiert werden
+ * Mitarbeiter müssen geblockt werden
  * Mitarbeiter werden über event informiert
  * Mitarbeiter Qualifizeirungsgrad und Fachgebiet (Licht, Ton, MedienTechnik)
  * Mitarbeiter sollen Zeit / Arbeitspaln bekommen
