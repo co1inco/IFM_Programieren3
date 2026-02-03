@@ -200,4 +200,122 @@ Abfahrtszeit oder Gleisnummer. Oder man hat zum Beispiel für die Reise bereits 
 Attraktion gebucht und dort wird dann Datum, Zeit und eine Bemerkung dazu erfasst. Die
 Durchführung der Events kann man auch dokumentieren, indem man Kommentare bzw.
 Bewertungen (z.B. „Unvergessliches Erlebnis“) und Multimedia-Dateien (z.B. Fotos oder
-Videos) hochladen kann. Nachdem ein Event stattfinden kann, können Zeitpläne und noch
+Videos) hochladen kann. Nachdem ein Event stattfinden kann, können Zeitpläne und noch ausstehende  Aufgaben  (z.B.  Grillfleisch  einkaufen)  erstellt  werden.  Diese  Aufgaben  werden
+einzelnen Teilnehmern zugewiesen, die sich vorher zur Übernahme von Aufgaben bereit erklärt
+haben. Aufgaben können als fertig markiert werden. Falls Aufgaben nicht bearbeitet werden,
+sendet  das  Softwareprodukt  automatisch  Erinnerungen  an  die  entsprechenden  Teilnehmer.
+Wichtige  Termine  können  per  Synchronisation  mit  Google  Calendar,  Outlook  oder  iCal
+automatisch  aktualisiert  werden.  Funktionen  zum  Matchmaking  von  Event-Teilnehmern
+(„Networking“) sowie Funktionen zum Nachrichtenaustausch zwischen sämtlichen Beteiligten
+sind  ebenfalls  vorhanden.  Das  über  Smartphone  und  Desktop-Webbrowser  bedienbare
+Softwareprodukt spricht Privatleute an, aber auch Institutionen wie Schulen und Firmen. Die
+Sprache der Anzeigetexte ist auswählbar. Die Passwörter dürfen nicht in Klartext gespeichert
+werden  und  die  Datenkommunikation  zwischen  Client  und  Server  muss  verschlüsselt  sein,
+damit diese nicht so einfach von Unbefugten abzufangen ist. Die Software muss ohne lange
+Einarbeitung bedienbar sein, sodass auch neue Mitarbeiter (Aushilfskräfte) schnell mit dem
+System arbeiten können. Das Softwareprodukt soll Kompatibilität zu den aktuellen Versionen
+der folgenden Browser aufweisen: Chrome, Edge, Firefox, Safari. Das Softwareprodukt soll ein
+Client-Server-System  sein,  das  für  mobile  Endgeräte,  Webbrowser  und  digitale
+Sprachassistenten  verfügbar  ist,  sehr  performant  ist,  für  sehr  viele  gleichzeitige  Benutzer
+ausgelegt ist und auf aktuellen (mobilen) Betriebssystemen läuft. Das Softwareprodukt muss im
+Webbrowser und als mobile App vollständig funktional konsistent sein, so dass alle Funktionen,
+die mit dem Webbrowser genutzt werden können, auch mittels der mobilen App verfügbar sind.
+Für Institutionen gibt es gesonderte Funktionalitäten, so dass die Software ein Rechtesystem
+zwischen  Gruppenleiter  und  normalen  Mitglied  benötigt.  Ein  Gruppenleiter  (Ersteller  einer
+Gruppe) kann Mitglieder aus der Gruppe entfernen und sperren sowie die Gruppe verwalten. So
+erhält  beispielsweise  ein  Lehrer  zusätzliche  Rechte,  während  Schüler  nur  lesenden  Zugriff
+haben. Unterschiedliche Rechte gelten zum Beispiel auch für unterschiedliche Personenrollen in
+Firmen.  In  der  kostenlosen  Variante  des  Softwareprodukts  können  Institutionen  insgesamt
+maximal drei Veranstaltungen nacheinander durchgeführt haben. Das Produkt wird ebenfalls in
+einer Premium-Variante angeboten. Hier können beliebig viele Veranstaltungen durchgeführt
+werden. In dieser Variante haben kommerzielle Institutionen (z.B. Anbieter von Kreuzfahrten)
+zusätzlich  die  Möglichkeit,  mehrere  Events  anzubieten,  die  gleichzeitig  stattfinden.  Zeitlich
+parallele  Events  sind  der  Community-Edition  nicht  möglich.  Eine  Integration  mit
+Veranstaltungs-Dienstleistern („Event-Anbietern“) bzw. Ticketing (z.B. Eventim) ist möglich,
+um die Veranstaltung selber sowie den Verkauf von digitalen Eintrittskarten abzuwickeln. In der
+Premium-Variante können sich die kommerziellem Veranstaltungs-Dienstleister anmelden. Für
+solche  Dienstleister  stehen  gesonderte  Features  für  den  Bereich  der  Planung  der
+Veranstaltungstechnik  zur  Verfügung,  da  in  der  Veranstaltungstechnik  ein  hoher
+Planungsbedarf an Ressourcen besteht, die einem Event zugeteilt werden und entsprechend
+verwaltet werden müssen. Hierbei ist sowohl die Rede vom notwendigen Event-Equipment als
+auch von Mitarbeitern bis hin zu Fahrzeugen. Hinzu kommt eine zeitliche wie auch logistische
+Ablaufplanung. Ein Veranstaltungs-Dienstleister kann von einem Organisator / Veranstalter für
+die Durchführung eines Events mit einem Maximalbudget angefragt werden. Dafür muss das
+Softwareprdukt  für  die  Dienstleister  eine  „Homepage“  mit  QR-Code  anzeigen,  von  der  aus
+Veranstalter  ein  Event  anfragen  können,  sodass  diese  Anfrage  direkt  dem  Dienstleister
+angezeigt und von ihm bearbeitet werden kann. Da ein Veranstalter den gebuchten Dienstleister
+nach der Durchführung bewerten kann, wird auf der Homepage ebenfalls eine Übersicht über
+die Bewertungen (z.B. mit Sternen) dargestellt. Das Softwareprodukt erlaubt es, einen Überblick
+über die Events eines Unternehmens zu erlangen, neue Events anzulegen und planen, bereits
+durchgeführte Events zu archivieren und Kunden wie auch deren Rechnungen zu verwalten. Die
+Ressourcen  (Mitarbeiter,  Event-Equipment,  Fahrzeuge,  etc.)  sollen  für  ein  Event  gebucht
+werden können, wobei das vom Kunden gesetzte Budget eingehalten werden soll. Des Weiteren
+sollen Dokumente wie Rechnungen oder Angebote automatisch generiert werden können. Wird
+ein Event erzeugt, werden der Veranstaltungsort, ein Start- und Enddatum bzw. eine Start- und
+Endzeit,  Veranstalter,  Budget  und  ein  Budget-Spielraum  gespeichert.  Eine
+Veranstaltungsanfrage durch einen Kunden enthält in dem dafür zuständigen Formular den
+Ort, das Start-/Enddatum bzw. Zeit, Veranstalter, Budget und Budget Spielraum. Es soll zu
+jedem mehrtägigen Event angegeben werden können, wie viele der Tage sogenannte „Off-Days“
+sind. In der Veranstaltungstechnik wird bei der Materialverleihung zwischen sogenannten „On-"
+und „Off-Days“ unterschieden. Off-Days sind hierbei Tage an denen das entsprechende Gerät
+nicht verwendet wird, also ausgeschaltet ist (bzw. bei Material ohne Stecker es nicht verwendet
+wird); On-Days entsprechend umgekehrt. Die Off-Days werden in den Gesamtkosten rabattiert.
+Die On- und Off-Days müssen nachträglich geändert werden können. Es soll nicht für jedes
+Material der Verleihpreis für On- und für Off-Days gespeichert werden, sondern ausschließlich
+der für On-Days. Jede Veranstaltungsanfrage soll weiterbearbeitet werden können und damit zu
+einem Event „konvertiert“ werden können. Aus einer Anfrage soll ein Angebot generiert werden
+können, welches automatisch an die vom Kunden angegebene E-Mail-Adresse weitergeleitet
+und ebenfalls vom Softwareprodukt dargestellt wird. Hat der Veranstaltungs-Dienstleister das
+Event  geplant,  kann  ein  Angebot  generiert  werden,  das  dem  Organisator  zugestellt  werden
+kann. Dieses Angebot muss folgende Informationen beinhalten: Preis (Brutto / Netto / Rabatt),
+Mitarbeiter  und  deren  Lohnkosten,  Materialkosten,  Fahrkosten,  Verwaltungskosten,  Kunde,
+Datum  und  Dauer,  Ort,  Verfasser  des  Angebots,  Materialliste  sowie  Fotos  des  verwendeten
+Materials. Der Veranstaltungs-Dienstleister kann Material (z.B. Boxen, LKWs) und Mitarbeiter
+verwalten (Hinzufügen, Löschen, Ändern). Sobald Material gebucht wird, darf dieses für andere
+Events nicht mehr zur Verfügung stehen. Wird ein Mitarbeiter einem Event zugeordnet, muss
+die Verfügbarkeit der Mitarbeiter zum Zeitpunkt des Events beachtet werden (Urlaub / Einsatz
+bei einem anderen Event / Krankheit). Mitarbeiter werden automatisch informiert, sobald diese
+in  einem  Event  eingeplant  werden,  sodass  diese  Mitarbeiter  einen  aktuellen  Zeit-  bzw.
+Arbeitsplan  haben,  die  den  Mitarbeitern  vom  Softwareprodukt  angezeigt  werden.  Für
+Mitarbeiter soll der Qualifizierungsgrad (Fachkraft / Meister / Aushilfskraft), das Fachgebiet
+(Licht  /  Ton  /  Medientechnik  /  Bühnenbau  /  etc.)  und  die  Führerscheinklasse  gespeichert
+werden.  Material  kann  verschiedene  Eigenschaften  (verfügbare  Anzahl,  Leistungsaufnahme,
+Lagermaße,  Lagergewicht,  Fluggewicht,  Anschaffungspreis,  Verleihpreis,  Anzahl  der
+Verleihungen,  Wartungszyklus,  letzte  Wartung,  Kategorie,  Bild).  Material  kann  kategorisiert
+(Ton / Licht / Bühnenbau / Catering / etc.) zugeordnet werden. Die Kategorien sollen um neue
+Kategorien erweitert werden können. Kategorien sollen gelöscht werden können. Ebenfalls wird
+für das Material der veränderbare Lagerstandort zugeordnet. Damit später auffallende Schäden
+an einem Material noch einem Veranstalter und der entsprechenden Versicherung zugeordnet
+werden  kann,  muss  für  das  Material  auch  die  Verleih-Historie  gespeichert  und  angezeigt
+werden.  Das  Softwareprodukt  muss  einen  Hinweis  geben,  wenn  auf  Grundlage  eines
+Wartungszyklus ein bestimmtes Material gewartet bzw. geprüft werden muss. Ebenfalls muss
+die  Software  anzeigen,  welche  Geräte  sich  bereits  amortisiert  haben.  Grundlage  für  die
+Amortisationsrechnung sind die Anschaffungskosten, die Verleihkosten und die Anzahl, wie oft
+ein Gerät bereits verliehen wurde. Zu jedem Material muss abgespeichert werden können, wie
+weit die Amortisierung fortgeschritten ist. Wird nachträglich der Verleihpreis des Materials
+verändert,  darf  die  bisher  errechnete  Amortisierung  nicht  angepasst  werden.  Wird  der
+Einkaufspreis des Materials geändert, hat dies jedoch Einfluss auf die Amortisierung. Nach
+Ende der Veranstaltung kann eine Rechnung erzeugt und zugestellt werden. Diese Rechnung
+muss folgendes beinhalten: Rechnungsbetrag (Brutto / Netto / Rabatt), Mitarbeiter und deren
+Lohnkosten, Materialkosten, Fahrkosten, Verwaltungskosten, Kunde / Veranstalter, Datum und
+Dauer,  Ort,  Verfasser  des  Angebots,  Materialliste,  Rechnungsfrist,  Rechnungsnummer,
+Kontodaten des Unternehmens. Veranstaltungen sollen als bezahlt markiert werden können.
+Bezahlte  und  nicht  bezahlte  Veranstaltungen  sollen  jeweils  in  einer  separaten  Darstellung
+angezeigt und gefiltert werden. Die Software soll nach einem gewissen Zeitraum (üblicherweise
+30 Tage) daran erinnern, dass Rechnungen noch nicht bezahlt worden sind. Aus einer nicht
+bezahlten  Rechnung  soll  eine  Mahnung  mit  Mahngebühr  und  neuem  Zahlungszeitraum
+generiert  werden  können.  Über  das  Softwareprodukt  werden  sehr  vertrauliche
+Kontaktinformationen sowie Nachrichten ausgetauscht, die unter keinen Umständen von nicht
+autorisierten Parteien einsehbar sein dürfen. Daten müssen daher verschlüsselt gespeichert und
+ausgetauscht werden. Das Softwareprodukt muss die Nutzerdaten gemäß Datenschutzrichtlinie
+(DSGVO) behandeln. Die Datenschutzrichtlinie muss von den Nutzern bestätigt werden, bevor
+diese  das  Softwareprodukt  vollständig  nutzen  können.  Die  Speicherung  von  privaten
+Informationen, insbesondere Kontaktinformationen, darf nicht in falsche Hände geraten. Die
+Daten  sollen  daher  besonders  verschlüsselt  unter  den  Nutzern  versendet  und  gespeichert
+werden.  Selbst  der  Betreiber  des  Softwareprodukts  soll  diese  Informationen  nicht  einsehen
+können.  Vielleicht  ist  ein  Ende-zu-Ende  Verschlüsselungssystem  zu  verwenden,  bei  dem
+Schlüssel erst ausgetauscht werden, wenn Erlaubnis dazu erteilt wurde. Um zu verhindern, dass
+Unbefugte Nutzer-Accounts übernehmen können, werden Nutzer ermutigt, starke Passwörter
+zu verwenden und eine 2FA-Authentifizierung per SMS oder vergleichbares für die Anmeldung
+zu  verwenden.  Accounts  könnten  auch  an  gültige  Telefonnummern  gebunden  werden,  um
+Missbrauch zu verhindern. Daten werden generell über das https-Protokoll ausgetauscht.
