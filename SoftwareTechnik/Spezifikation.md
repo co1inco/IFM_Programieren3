@@ -1,6 +1,30 @@
 
+1. Titelblatt, Autoren, Selbstständigkeitserklärung
+2. Executive Summary (Ziele, Scope, wichtige Annahmen)
+3. Glossar / Domain‑Begriffe
+4. Functional requirements (User‑Stories + komplette Tabelle) ← zentrale Stelle
+   + 4.1 Mapping User‑Stories → Akteure (Use‑Case‑Kurzliste)
+   + 4.2 Akzeptanztests / Test‑Cases (pro Story)
+5. 4+1 Sichten (jeweils: Ziele, Hauptdiagramme, Mapping zu Stories)
+   + 5.1 Use‑case / Szenarien (the „+1“): Use‑case‑Diagramme, Hauptszenarien, Sequenzdiagramme, Acceptance‑Criteria links
+   + 5.2 Logical View: Domänen‑Klassendiagramm, ER/DB‑Modell, CRUD‑Matrix, VIF/Relationen
+   + 5.3 Development View: Komponenten/Module, Paketstruktur, API‑Contract (OpenAPI), Build/ * Repo‑Struktur
+   + 5.4 Process View: Laufzeit‑Architektur, Threads/Queues, State‑Machines (z. B. Group  * lifecycle), Sequence/Activity für kritische Flows
+   + 5.5 Physical (Deployment) View: Deployment‑Diagramm, Infra‑Services, Sizing & SLOs
+ 1. Nicht‑funktionale Anforderungen (NFR) — messbar (Performance, Security, Privacy, Availability,  * Scalability)
+ 1. Security & Privacy (STRIDE, Datenschutz, Encryption, Aufbewahrung)
+ 1. API & Integration (OpenAPI, Webhooks, Idempotenz, Drittanbieter)
+ 1. Operations & SRE (Monitoring, Backups, Runbook, SLA/SLO)
+ 1. Testplan / QA (Akzeptanztests, CI/CD‑Pipelines, E2E‑Matrix)
+ 1. Open decisions / Risks / Roadmap (TODOs, Annahmen)
+ 1. Anhänge: UML‑Quellen, DB‑Schema SQL, Mockups, Beispiel‑API‑Responses, Traceability‑Matrix
 
-# Funktionale requirements
+
+# 2 - Zusammenfassung
+Ziel ist es, einen Service zu entwickeln, der es Leuten die Planung von Events und Urlauben zu vereinfachen. Diese Events benötigen häufig die Organisation einer größeren Gruppe an Personen. Unser Service soll den Leuten genau diese Absprachen und Organisation erleichtern. Die Nutzer sollen eine Gruppe zur Organisation solcher Events erstellen oder bereits bestehenden Gruppen beitreten können. Eine solche Gruppe bietet den Mitgliedern dann die Möglichkeit, sich mittels Chats, Terminen und Umfragen abzusprechen. Außerdem soll es möglich sein, über eine Gruppe Gelder einzusammeln und Ausgaben zu Organisieren. Außerdem sollen Veranstaltungsdienstleister über die Platform ihre Dienste anbieten können. Gruppen können die Dienstleiter dann für die Organisation des Events Buchen. Unsere Platform soll den Dienstleistern außerdem die Möglichkeit geben Mitarbeiter und Materialien zu Organisieren.
+
+
+# 5 - Funktionale requirements
 
 | Name/ID | In meiner Rolle als ... | möchte ich ...                  | , so dass...           | Akzeptiert, wenn...       | Priorität |
 | ----------------- | ----------- | --------------------------------- | ---------------------- | ------------------------- | ---- |
@@ -45,13 +69,6 @@
 | Gruppen‑Lifecycle (state machine) | Owner / System | Eventzustände (Draft→Open→Confirmed→Cancelled→Archived) verwalten | automatisierbare Abläufe möglich | Zustandsübergänge definiert; bei Cancel automatischer Refund‑Pfad / Benachrichtigung möglich | Muss |
 | Zahlungs‑Webhook Idempotenz   | System      | eingehende Payment‑Events idempotent verarbeiten | keine Doppelbuchungen entstehen | Webhook‑Events mit Idempotency‑Key; wiederholte Zustellungen erzeugen kein Duplikat | Muss |
 | Gruppen‑Zeitraum              | Gruppenmitglied | einen Zeitpunkt / Zeitraum festlegen | ich kommuniziere, wann das Event stattfindet | Start/End‑Datum vorhanden; Zeitzone angegeben; wiederkehrende Termine optional | Muss |
-
-## Stage2
-
-Hinweis: Tabelle bereinigt (Duplikate entfernt). Akzeptanzkriterien wurden präzisiert und fehlende nicht‑funktionale / Privacy‑Stories ergänzt.
-
-| Name/ID | In meiner Rolle als | möchte ich ... | , so dass... | Akzeptiert, wenn (messbar / testbar) | Priorität |
-|---|---:|---|---|---|---|
 | Gruppen: Aufgaben (create) | Gruppenmitglied | Aufgaben erstellen | Team-Aufgaben verwaltbar sind | Neue Aufgabe wird in Gruppen-Task‑Liste angezeigt; Pflichtfelder: Titel, Fälligkeitsdatum; API-Response 201 | Muss |
 | Gruppen: Aufgabe zuweisen | Gruppenmitglied | Aufgaben einem Mitglied zuweisen | Zuständigkeiten klar sind | Zuweisung ändert Task-Status; Benachrichtigung an Empfänger innerhalb 5 min | Muss |
 | Gruppen: Aufgabe abschließen | Gruppenmitglied | Aufgabe als erledigt markieren | Aufgabenstatus aktuell ist | Statuswechsel sichtbar für alle Mitglieder; Änderungs-Log vorhanden | Muss |
@@ -74,9 +91,6 @@ Hinweis: Tabelle bereinigt (Duplikate entfernt). Akzeptanzkriterien wurden präz
 | API: Contract & Rate Limits | Integrator | stabile API nutzen | Integration zuverlässig bleibt | OpenAPI spec vorhanden; 95th pct response <500ms; rate limit 1000 req/min per API key | Soll |
 | Accessibility (WCAG) | User | barrierefreien Zugang haben | inklusiver Betrieb | WCAG 2.1 AA für Kern-User‑Flows | Soll |
 | Testing & CI/CD | Entwickler | automatisierte Qualitätssicherung | Regressionen verhindert werden | Unit/Integration/E2E in CI; PRs müssen CI grünes Licht haben | Muss |
-| Open / Unresolved decisions (TODO) | — | — | — | - Payment provider (Stripe/Adyen?)
-- Retention policy (default retention periods)
-- Exact SLA & SLO Zahlen (operational) | Kann |
 
 ### Ergänzende nicht‑funktionale Anforderungen (Auswahl / messbar)
 - Performance: 95th‑percentile API latency < 500 ms für Kernendpunkte (list/create/join).
