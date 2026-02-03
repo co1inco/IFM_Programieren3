@@ -46,49 +46,50 @@
 | Zahlungs‑Webhook Idempotenz   | System      | eingehende Payment‑Events idempotent verarbeiten | keine Doppelbuchungen entstehen | Webhook‑Events mit Idempotency‑Key; wiederholte Zustellungen erzeugen kein Duplikat | Muss |
 | Gruppen‑Zeitraum              | Gruppenmitglied | einen Zeitpunkt / Zeitraum festlegen | ich kommuniziere, wann das Event stattfindet | Start/End‑Datum vorhanden; Zeitzone angegeben; wiederkehrende Termine optional | Muss |
 
-## Stage2 
+## Stage2
 
-| Name/ID | In meiner Rolle als ... | möchte ich ...                  | , so dass...           | Akzeptiert, wenn...       | Priorität |
-| ----------------- | ----------- | --------------------------------- | ---------------------- | ------------------------- | ---- |
-| Gruppen Aufgaben | Gruppenmitglied | Aufgaben erstellen | Gruppenmitglieder eine Übersicht habe, welche Aufgaben erledigt werden müssen | eine Gruppe eine Übersicht über die Aufgaben hat | Muss |
-| Gruppenaufgabe zuweisen | Gruppenmitglied | bestehende Aufgaben einem Gruppenmitglied zuweisen | das Mitglied weiß, welche Aufgaben es noch zu erledigen hat | Gruppenmitgliedern Aufgaben zugewiesen werden können | Muss |
-| Gruppenaufgabe beenden | Gruppenmitglied | eine Aufgabe als erledigt markieren | ersichtlich ist, welche Aufgaben noch zu erledigen sind | ein Gruppenmitglied eine Aufgabe als erledigt markieren kann | Muss |
-| Gruppenaufgabe Erinnerung | Gruppenmitglied | eine automatische Erinnerung über unerledigte Aufgaben bekomme, denen ich zugewiesen bin. Die Benachrichtigung soll über meinen bevorzugten Kommunikationskanal bekommen | ich an Unerledigte Aufgaben erinnert werde | Gruppenmitglieder bekommen Erinnerungen über ihren bevorzugten Kommunikationskanal | Kann |
-| Gruppenrechte | Gruppen-Owner | Berechtigungen für Gruppenmitglieder festlegen können | ich Steuern kann, welche Gruppenmitglieder welche Operationen Ausführen können | ein Gruppen-Owner die Zugriffsberechtigungen [Owner; Admin; User] einzelnen Gruppenmitglieder zuweisen | Muss |
-| Gruppen-Owner | Gruppenersteller | automatisch der Besitzer einer Gruppe sein | ich alle relevanten Einstellungen treffen kann | der Ersteller einer Gruppe nach dem erstellen der Gruppen-owner is | Muss |
-| Gruppenmitglied entfernen | Gruppenamin | Als Gruppenadmin möchte ich einzelne Gruppenmitglieder aus der Gruppe entfernen | ich störende Nutzer aus der Gruppe entfernen kann | Gruppenadmins einzelne Gruppenmitglieder aus der Gruppe entfernen können | Muss |
-| Community-Edition | User | Zugriff auf eine Kostenlose Variante des Services haben | ich bis zu drei Gruppen Kostenlos, nicht zeitgleich erstellen kann | "Community" Nutzer können Kostelos bis zu 3 Gruppen erstellen, die nicht zeitgleich stattfinden | Muss |
-| premium-Edition | user | Zugriff auf eine Premium Variante des Services haben | so dass ich unbegrenzt viele und zeitgleiche Gruppen erstellen kann | ein Premium Nutzer unbegrenzt viele Gruppen erstellen kann, welche zeitgleich stattfinden können | Muss |
-| Smartphone | User | den Service über ein Smartphone verwenden | ich den Service Unterwegs verwenden kann | der Service über ein Smartphone verwendet werden kann | Muss |
-| Desktop | User | den Service über eine Webbrowser auf meinem Desktop verwenden | ich den Service von meinem Computer verwenden kann | der Service über ein webbrowser verwendet werden kann | Muss |
-| Funktionale-Parität | User | Alle Endgeräte sollen mir Zugriff auf die gleichen Funktionen geben | ich in der Wahl des Endgerätes frei bin | alle Platformen [Smartphone; Desktop-Webborwser] die gleichen Funktionen bieten | Muss |
-| Dienstleister | Dienstleister | meine Leistungen auf der Platform anbieten | Gruppen meinen Dienst in Anspruch nehmen können | Dienstleister ihre Leistungen anbieten können | Muss |
-| Dienstleister buchen | Gruppenmitglied | einen Dienstleister buchen | dieser größere Events für meine Gruppe planen und durchführen kann | Gruppenmitglieder einen Dienstleister für das durchführen eines Events buchen können | Muss |
-| Dienstleister QR-Code | Gruppenmitglied | einen Dienstleister buchen können, in dem ich seinen QR-Code scanne | ich einen Dienstleister nicht manuell suchen muss, wenn ich extern auf ihn gestoßen bin | Dienstleister zugriff auf eine QR-Code haben, der zu ihrem Eintrag verlinkt | Kann |
-| Dienstleister bewerten | Gruppenmitglied | einen Dienstleister bewerten können | ich meine Erfahrung mit anderen Usern Teilen kann | Gruppenmitglieder einen verwendeten Dienstleister bewerten können | Kann |
-| Dienstleister Bewertungen | Gruppenmitglied | die Bewertungen eines Dienstleister ansehen | ich über die Qualität des Dienstleister Bescheid weiß, bevor ich ihn buche | Gruppenmitglieder die Bewertungen eines Dienstleister einsehen können | Kann |
-| Dienstleister budget | Gruppenmitglied | eine Budget festlegen, welches einem Dienstleister zur Verfügung steht | dieser sein Angebot darauf anpassen kann | Gruppenmitglieder ein Budget für einen Dienstleister festlegen können | Muss |
-| Dienstleister Angebot erstellen | Dienstleister | das ein Angebot für eine Gruppe Automatisch generiert werden kann | Gruppen schnell und einfach ein Angebot erhalten können | Dienstleister ein Angebot für ein Event automatisch generieren Können. Das Angebot soll Preis (Netto, Brutto, Rabatt), Lohnkosten, Fahrkosten, Veranstaltungskosten, Kunde, Verfasser des Angebotes, Materialliste, Fotos des versendeten Materials und (Datum, Uhrzeit, Ort) der Erstellung des Angebotes enthalten | Muss |
-| Dienstleister Rechnung erstellen | Dienstleister | das die Rechnung für ein Angebot automatisch generiert wird | Gruppen schnell und einfach die Rechnung erhalten | Dienstleister ein Rechnung für ein Event, auf basis eines zuvor erstellten Angebotes  automatisch generieren Können. Die Rechnung soll die Mitarbeiterkosten, Fahrkosten, Verwaltungskosten, den Verfasser des Angebotes, Rechnungsfrist, Rechnungsnummer, KOntodaten des Dienstleisters, Kunde, und (Datum, Uhrzeit, Ort) der erstellung beinhalten | Muss |
-| Dienstleister Mitarbeiter verwalten | Dienstleister | meine Mitarbeiter verwalten | ich die Verfügbarkeit von Mitarbeitern für Events planen kann | Dienstleister die Möglichkeit haben ihre Mitarbeiter (Qualifikation, Fachgebiet) und ihren Status verwalten zu können | Muss |
-| Mitarbeiter Event | Dienstleister | einen Mitarbeiter einem Event zuteilen | dieser weiß, für welche Events er eingeteilt ist und automatisch im System blockiert werden kann | ein Dienstleister seinen Mitarbeiter einem Event zuordnen kann | Muss |
-| Mitarbeiter informieren | Mitarbeiter | möchte ich informiert werden, sobald ich einem Event zugeteilt bin | ich mich für das Event vorbereiten kann | Mitarbeiter benachrichtigt werden, sobald sie einem Event hinzu gefügt wurden | Muss |
-| mitarbeiter Zeitplan | Mitarbeiter | möchte ich einen Zeitplan haben, wann ich zu welchem Event eingeteilt bin | ich mich Zeitlich organisieren kann | Mitarbeiter einen Zeitplan einsehen können | Muss |
-| Dienstleister Resourcen verwalten | Dienstleister | meine Resourcen verwalten | ich die Verfügbarkeit von Resourcen für Events planen kann | Dienstleister die Möglichkeit haben Resourcen (zb. LKWs, Boxen, Equipment / Material) und deren Status zu verwalten (zb. Verfügbar / Geblockt, nächste Wartung) | Muss |
-| Materialien managen | Dienstleister | meine Materialien eintragen und organisieren können | ich eine Übersicht über meine Materialien habe | Dienstleister die Möglichkeit haben ihre Materialien und ihre Eigenschaften (eg: Anzahl, Leistungsaufnahme, Lagermaße, Lagergewicht, Wartungszyklus, Aktueller Standort, Anschaffungskosten, Verleihkosten,  Bild) Organisieren können | Muss |
-| Materialkategorien | Dienstleister | meine Materialien in Kategorien einteilen können | ich eine bessere Übersicht habe und bestimmte Materialien schnelle finde | Dienstleister neue Kategorien für ihre Materialien anlegen können | Kann |
-| Materialkategorien hinzufügen | Dienstleister | einem Material eine Kategorie hinzufügen können | es in dieser Kategorie erscheint | Dienstleister Materialien bestimmte Kategorien zuweisen können | Kann |
-| Materialkategorien löschen | Dienstleister | eine bestehende Kategorie löschen | diese nicht mehr existiert | Dienstleister Kategorien löschen könne, die sie zuvor erstellt haben | Kann |
-| Wartungsstand | Dienstleister | benachrichtigt werden, wenn Material für die Wartung fällig ist | ich die Wartung und die damit zusammenhängenden Ausfälle des Materials frühzeitig planen kann | Dienstleister eine Benachrichtigung bekommen wen Material zur Wartung fällig ist | Muss |
-| Verleih-historie | Dienstleister | die Verleih-Historie für Material einsehen | ich Schäden nachverfolgen kann | die Verleih-Historie eines Materials gespeichert und eingesehen werden kann. Für jeden Verleih soll (Datum, Dauer, Leiher, Verleih-preis) | Muss |
-| Material Armortisierung | Dienstleister | den Status der Armortisierung des Materials einsehen | ich überprüfen kann, wann das Material abbezahlt ist | der Dienstleister den Armortisierungs-status von Materialien überprüfen kann. Die Armortisierung berechnet sich aus dem aktuellen Kaufpreis und den tatsächlichen einnahmen durch den Verleih | Muss |
-| Rechnungsstaus | Dienstleister | eine Übersicht über den status der Ausgestellten Rechnungen haben | ich überprüfen kann, welche Rechnungen noch offen sind | ein Dienstleister eine Übersicht über erstellte Rechnungen hat | Muss |
-| Rechnungserinnerung | Event-Organisator | eine Benachrichtigung bekommen, wenn eine Rechnung offen ist | ich keine Rechnung vergesse | der Veranstalter eines Events eine Benachrichtigung bekommt so bald eine Rechnung erstellt wurde und nach 30 Tagen, wenn sie noch offen ist | Muss |
-| Automatische Mahnung | Dienstleister | das nach Ablauf der Zahlungsfrist automatisch eine Mahnung erzeugt wird | sich der druck auf den Organisator erhöht, die Rechnung zu bezahlen | nach Ablauf der Zahlungsfrist einer unbezahlten Rechnung automatisch eine Mahnung (incl. Mahngebühren) erzeugt und an den Veranstalter gesendet wird. | Muss | 
+Hinweis: Tabelle bereinigt (Duplikate entfernt). Akzeptanzkriterien wurden präzisiert und fehlende nicht‑funktionale / Privacy‑Stories ergänzt.
 
+| Name/ID | In meiner Rolle als | möchte ich ... | , so dass... | Akzeptiert, wenn (messbar / testbar) | Priorität |
+|---|---:|---|---|---|---|
+| Gruppen: Aufgaben (create) | Gruppenmitglied | Aufgaben erstellen | Team-Aufgaben verwaltbar sind | Neue Aufgabe wird in Gruppen-Task‑Liste angezeigt; Pflichtfelder: Titel, Fälligkeitsdatum; API-Response 201 | Muss |
+| Gruppen: Aufgabe zuweisen | Gruppenmitglied | Aufgaben einem Mitglied zuweisen | Zuständigkeiten klar sind | Zuweisung ändert Task-Status; Benachrichtigung an Empfänger innerhalb 5 min | Muss |
+| Gruppen: Aufgabe abschließen | Gruppenmitglied | Aufgabe als erledigt markieren | Aufgabenstatus aktuell ist | Statuswechsel sichtbar für alle Mitglieder; Änderungs-Log vorhanden | Muss |
+| Aufgaben: Erinnerungen (configurable) | Gruppenmitglied | Erinnerungen per bevorzugtem Kanal erhalten | Deadlines nicht verpasst werden | Erinnerung per E‑Mail/Push/SMS laut Präferenz; konfigurierbar; Zustellung innerhalb 5 min vor Fälligkeit (configurable) | Kann |
+| Rollen & Rechte (RBAC Basis) | Gruppen-Owner | Rollen (Owner/Admin/Member) vergeben | Zugriff und Aktionen steuerbar sind | Owner kann Rollen ändern; Berechtigungen enforced (z. B. nur Owner kann Gruppe löschen) | Muss |
+| Owner auto‑assignment | Gruppenersteller | nach Erstellung Owner sein | Einstellungen verwalten zu können | Ersteller ist Owner; Owner-Flag in DB gesetzt | Muss |
+| Mitgliederverwaltung | Gruppen-Admin | Mitglieder entfernen / einladen | Moderation möglich ist | Admin kann Mitglied entfernen; Aktion audit‑logged; entfernte Nutzer verlieren Zugriff sofort | Muss |
+| Editions: Community / Premium | User | freie / kostenpflichtige Pläne nutzen | Produkt‑Limits durchsetzen | Community: ≤3 aktive Gruppen; Premium: keine Limit; Abrechnung aktiviert für Premium | Muss |
+| Multi‑device parity | User | gleiches Funktionsset auf allen Geräten | konsistente UX | Kernfunktionen auf Mobile/Web verfügbar; responsives Layout (breakpoints) | Muss |
+| Dienstleister: Listing & Angebot | Dienstleister | Dienstleistung einstellen & Angebot erstellen | Veranstalter finden passende Anbieter | Listing mit Pflichtfeldern; Angebot enthält Preise (Netto/Brutto), Positionen, Fotos; Download als PDF möglich | Muss |
+| Dienstleister: Buchung & Budget | Gruppenmitglied | Dienstleister buchen; Budget setzen | Planung & Kostenkontrolle möglich | Buchung erzeugt Reservierung; Budget‑Limit verhindert Überbuchung; Bestätigung & Storno‑API vorhanden | Muss |
+| Dienstleister: Ressourcen & Mitarbeiter | Dienstleister | Material & Personal verwalten | Verfügbarkeit planbar ist | Ressourcen können geblockt/entblockt werden; Mitarbeiter‑Calendar sichtbar; Konflikte verhindert | Muss |
+| Bewertungen & Feedback | Gruppenmitglied | Dienstleister bewerten | Qualität transparent wird | Bewertung nur nach abgeschlossenem Event; Anzeige mittelt Bewertungen; Missbrauchs-Moderation möglich | Kann |
+| Material‑Lifecycle (Wartung) | Dienstleister | Wartungszyklen verwalten | Ausfälle planbar sind | Wartungs‑Reminder configurable; Historie pro Asset vorhanden | Muss |
+| Abrechnung: Rechnung + Mahnwesen | Dienstleister / Organisator | Rechnungen automatisch erzeugen / Mahnungen senden | Zahlungen eingetrieben werden | Rechnung generiert aus Angebot; PDF/CSV-Export; Mahnung nach konfigurierbarer Frist (z. B. 30 Tage) | Muss |
+| DSGVO – Datenexport & Löschung | Benutzer | meine Daten exportieren/ löschen lassen | Recht auf Auskunft / Vergessenwerden erfüllt ist | User kann vollständigen Datenexport (JSON/CSV) anfordern; Löschung führt zu Anonymisierung/Entfernung innerhalb 30 Tage; Audit-Log der Anfrage | Muss |
+| Sicherheit: Auth & Sessions | Benutzer/System | 2‑Faktor, Session‑Timeout, Account‑Lockout | Konten sicher sind | Passwort-Hashing mit Argon2/bcrypt; 2FA optional; Session default 30 min idle; Account lock after 5 failed attempts (configurable) | Muss |
+| Payments: Webhook Idempotenz & Refunds | System | sichere Zahlungsabwicklung | keine Doppelbuchungen; Rückerstattungen möglich | Webhooks idempotent; Refunds via API in <72 h; reconciliations reportierbar | Muss |
+| Observability & Ops | Betreiber | Monitoring, Logging, Backups | Betriebssicherheit gewährleistet | 99.5% availability target (SLA); zentrale Logs (retention 90d); tägliche Backups; Alerts bei Fehlern | Soll |
+| API: Contract & Rate Limits | Integrator | stabile API nutzen | Integration zuverlässig bleibt | OpenAPI spec vorhanden; 95th pct response <500ms; rate limit 1000 req/min per API key | Soll |
+| Accessibility (WCAG) | User | barrierefreien Zugang haben | inklusiver Betrieb | WCAG 2.1 AA für Kern-User‑Flows | Soll |
+| Testing & CI/CD | Entwickler | automatisierte Qualitätssicherung | Regressionen verhindert werden | Unit/Integration/E2E in CI; PRs müssen CI grünes Licht haben | Muss |
+| Open / Unresolved decisions (TODO) | — | — | — | - Payment provider (Stripe/Adyen?)
+- Retention policy (default retention periods)
+- Exact SLA & SLO Zahlen (operational) | Kann |
 
+### Ergänzende nicht‑funktionale Anforderungen (Auswahl / messbar)
+- Performance: 95th‑percentile API latency < 500 ms für Kernendpunkte (list/create/join).
+- Skalierbarkeit: System skaliert horizontal bei 50% CPU‑Auslastung der Instanzgruppe.
+- Sicherheit: TLS 1.2+ enforced; Secrets in KMS; regelmäßige Pen‑Tests (Jährlich).
+- Datenschutz: Datenexport (JSON/CSV), Lösch‑Workflow, Einwilligungs‑Logging für E‑Mails.
 
+### Quick checklist (für Review)
+1. Alle User Stories haben prüfbare Akzeptanzkriterien? — (✓) größtenteils; offene Punkte in TODO.
+2. DSGVO‑spezifische Stories vorhanden? — (✓)
+3. Nicht‑funktionale Anforderungen (verfügbar, messbar)? — (✓)
+4. Vorschlag: für jede "Soll"/"Muss"‑Story einen Implementierungs‑Task + Tests definieren.
 
-
+<!-- Ende Stage2 (überarbeitet) -->
 
 
