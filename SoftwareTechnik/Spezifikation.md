@@ -32,30 +32,6 @@ Für jedes Kapitel (kurze Checkliste / erwartete Artefakte):
   - Pflicht: Autor(en), Matrikelnummer(n), Datum, Selbstständigkeitserklärung
 
 
-- Use‑case / Szenarien
-  - Use‑case‑Diagramm (Actors + top 10 Use‑cases)
-  - 3–5 Sequenzdiagramme (z. B. Create Group, Book Provider, Payment + Refund)
-  - Mapping Story→Use‑case
-
-- Logical View
-  - Domänen‑Klassendiagramm (Entitäten + Schlüsselattribute)
-  - ER‑Diagram + CRUD‑Matrix
-  - Daten‑Retention & Privacy per Entität
-
-- Development View
-  - Komponentenübersicht (groups‑service, auth, payments, provider‑portal, ui)
-  - API‑Endpunkte (stubs) für Kernflows (Groups, Membership, Payments)
-  - Build/CI Übersicht, Dependency‑Matrix
-
-- Process View
-  - Laufzeitflüsse: Event lifecycle, Payment flow, Notification flow
-  - State‑Machines (Group lifecycle), Queue/Retry‑Policy, Scaling points
-  - Performance‑kritische Pfade + Resilience‑Patterns
-
-- Physical View
-  - Beispiel‑Deployment (k8s/VM), Netz‑Diagram, Storage/BLOB, CDN
-  - Backup/Restore, DR‑Plan, Sizing‑Annäherungen
-
 - NFRs & Security
   - Messbare NFR‑Tabelle (SLO/SLA, retention, latency, throughput)
   - STRIDE‑Kurzanalyse + Controls (Auth, KMS, Rate‑limit, CSP)
@@ -232,5 +208,59 @@ Akzeptanz der Zusammenfassung
 4. Vorschlag: für jede "Soll"/"Muss"‑Story einen Implementierungs‑Task + Tests definieren.
 
 <!-- Ende Stage2 (überarbeitet) -->
+
+
+
+
+# 5. 4+1 Sichten (jede Sicht: Ziel, Diagramme, Mapping zu Stories, offene Fragen)
+
+## 5.1 Use‑case / Szenarien (the "+1"): Use‑case‑Diagramme, Hauptszenarien, Sequenzdiagramme, Akzeptanzkriterien
+<!--
+- Use‑case / Szenarien
+  - Use‑case‑Diagramm (Actors + top 10 Use‑cases)
+  - 3–5 Sequenzdiagramme (z. B. Create Group, Book Provider, Payment + Refund)
+  - Mapping Story→Use‑case
+-->
+
+
+## 5.2 Logical View: Domänen‑Klassendiagramm, ER/DB‑Modell, CRUD‑Matrix, Entitäts‑Attribute, VIF
+<!--
+- Logical View
+  - Domänen‑Klassendiagramm (Entitäten + Schlüsselattribute)
+  - ER‑Diagram + CRUD‑Matrix
+  - Daten‑Retention & Privacy per Entität
+-->
+
+
+## 5.3 Development View: Komponenten/Module, Paket‑ und Repo‑Struktur, API‑Contract (OpenAPI), Build/CI
+<!--
+- Development View
+  - Komponentenübersicht (groups‑service, auth, payments, provider‑portal, ui)
+  - API‑Endpunkte (stubs) für Kernflows (Groups, Membership, Payments)
+  - Build/CI Übersicht, Dependency‑Matrix
+-->
+
+
+## 5.4 Process View: Laufzeit‑Architektur, Messaging/Queues, State‑Machines (z. B. Group lifecycle), Performance‑Flows
+<!--
+- Development View
+  - Komponentenübersicht (groups‑service, auth, payments, provider‑portal, ui)
+  - API‑Endpunkte (stubs) für Kernflows (Groups, Membership, Payments)
+  - Build/CI Übersicht, Dependency‑Matrix
+-->
+
+
+## 5.5 Physical View: Deployment‑Diagramm (K8s/VMs), Netz, Sizing, SLO/SLA
+<!--
+- Physical View
+  - Beispiel‑Deployment (k8s/VM), Netz‑Diagram, Storage/BLOB, CDN
+  - Backup/Restore, DR‑Plan, Sizing‑Annäherungen
+-->
+
+
+
+
+
+
 
 
