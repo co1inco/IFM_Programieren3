@@ -1,30 +1,157 @@
 
 1. Titelblatt, Autoren, Selbstständigkeitserklärung
-2. Executive Summary (Ziele, Scope, wichtige Annahmen)
+2. Zusammenfassung (Ziele, Scope, Annahmen)
 3. Glossar / Domain‑Begriffe
-4. Functional requirements (User‑Stories + komplette Tabelle) ← zentrale Stelle
-   + 4.1 Mapping User‑Stories → Akteure (Use‑Case‑Kurzliste)
-   + 4.2 Akzeptanztests / Test‑Cases (pro Story)
-5. 4+1 Sichten (jeweils: Ziele, Hauptdiagramme, Mapping zu Stories)
-   + 5.1 Use‑case / Szenarien (the „+1“): Use‑case‑Diagramme, Hauptszenarien, Sequenzdiagramme, Acceptance‑Criteria links
-   + 5.2 Logical View: Domänen‑Klassendiagramm, ER/DB‑Modell, CRUD‑Matrix, VIF/Relationen
-   + 5.3 Development View: Komponenten/Module, Paketstruktur, API‑Contract (OpenAPI), Build/ * Repo‑Struktur
-   + 5.4 Process View: Laufzeit‑Architektur, Threads/Queues, State‑Machines (z. B. Group  * lifecycle), Sequence/Activity für kritische Flows
-   + 5.5 Physical (Deployment) View: Deployment‑Diagramm, Infra‑Services, Sizing & SLOs
- 1. Nicht‑funktionale Anforderungen (NFR) — messbar (Performance, Security, Privacy, Availability,  * Scalability)
- 1. Security & Privacy (STRIDE, Datenschutz, Encryption, Aufbewahrung)
- 1. API & Integration (OpenAPI, Webhooks, Idempotenz, Drittanbieter)
- 1. Operations & SRE (Monitoring, Backups, Runbook, SLA/SLO)
- 1. Testplan / QA (Akzeptanztests, CI/CD‑Pipelines, E2E‑Matrix)
- 1. Open decisions / Risks / Roadmap (TODOs, Annahmen)
- 1. Anhänge: UML‑Quellen, DB‑Schema SQL, Mockups, Beispiel‑API‑Responses, Traceability‑Matrix
+4. Functional requirements (User‑Stories + zentrale Requirements‑Tabelle)
+   - 4.1 Mapping: User‑Stories → Akteure / Use‑Cases
+   - 4.2 Akzeptanztests / Test‑Cases (pro Story)
+5. 4+1 Sichten (jede Sicht: Ziel, Diagramme, Mapping zu Stories, offene Fragen)
+   - 5.1 Use‑case / Szenarien (the "+1"): Use‑case‑Diagramme, Hauptszenarien, Sequenzdiagramme, Akzeptanzkriterien
+   - 5.2 Logical View: Domänen‑Klassendiagramm, ER/DB‑Modell, CRUD‑Matrix, Entitäts‑Attribute, VIF
+   - 5.3 Development View: Komponenten/Module, Paket‑ und Repo‑Struktur, API‑Contract (OpenAPI), Build/CI
+   - 5.4 Process View: Laufzeit‑Architektur, Messaging/Queues, State‑Machines (z. B. Group lifecycle), Performance‑Flows
+   - 5.5 Physical View: Deployment‑Diagramm (K8s/VMs), Netz, Sizing, SLO/SLA
+6. Nicht‑funktionale Anforderungen (NFR) — messbar: Performance, Security, Privacy, Availability, Scalability
+7. Security & Privacy (STRIDE, DSGVO‑Flows, Key‑Management, Aufbewahrung)
+8. API & Integration (OpenAPI, Webhooks, Idempotenz, 3rd‑party connectors)
+9. Operations & SRE (Monitoring, Logging, Backups, Runbook, Incident‑Response)
+10. Testplan / QA (Unit, Integration, E2E, Akzeptanztests, CI/CD‑Gates)
+11. Open decisions / Risks / Roadmap (TODOs, Annahmen)
+12. Anhänge
+    - A: UML‑Quellen (XMI / PlantUML)
+    - B: DB‑Schema (DDL + Beispiel‑daten)
+    - C: Mockups / Styleguide
+    - D: Beispiel‑API‑Responses (OpenAPI snippets)
+    - E: Traceability‑Matrix (Requirement → Artifact → Test)
+
+---
+
+Für jedes Kapitel (kurze Checkliste / erwartete Artefakte):
+
+- Titelblatt
+  - Pflicht: Autor(en), Matrikelnummer(n), Datum, Selbstständigkeitserklärung
+
+
+- Use‑case / Szenarien
+  - Use‑case‑Diagramm (Actors + top 10 Use‑cases)
+  - 3–5 Sequenzdiagramme (z. B. Create Group, Book Provider, Payment + Refund)
+  - Mapping Story→Use‑case
+
+- Logical View
+  - Domänen‑Klassendiagramm (Entitäten + Schlüsselattribute)
+  - ER‑Diagram + CRUD‑Matrix
+  - Daten‑Retention & Privacy per Entität
+
+- Development View
+  - Komponentenübersicht (groups‑service, auth, payments, provider‑portal, ui)
+  - API‑Endpunkte (stubs) für Kernflows (Groups, Membership, Payments)
+  - Build/CI Übersicht, Dependency‑Matrix
+
+- Process View
+  - Laufzeitflüsse: Event lifecycle, Payment flow, Notification flow
+  - State‑Machines (Group lifecycle), Queue/Retry‑Policy, Scaling points
+  - Performance‑kritische Pfade + Resilience‑Patterns
+
+- Physical View
+  - Beispiel‑Deployment (k8s/VM), Netz‑Diagram, Storage/BLOB, CDN
+  - Backup/Restore, DR‑Plan, Sizing‑Annäherungen
+
+- NFRs & Security
+  - Messbare NFR‑Tabelle (SLO/SLA, retention, latency, throughput)
+  - STRIDE‑Kurzanalyse + Controls (Auth, KMS, Rate‑limit, CSP)
+  - DSGVO: Datenexport & Lösch‑Workflow (API + delays)
+
+- API & Integration
+  - OpenAPI‑stubs für Kernressourcen
+  - Webhook contract (idempotence), retry semantics
+  - 3rd‑party integration checklist (payment, calendar sync)
+
+- Operations & Testplan
+  - Monitoring KPI list, runbooks for top‑5 incidents
+  - CI/CD gates + Testmatrix (unit/integration/e2e/manual)
+
+- Open decisions / Risks
+  - Liste offener Architektur‑/Business‑entscheide + vorgeschlagene Optionen
+
+- Anhänge
+  - PlantUML/XMI, DDL, Mockups (png/svg), Beispiel‑API‑responses, Traceability CSV
+
+---
+
+Hinweis zur Organisation: Die **Requirements‑Tabelle** ist die kanonische Quelle und bleibt in Kapitel 4; in den 4+1‑Sichten referenzierst du Story‑IDs (nicht kopieren). Eine Traceability‑Matrix (Anhang E) verbindet Requirements mit Use‑cases, Klassen, Endpunkten und Tests.
 
 
 # 2 - Zusammenfassung
-Ziel ist es, einen Service zu entwickeln, der es Leuten die Planung von Events und Urlauben zu vereinfachen. Diese Events benötigen häufig die Organisation einer größeren Gruppe an Personen. Unser Service soll den Leuten genau diese Absprachen und Organisation erleichtern. Die Nutzer sollen eine Gruppe zur Organisation solcher Events erstellen oder bereits bestehenden Gruppen beitreten können. Eine solche Gruppe bietet den Mitgliedern dann die Möglichkeit, sich mittels Chats, Terminen und Umfragen abzusprechen. Außerdem soll es möglich sein, über eine Gruppe Gelder einzusammeln und Ausgaben zu Organisieren. Außerdem sollen Veranstaltungsdienstleister über die Platform ihre Dienste anbieten können. Gruppen können die Dienstleiter dann für die Organisation des Events Buchen. Unsere Platform soll den Dienstleistern außerdem die Möglichkeit geben Mitarbeiter und Materialien zu Organisieren.
+
+Kurzfassung (Executive Summary)
+
+Dieses Dokument beschreibt die Spezifikation für eine Plattform zur Planung, Organisation und Durchführung von Gruppen‑Events (z. B. Reisen, Vereins‑ oder Firmenveranstaltungen). Kernnutzen: Teilnehmer können Gruppen anlegen/verwalten, Termine/Umfragen/Finanzen koordinieren und externe Dienstleister (z. B. Veranstaltungstechnik) buchen. Die Lösung adressiert sowohl Privatnutzer als auch kommerzielle Dienstleister und bietet ein Provider‑Portal, Zahlungs‑ und Rechnungsfunktionen sowie Compliance‑ und Betriebsmechanismen (Monitoring, Backups, DSGVO‑Workflows).
+
+Zielsetzung: Eine sichere, skalierbare Web‑ und Mobile‑Plattform, die Gruppen‑Organisation, Zahlungsabwicklung und Dienstleister‑Management in einem integrierten Workflow unterstützt.
+
+Wichtige Kennzahlen
+- Verfügbarkeit (SLA target): 99.5% (kritische Dienste: auth, payments, groups). 
+- Performance: Group‑listing — median < 150 ms, 95th‑percentile < 500 ms.
+- Durchsatz: skalierbar auf ~10k gleichzeitige aktive Nutzer pro Region (horizontale Skalierung).
+- Backup / RPO / RTO: tägliche Backups (RPO = 24 h); RTO kritisch (auth/payments) < 1 h, RTO nicht‑kritisch < 24 h.
+- Datenschutz: Lösch‑Workflow abgeschlossen / Anonymisierung innerhalb 30 Tagen; Datenexport innerhalb 7 Tagen.
+
+Scope (konkret)
+- In Scope (MVP): User‑Management (Auth, Sessions, 2FA optional), Gruppen (Erstellen, Beitreten, Rollen), Notizen/Termine/Umfragen, Einzahlungen & einfache Abrechnung, Provider‑Listing + Buchung, Basis UI (Web + responsive Mobile), Audit & DSGVO‑Flows.
+- Out of Scope (MVP): vollständiges End‑to‑End E2E‑Verschlüsselung, komplexe Market‑Place‑Features (Gebotsauktionen), Enterprise‑SAML (optional später), vollständige Offline‑Mobile‑Funktionalität.
+
+Priorisierte Annahmen
+- Nutzerdaten und Transaktionen sind primär in einer zentralen Region gespeichert; system ist regional skalierbar.
+- Zahlungen werden über einen externen Provider (Stripe/Adyen) angebunden — Zahlungs‑Reconciliation via API.
+- Externe Kalender‑Sync (Google/Outlook/iCal) wird als Integrationsfeature implementiert; initial nur Pull/Sync‑Opt‑in.
+
+Top‑Risiken (priorisiert)
+1. Business/Integration: Unklare Payment‑Provider‑Entscheidung verzögert MVP (Mitigation: Auswahl‑kriterien + PoC innerhalb 2 Wochen).
+2. Datenschutz: Lösch‑/Export‑Workflow komplex (Mitigation: API‑Contract + automatisierte Tests für Delete/Anonymize).
+3. Security: Unzureichende Auth/Session‑Hardening → Account‑Kompromittierung (Mitigation: starke PW‑Policy, 2FA, WAF, regelmäßige Pen‑Tests).
+4. Operational: Fehlen von Runbooks/Monitoring führt zu langen Ausfallzeiten (Mitigation: Runbook + SLOs vor Produktionsstart).
+
+Akzeptanzkriterien für die Deliverables (Kurz)
+- MVP accepted when: alle "Muss"‑Stories in Kapitel 4 implementiert und durch End‑to‑End‑Tests verifiziert sind; kritische SLOs (auth/payments/group‑listing) werden in Staging‑Loadtests erreicht; DSGVO‑Delete/Export‑Flows getestet.
+
+Empfohlene nächste Schritte (priorisiert)
+1. Entscheidung: Payment‑Provider (PoC → 1 chosen) — blocker für Invoicing/Refunds.  
+2. Erzeuge Traceability‑Matrix (Requirement → Use‑case → API → Test).  
+3. Erstelle Runbook‑Draft für Top‑3 Incidents (auth outage, payment failure, data‑loss).
+
+Akzeptanz der Zusammenfassung
+- Diese Zusammenfassung ist akzeptabel, wenn sie in Review von Product Owner bestätigt wird und die drei NFR‑Defaults (SLA, latency, RTO) als Ausgangswerte genehmigt werden.
 
 
-# 5 - Funktionale requirements
+
+
+# 3 - Glossar 
+
+<!--
+- Glossar
+  - Liste der Domainbegriffe + kurze Definitionen (z. B. Group, Event, Organizer, Provider)
+-->
+
+| Name          | Beschreibung  |
+| ------------- | ------------- |
+| Gruppe        | Eine Sammlung an Nutzern die sich über eine Gruppe austauschen können |
+| Benutzer      | Ein Nutzer von unserem Service |
+| Dienstleister | Ein Externer Dienstleister der auf unser Platform vertreten ist und von Gruppen beauftragt werden können |
+| System        | Stellvertreten für uns als Service oder Serviceanbieter |
+| Owner         | Der Benutzer, der eine Gruppe erstellt hat |
+| Admin         | Ein Gruppenmitglied mit erhöhten rechten innerhalb einer Gruppe |
+
+
+
+
+# 4 - Funktionale requirements
+
+<!--
+- Functional requirements (canonical)
+  - Vollständige User‑Stories‑Tabelle (canonical source)
+  - Priorisierung (MoSCoW), Acceptance‑Criteria, einfache Akzeptanztests
+  - Traceability‑IDs (UIDs) für jede Story
+-->
 
 | Name/ID | In meiner Rolle als ... | möchte ich ...                  | , so dass...           | Akzeptiert, wenn...       | Priorität |
 | ----------------- | ----------- | --------------------------------- | ---------------------- | ------------------------- | ---- |
