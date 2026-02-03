@@ -1,0 +1,18 @@
+@startuml
+title Create Group — sequence
+actor User
+participant "Web UI / Mobile" as UI
+participant "Groups Service" as Groups
+participant "Auth Service" as Auth
+database DB
+
+User -> UI: Open 'Create group' form
+UI -> Auth: validate session / token
+Auth --> UI: 200 OK
+UI -> Groups: POST /api/v1/groups {payload}
+Groups -> DB: INSERT group + owner
+DB --> Groups: group_id
+Groups -> Groups: generate join_code
+Groups --> UI: 201 Created {group_id, join_code}
+UI --> User: show confirmation + shareable URL/QR
+@enduml

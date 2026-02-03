@@ -1,0 +1,23 @@
+@startuml
+title Book Provider — sequence
+actor User
+participant "Web UI" as UI
+participant "Provider Service" as Provider
+participant "Booking Service" as Booking
+participant "Availability Service" as Avail
+database DB
+
+User -> UI: Select provider + request quote
+UI -> Provider: GET /api/v1/providers/{id}/availability
+Provider -> Avail: check resources/calendar
+Avail --> Provider: availability
+Provider --> UI: quote + available slots
+User -> UI: confirm booking (with budget)
+UI -> Booking: POST /api/v1/providers/{id}/book
+Booking -> Provider: reserve resources
+Booking -> DB: create booking record
+DB --> Booking: booking_id
+Booking --> UI: 200 OK {booking_id}
+UI -> User: show booking confirmation
+Booking -> Notification: notify provider + organizer
+@enduml

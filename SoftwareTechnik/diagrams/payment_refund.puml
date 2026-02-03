@@ -1,0 +1,26 @@
+@startuml
+title Payment & Refund (webhook + idempotence)
+actor PaymentProvider
+participant "Payments Service" as Payments
+participant "Orders/Booking Service" as Orders
+database DB
+
+PaymentProvider -> Payments: POST /api/v1/payments/webhook {event, idempotency_key}
+Payments -> Payments: lookup event by idempotency_key
+alt already processed
+  Payments --> PaymentProvider: 200 (ignored)
+else new event
+  Payments -> Orders: mark payment received (order_id)
+  Orders -> DB: update payment_status
+  DB --> Orders: OK
+  Payments --> PaymentProvider: 200 (processed)
+end
+
+== Refund ==
+User -> UI: request refund
+UI -> Payments: POST /api/v1/payments/{id}/refund
+Payments -> PaymentProvider: initiate refund
+PaymentProvider --> Payments: refund_confirm
+Payments -> Orders: update refund_status
+Payments --> UI: 200 (refund scheduled)
+@enduml

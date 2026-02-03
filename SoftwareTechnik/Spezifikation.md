@@ -18,10 +18,10 @@
 10. Testplan / QA (Unit, Integration, E2E, Akzeptanztests, CI/CD‑Gates)
 11. Open decisions / Risks / Roadmap (TODOs, Annahmen)
 12. Anhänge
-    - A: UML‑Quellen (XMI / PlantUML)
-    - B: DB‑Schema (DDL + Beispiel‑daten)
-    - C: Mockups / Styleguide
-    - D: Beispiel‑API‑Responses (OpenAPI snippets)
+    - A: UML‑Quellen (XMI / PlantUML) — siehe `diagrams/` (PlantUML‑Quellen)
+    - B: DB‑Schema (DDL + Beispiel‑daten) — `db/schema.sql`
+    - C: Mockups / Styleguide — `mockups/`
+    - D: Beispiel‑API‑Responses (OpenAPI snippets) — `api/openapi.yaml`
     - E: Traceability‑Matrix (Requirement → Artifact → Test)
 
 ---
@@ -258,7 +258,28 @@ Akzeptanz der Zusammenfassung
 -->
 
 
+---
 
+# Anhänge 
+
+## Anhang E — initiale Traceability‑Matrix (Auszug)
+
+| Requirement ID | Kurzbezeichnung | Use‑case | Component | API endpoint | Testcase ID |
+|---|---|---|---|---|---|
+| REQ-001 | User login | Authenticate user | auth-service | POST /api/v1/auth/login | TC-001 |
+| REQ-003 | Create group | Create Group | groups-service | POST /api/v1/groups | TC-010 |
+| REQ-004 | Join group | Join Group | membership-service | POST /api/v1/groups/{group_id}/join | TC-011 |
+| REQ-006 | Book provider | Provider booking | booking-service | POST /api/v1/providers/{id}/book | TC-030 |
+| REQ-007 | Payment webhook idempotence | Payment notification | payments-service | POST /api/v1/payments/webhook | TC-040 |
+| REQ-009 | Data export | User data export | export-service | GET /api/v1/users/{id}/export | TC-050 |
+
+Details / Dateien:
+- Vollständige CSV (expandable): `SoftwareTechnik/traceability.csv`
+- Sequenzdiagramme (PlantUML): `SoftwareTechnik/diagrams/create_group.puml`, `.../book_provider.puml`, `.../payment_refund.puml`
+
+<!--
+Hinweis: das oben ist ein initialer, prüfbarer Auszug für die wichtigsten MVP‑Flows — erweitere die CSV, bis jede Story aus Kapitel 4 abgebildet ist.
+-->
 
 
 
