@@ -211,7 +211,6 @@ Akzeptanz der Zusammenfassung
 
 
 
-
 # 5. 4+1 Sichten (jede Sicht: Ziel, Diagramme, Mapping zu Stories, offene Fragen)
 
 ## 5.1 Use‑case / Szenarien (the "+1"): Use‑case‑Diagramme, Hauptszenarien, Sequenzdiagramme, Akzeptanzkriterien
@@ -221,6 +220,88 @@ Akzeptanz der Zusammenfassung
   - 3–5 Sequenzdiagramme (z. B. Create Group, Book Provider, Payment + Refund)
   - Mapping Story→Use‑case
 -->
+
+### Gruppe erstellen
+A user sends a request to create a new group. His session is validated and on successful validation the group is created. After the group is created the user can be redirected to the groups page.
+
+
+```mermaid
+sequenceDiagram
+
+actor User
+participant UI as Web UI / Mobile
+participant Groups as Groups Service
+participant Auth as Auth service
+participant DB@{ "type" : "database" }
+
+User ->> UI : Open 'Create group' form
+UI ->> Auth : validate session
+Auth -->> UI : 200 OK
+UI ->> Groups : POST /api/v1/groups {payload}
+Groups ->> DB : INSERT group + owner
+DB -->> Groups : groupId
+Groups -->> UI : 201 Created { groupId }
+UI -->> User : Show confirmation and open Group
+
+```
+
+
+#### Gruppendaten
+```
+{
+  name : Provided by user
+  groupId" : Automatically generated unique id
+  visibility : Provided by user (default Private)
+}
+```
+
+
+### Gruppe über link beitreten
+An exiting group member can access an invite link through the UI. This invite link can be send to other users. 
+If another user opens that invite link, the join process is stared. First it is validated if the user is allowed to join the group (ie: not blocked, etc.). If the user is allowed to join the User is displayed basic information about the Group so that he can ensure that he is joining the group he is intending to. If the user confirms, the user is added as a group member. The user the receives confirmation of the successful join and is redirected to the groups page.
+If the user is already part of the group he can be redirected to the groups page directly.
+
+
+
+```mermaid
+sequenceDiagram
+
+actor Inviter
+actor Invited
+participant UI as Web UI / Mobile
+participant Groups as Groups Service
+participant Auth as Auth service
+participant DB@{ "type" : "database" }
+
+Inviter ->> UI : Open group info 'Invite' UI
+UI ->> Auth : validate session
+Auth -->> UI : 200 OK
+UI ->> Groups : GET /api/v1/groups/invite_link
+Groups ->> DB : SELECT publicGroupId FROM group
+DB -->> Groups : publicGroupId
+Groups -->> UI : 200 Found { publicGroupId }
+UI ->> Inviter  : Copy invite link
+Inviter ->> Invited : Send invite link
+
+Invited ->> UI : Open 'Invite link'
+UI ->> Auth : validate session
+Auth -->> UI : 200 OK
+UI ->> Groups : GET /api/v1/groups/can_join {userId}
+Groups ->> DB : SELECT user authorized to join, group info
+DB -->> Groups : authorized
+Groups -->> UI : 200 inviteProcessId, authorized, groupInfo
+UI -->> Invited : Request 'confirm join'
+Invited ->> UI : Confirm join
+UI ->> Groups : /api/v1/groups/join/{inviteProcessId}
+Groups ->> DB : INSERT groupMember
+DB -->> Groups : groupMemberId
+Groups -->> UI : 201 Created { groupMemberId }
+UI -->> Invited : Confirm joined
+Groups -->> UI : 303 forward to group { /groups/{publicGroupId} }
+UI -->> Invited : Open group
+```
+
+### TODO
 
 
 ## 5.2 Logical View: Domänen‑Klassendiagramm, ER/DB‑Modell, CRUD‑Matrix, Entitäts‑Attribute, VIF
@@ -259,6 +340,7 @@ USER {
   int preferredCommunication
   byte[64] passwordHash
   byte[64] passwordSalt
+  bool consent
 }
 
 GROUP {
@@ -475,11 +557,6 @@ SP_GROUP_INVOICE {
 }
 
 SP_GROUP_INVOICE |o--|| SP_GROUP_OFFER : "invoice"
-
-
-
-
-
 
 ```
 
