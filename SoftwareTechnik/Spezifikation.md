@@ -231,6 +231,249 @@ Akzeptanz der Zusammenfassung
   - Daten‑Retention & Privacy per Entität
 -->
 
+### ER - Model
+
+
+<!--
+different diagram layout
+---
+title: Order example
+config:
+    layout: elk
+---
+-->
+
+```mermaid
+
+erDiagram
+direction LR;
+
+USER {
+  int id PK
+  string username
+  string name
+  string familyName
+  bool emailVerified
+  string email
+  string phone
+  int preferredCommunication
+  byte[64] passwordHash
+  byte[64] passwordSalt
+}
+
+GROUP {
+  int id PK
+  string name
+  string groupId "Public unique id used in invite links"
+  int minUsersForEvent "min number of users so that the event can happen"
+  float minDepositForEvent "min amount deposited so that the event can happen"
+  DateTime startDate "start of the event"
+  DateTime endDate "end of the event"
+}
+
+GROUP_MEMBER {
+  int id PK
+  int groupId FK
+  int userId FK "relevant user. May be removed if a user left the group"
+  string role
+}
+
+USER |o--o{ GROUP_MEMBER : "member of"
+GROUP ||--|{ GROUP_MEMBER : "group members"
+
+
+TRANSACTION {
+  int id PK
+  int groupId FK "group the money was deposited into"
+  int userId FK "user that deposited the money"
+  float amount "amount deposited into the group in $"
+  Date transactionDate
+  string description
+}
+
+TRANSACTION }o--|| GROUP : "deposit into"
+TRANSACTION }o--|| GROUP : "payout from"
+TRANSACTION }o--|| USER : "relevant user"
+
+
+GROUP_NOTE {
+  int id PK
+  int groupId FK
+  string text
+  DateTime creationDate
+}
+
+GROUP_NOTE }o--|| GROUP  : "notes"
+
+
+GROUP_APPOINTMENT {
+  int id PK
+  int groupId FK
+  DateTime startDate
+  DateTime endDate
+  string description 
+}
+
+GROUP ||--o{ GROUP_APPOINTMENT : "appointments"
+
+
+GROUP_SURVEY {
+  int id PK
+  int groupId Fk
+  string description 
+  DateTime createDate
+}
+
+GROUP_SURVEY_QUESTION {
+  int id PK
+  int surveyId FK
+  string question
+  int type "0 = single choice; 1 = multiple choice"
+  string[] options
+}
+
+GROUP_SURVEY_ANSWER {
+  int id PK
+  int questionId FK
+  int groupMemberId FK
+  int answer
+}
+
+GROUP_SURVEY }o--|| GROUP  : "surveys"
+GROUP_SURVEY ||--o{ GROUP_SURVEY_QUESTION : "questions"
+GROUP_SURVEY_ANSWER }o--|| GROUP_SURVEY_QUESTION : "answers"
+GROUP_SURVEY_ANSWER }o--|| GROUP_MEMBER : "survey user"
+
+
+GROUP_COMMENT {
+  int id PK
+  int groupId FK
+  int memberId FK
+  string text
+  Image[] pictures
+  Video[] videos
+}
+
+GROUP_COMMENT }o--|| GROUP : "user comment on event"
+GROUP_COMMENT }o--|| GROUP_MEMBER : "poster"
+
+
+GROUP_TASK {
+  int id PK
+  int groupId FK
+  int memberId FK
+  string description
+  int state "0 = open; 1 = in progress; 2 = done"
+  DateTime deadline
+}
+
+GROUP_TASK }o--|| GROUP : "group task"
+GROUP_TASK }o--o| GROUP_MEMBER : "assigned"
+
+
+SERVICE_PROVIDER {
+  int id PK
+  string name
+  string providerId "unique id that can be used to identify the provider (eg: link)"
+}
+
+SP_EMPLOYEE {
+  int id PK
+  int employerId FK
+  string name
+  float wage
+  string qualification "the qualification the employee has"
+  string subject "field of expertise"
+}
+
+SP_EMPLOYEE }o--|| SERVICE_PROVIDER : "employees"
+
+SP_EMPLOYEE_APPOINTMENT {
+  int id PK
+  int employeeId FK
+  DateTime startDate
+  DateTime endDate
+  int spGroupEventId 
+}
+
+SP_EMPLOYEE_APPOINTMENT }o--|| SP_EMPLOYEE : "Date range when the employee is occupied"
+SP_EMPLOYEE_APPOINTMENT }o--o| SP_GROUP_EVENT : "id of event if assigned to one. Can be null if occupied otherwise (vacation)"
+
+SP_RESOURCE {
+  int id PK
+  int ownerId FK
+  float buyPrice "Price the item was bought for"
+  float rentPrice "Price of the item per day"
+  Image picture "Image of the resource"
+  float weight "storage weight"
+  DateTime nextMaintenance
+  float requiredPower
+  Dimension size
+}
+
+SP_RESOURCE }o--|| SERVICE_PROVIDER : "owned resources"
+
+SP_RESOURCE_RENT {
+  int id PK
+  int resourceId 
+  DateTime startDate "Day the rented item is send out"
+  DateTime endDate "Day the item is returned"
+  int onDays "Number of on-days of the device while rented"
+  float rent "Price the item was rented for"
+}
+
+SP_RESOURCE_RENT }o--|| SP_RESOURCE : "rent history"
+
+
+SP_GROUP_EVENT {
+  int id PK
+  int providerId FK "commissioned"
+  int groupId FK "service provider commissioner"
+
+}
+
+SP_GROUP_EVENT }o--|| GROUP : "event"
+SP_GROUP_EVENT }o--|| SERVICE_PROVIDER : "operational provider"
+
+
+SP_GROUP_OFFER {
+  int id
+  int spGroupEventId FK
+  bool offerAccepted "Weather the group has accepted the offer"
+  float priceGross
+  float priceNet
+  float discount
+  float employeeCost
+  float drivingCost
+  float operationalCost
+  string location
+  DateTime date
+  string author
+  int[] materialIds
+}
+
+SP_GROUP_OFFER |o--|| SP_GROUP_EVENT : "offer for operation"
+
+
+SP_GROUP_INVOICE {
+  int id
+  int spGroupOfferId FK
+  string invoiceNumber
+  DateTime creationDate
+  DateTime invoiceDeadline
+  bool warningSend
+}
+
+SP_GROUP_INVOICE |o--|| SP_GROUP_OFFER : "invoice"
+
+
+
+
+
+
+```
+
+
 
 ## 5.3 Development View: Komponenten/Module, Paket‑ und Repo‑Struktur, API‑Contract (OpenAPI), Build/CI
 <!--
