@@ -269,6 +269,9 @@ GROUP {
   float minDepositForEvent "min amount deposited so that the event can happen"
   DateTime startDate "start of the event"
   DateTime endDate "end of the event"
+  int visibility "0 = private; 1 = public"
+  DateTime archivedOn "Date when the group was archived. Null if not archived"
+  DateTime deletedOn "Date when the group was deleted. Null if not deleted"
 }
 
 GROUP_MEMBER {
@@ -276,6 +279,9 @@ GROUP_MEMBER {
   int groupId FK
   int userId FK "relevant user. May be removed if a user left the group"
   string role
+  bool isBlocked
+  DateTime joinedOn
+  DateTime leftOn
 }
 
 USER |o--o{ GROUP_MEMBER : "member of"
@@ -289,6 +295,8 @@ TRANSACTION {
   float amount "amount deposited into the group in $"
   Date transactionDate
   string description
+  int direction "0 = deposited; 1 = payed out"
+  int status "0 = created; 1 = processing; 2 = completed"
 }
 
 TRANSACTION }o--|| GROUP : "deposit into"
@@ -361,6 +369,7 @@ GROUP_COMMENT }o--|| GROUP_MEMBER : "poster"
 GROUP_TASK {
   int id PK
   int groupId FK
+  int creatorId FK
   int memberId FK
   string description
   int state "0 = open; 1 = in progress; 2 = done"
@@ -369,6 +378,7 @@ GROUP_TASK {
 
 GROUP_TASK }o--|| GROUP : "group task"
 GROUP_TASK }o--o| GROUP_MEMBER : "assigned"
+GROUP_TASK ||--|| GROUP_MEMBER : "created"
 
 
 SERVICE_PROVIDER {
