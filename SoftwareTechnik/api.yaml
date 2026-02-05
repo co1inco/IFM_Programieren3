@@ -1,0 +1,1884 @@
+openapi: 3.0.3
+info:
+  title: EventGroup API
+  version: 1.0.0
+  description: API for managing event groups, users, providers, and related functionalities.
+  contact:
+    name: API Support
+    email: support@eventgroup.com
+servers:
+  - url: https://api.eventgroup.com/v1
+    description: Production server
+  - url: https://staging.api.eventgroup.com/v1
+    description: Staging server
+security:
+  - bearerAuth: []
+components:
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+  schemas:
+    User:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int64
+        username:
+          type: string
+        name:
+          type: string
+        familyName:
+          type: string
+        email:
+          type: string
+          format: email
+        phone:
+          type: string
+        preferredCommunication:
+          type: integer
+          enum: [0, 1, 2]  # 0: SMS, 1: Email, 2: WhatsApp
+        passwordHash:
+          type: string
+        passwordSalt:
+          type: string
+        emailVerified:
+          type: boolean
+        consent:
+          type: boolean
+        createdAt:
+          type: string
+          format: date-time
+        updatedAt:
+          type: string
+          format: date-time
+      required:
+        - username
+        - email
+        - passwordHash
+    Group:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int64
+        name:
+          type: string
+        groupId:
+          type: string
+          description: Public unique id used in invite links
+        minUsersForEvent:
+          type: integer
+        minDepositForEvent:
+          type: number
+          format: float
+        startDate:
+          type: string
+          format: date-time
+        endDate:
+          type: string
+          format: date-time
+        visibility:
+          type: string
+          enum: [public, private, hidden]
+        description:
+          type: string
+        state:
+          type: string
+          enum: [draft, open, confirmed, cancelled, archived]
+        ownerId:
+          type: integer
+          format: int64
+        createdAt:
+          type: string
+          format: date-time
+        deletedOn:
+          type: string
+          format: date-time
+          nullable: true
+      required:
+        - name
+        - groupId
+        - ownerId
+    GroupMember:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int64
+        groupId:
+          type: integer
+          format: int64
+        userId:
+          type: integer
+          format: int64
+        role:
+          type: string
+          enum: [owner, admin, member]
+        joinedAt:
+          type: string
+          format: date-time
+        leftOn:
+          type: string
+          format: date-time
+          nullable: true
+        isBlocked:
+          type: boolean
+        contributionTotal:
+          type: number
+          format: float
+      required:
+        - groupId
+        - userId
+        - role
+    Transaction:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int64
+        groupId:
+          type: integer
+          format: int64
+        userId:
+          type: integer
+          format: int64
+        amount:
+          type: number
+          format: float
+        type:
+          type: string
+          enum: [deposit, refund, expense, payout]
+        status:
+          type: string
+          enum: [created, processing, completed]
+        transactionDate:
+          type: string
+          format: date-time
+        description:
+          type: string
+      required:
+        - groupId
+        - amount
+        - type
+        - status
+    GroupNote:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int64
+        groupId:
+          type: integer
+          format: int64
+        text:
+          type: string
+        creationDate:
+          type: string
+          format: date-time
+      required:
+        - groupId
+        - text
+    GroupAppointment:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int64
+        groupId:
+          type: integer
+          format: int64
+        startDate:
+          type: string
+          format: date-time
+        endDate:
+          type: string
+          format: date-time
+        description:
+          type: string
+      required:
+        - groupId
+        - startDate
+        - endDate
+    GroupSurvey:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int64
+        groupId:
+          type: integer
+          format: int64
+        description:
+          type: string
+        createDate:
+          type: string
+          format: date-time
+      required:
+        - groupId
+        - description
+    GroupSurveyQuestion:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int64
+        surveyId:
+          type: integer
+          format: int64
+        question:
+          type: string
+        type:
+          type: integer
+          enum: [0, 1]  # 0: single choice, 1: multiple choice
+        options:
+          type: array
+          items:
+            type: string
+      required:
+        - surveyId
+        - question
+        - type
+    GroupSurveyAnswer:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int64
+        questionId:
+          type: integer
+          format: int64
+        groupMemberId:
+          type: integer
+          format: int64
+        answer:
+          type: integer
+      required:
+        - questionId
+        - groupMemberId
+        - answer
+    GroupComment:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int64
+        groupId:
+          type: integer
+          format: int64
+        memberId:
+          type: integer
+          format: int64
+        text:
+          type: string
+        pictures:
+          type: array
+          items:
+            type: string
+        videos:
+          type: array
+          items:
+            type: string
+      required:
+        - groupId
+        - memberId
+        - text
+    GroupTask:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int64
+        groupId:
+          type: integer
+          format: int64
+        memberId:
+          type: integer
+          format: int64
+          nullable: true
+        description:
+          type: string
+        state:
+          type: integer
+          enum: [0, 1, 2]  # 0: open, 1: in progress, 2: done
+        deadline:
+          type: string
+          format: date-time
+        createdBy:
+          type: integer
+          format: int64
+        completedBy:
+          type: integer
+          format: int64
+          nullable: true
+        createdAt:
+          type: string
+          format: date-time
+        completedAt:
+          type: string
+          format: date-time
+          nullable: true
+      required:
+        - groupId
+        - description
+        - state
+        - createdBy
+    ServiceProvider:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int64
+        name:
+          type: string
+        providerId:
+          type: string
+      required:
+        - name
+        - providerId
+    SpEmployee:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int64
+        employerId:
+          type: integer
+          format: int64
+        name:
+          type: string
+        wage:
+          type: number
+          format: float
+        qualification:
+          type: string
+        subject:
+          type: string
+      required:
+        - employerId
+        - name
+    SpResource:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int64
+        ownerId:
+          type: integer
+          format: int64
+        buyPrice:
+          type: number
+          format: float
+        rentPrice:
+          type: number
+          format: float
+        picture:
+          type: string
+        weight:
+          type: number
+          format: float
+        nextMaintenance:
+          type: string
+          format: date-time
+        requiredPower:
+          type: number
+          format: float
+        size:
+          type: string
+      required:
+        - ownerId
+    SpGroupEvent:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int64
+        providerId:
+          type: integer
+          format: int64
+        groupId:
+          type: integer
+          format: int64
+      required:
+        - providerId
+        - groupId
+    SpGroupOffer:
+      type: object
+      properties:
+        id:
+          type: integer
+        spGroupEventId:
+          type: integer
+        offerAccepted:
+          type: boolean
+        priceGross:
+          type: number
+          format: float
+        priceNet:
+          type: number
+          format: float
+        discount:
+          type: number
+          format: float
+        employeeCost:
+          type: number
+          format: float
+        drivingCost:
+          type: number
+          format: float
+        operationalCost:
+          type: number
+          format: float
+        location:
+          type: string
+        date:
+          type: string
+          format: date-time
+        author:
+          type: string
+        materialIds:
+          type: array
+          items:
+            type: integer
+      required:
+        - spGroupEventId
+    SpGroupInvoice:
+      type: object
+      properties:
+        id:
+          type: integer
+        spGroupOfferId:
+          type: integer
+        invoiceNumber:
+          type: string
+        creationDate:
+          type: string
+          format: date-time
+        invoiceDeadline:
+          type: string
+          format: date-time
+        warningSend:
+          type: boolean
+      required:
+        - spGroupOfferId
+        - invoiceNumber
+    Error:
+      type: object
+      properties:
+        code:
+          type: integer
+        message:
+          type: string
+      required:
+        - code
+        - message
+paths:
+  /users:
+    get:
+      summary: Get all users
+      operationId: getUsers
+      responses:
+        '200':
+          description: List of users
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/User'
+    post:
+      summary: Create a new user
+      operationId: createUser
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/User'
+      responses:
+        '201':
+          description: User created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/User'
+        '400':
+          description: Bad request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+  /users/{userId}:
+    get:
+      summary: Get user by ID
+      operationId: getUserById
+      parameters:
+        - name: userId
+          in: path
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        '200':
+          description: User details
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/User'
+        '404':
+          description: User not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+    put:
+      summary: Update user
+      operationId: updateUser
+      parameters:
+        - name: userId
+          in: path
+          required: true
+          schema:
+            type: integer
+            format: int64
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/User'
+      responses:
+        '200':
+          description: User updated
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/User'
+    delete:
+      summary: Delete user
+      operationId: deleteUser
+      parameters:
+        - name: userId
+          in: path
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        '204':
+          description: User deleted
+  /groups:
+    get:
+      summary: Get all groups
+      operationId: getGroups
+      responses:
+        '200':
+          description: List of groups
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Group'
+    post:
+      summary: Create a new group
+      operationId: createGroup
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Group'
+      responses:
+        '201':
+          description: Group created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Group'
+  /groups/{groupId}:
+    get:
+      summary: Get group by ID
+      operationId: getGroupById
+      parameters:
+        - name: groupId
+          in: path
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        '200':
+          description: Group details
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Group'
+    put:
+      summary: Update group
+      operationId: updateGroup
+      parameters:
+        - name: groupId
+          in: path
+          required: true
+          schema:
+            type: integer
+            format: int64
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Group'
+      responses:
+        '200':
+          description: Group updated
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Group'
+    delete:
+      summary: Delete group
+      operationId: deleteGroup
+      parameters:
+        - name: groupId
+          in: path
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        '204':
+          description: Group deleted
+  /groups/start_join/{groupId}:
+    put:
+      summary: Start join process for group
+      operationId: startJoinGroup
+      parameters:
+        - name: groupId
+          in: path
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        '200':
+          description: Join process started
+  /groups/join:
+    put:
+      summary: Join group
+      operationId: joinGroup
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                joinId:
+                  type: string
+      responses:
+        '200':
+          description: Joined group
+  /groups/{groupId}/invite:
+    get:
+      summary: Get invite link for group
+      operationId: getInviteLink
+      parameters:
+        - name: groupId
+          in: path
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        '200':
+          description: Invite link
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  link:
+                    type: string
+  /groups/{groupId}/member:
+    get:
+      summary: Get group members
+      operationId: getGroupMembers
+      parameters:
+        - name: groupId
+          in: path
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        '200':
+          description: List of members
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/GroupMember'
+    post:
+      summary: Add member to group
+      operationId: addGroupMember
+      parameters:
+        - name: groupId
+          in: path
+          required: true
+          schema:
+            type: integer
+            format: int64
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/GroupMember'
+      responses:
+        '201':
+          description: Member added
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GroupMember'
+  /groups/{groupId}/member/{memberId}:
+    get:
+      summary: Get group member by ID
+      operationId: getGroupMemberById
+      parameters:
+        - name: groupId
+          in: path
+          required: true
+          schema:
+            type: integer
+            format: int64
+        - name: memberId
+          in: path
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        '200':
+          description: Member details
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GroupMember'
+    put:
+      summary: Update group member
+      operationId: updateGroupMember
+      parameters:
+        - name: groupId
+          in: path
+          required: true
+          schema:
+            type: integer
+            format: int64
+        - name: memberId
+          in: path
+          required: true
+          schema:
+            type: integer
+            format: int64
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/GroupMember'
+      responses:
+        '200':
+          description: Member updated
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GroupMember'
+  /groups/{groupId}/note:
+    get:
+      summary: Get group notes
+      operationId: getGroupNotes
+      parameters:
+        - name: groupId
+          in: path
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        '200':
+          description: List of notes
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/GroupNote'
+    post:
+      summary: Create group note
+      operationId: createGroupNote
+      parameters:
+        - name: groupId
+          in: path
+          required: true
+          schema:
+            type: integer
+            format: int64
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/GroupNote'
+      responses:
+        '201':
+          description: Note created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GroupNote'
+  /groups/{groupId}/note/{noteId}:
+    get:
+      summary: Get group note by ID
+      operationId: getGroupNoteById
+      parameters:
+        - name: groupId
+          in: path
+          required: true
+          schema:
+            type: integer
+            format: int64
+        - name: noteId
+          in: path
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        '200':
+          description: Note details
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GroupNote'
+    put:
+      summary: Update group note
+      operationId: updateGroupNote
+      parameters:
+        - name: groupId
+          in: path
+          required: true
+          schema:
+            type: integer
+            format: int64
+        - name: noteId
+          in: path
+          required: true
+          schema:
+            type: integer
+            format: int64
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/GroupNote'
+      responses:
+        '200':
+          description: Note updated
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GroupNote'
+    delete:
+      summary: Delete group note
+      operationId: deleteGroupNote
+      parameters:
+        - name: groupId
+          in: path
+          required: true
+          schema:
+            type: integer
+            format: int64
+        - name: noteId
+          in: path
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        '204':
+          description: Note deleted
+  /groups/{groupId}/comment:
+    get:
+      summary: Get group comments
+      operationId: getGroupComments
+      parameters:
+        - name: groupId
+          in: path
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        '200':
+          description: List of comments
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/GroupComment'
+    post:
+      summary: Create group comment
+      operationId: createGroupComment
+      parameters:
+        - name: groupId
+          in: path
+          required: true
+          schema:
+            type: integer
+            format: int64
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/GroupComment'
+      responses:
+        '201':
+          description: Comment created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GroupComment'
+  /groups/{groupId}/comment/{commentId}:
+    get:
+      summary: Get group comment by ID
+      operationId: getGroupCommentById
+      parameters:
+        - name: groupId
+          in: path
+          required: true
+          schema:
+            type: integer
+            format: int64
+        - name: commentId
+          in: path
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        '200':
+          description: Comment details
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GroupComment'
+    put:
+      summary: Update group comment
+      operationId: updateGroupComment
+      parameters:
+        - name: groupId
+          in: path
+          required: true
+          schema:
+            type: integer
+            format: int64
+        - name: commentId
+          in: path
+          required: true
+          schema:
+            type: integer
+            format: int64
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/GroupComment'
+      responses:
+        '200':
+          description: Comment updated
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GroupComment'
+    delete:
+      summary: Delete group comment
+      operationId: deleteGroupComment
+      parameters:
+        - name: groupId
+          in: path
+          required: true
+          schema:
+            type: integer
+            format: int64
+        - name: commentId
+          in: path
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        '204':
+          description: Comment deleted
+  /groups/{groupId}/survey:
+    get:
+      summary: Get group surveys
+      operationId: getGroupSurveys
+      parameters:
+        - name: groupId
+          in: path
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        '200':
+          description: List of surveys
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/GroupSurvey'
+    post:
+      summary: Create group survey
+      operationId: createGroupSurvey
+      parameters:
+        - name: groupId
+          in: path
+          required: true
+          schema:
+            type: integer
+            format: int64
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/GroupSurvey'
+      responses:
+        '201':
+          description: Survey created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GroupSurvey'
+  /groups/{groupId}/survey/{surveyId}:
+    get:
+      summary: Get group survey by ID
+      operationId: getGroupSurveyById
+      parameters:
+        - name: groupId
+          in: path
+          required: true
+          schema:
+            type: integer
+            format: int64
+        - name: surveyId
+          in: path
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        '200':
+          description: Survey details
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GroupSurvey'
+    put:
+      summary: Update group survey
+      operationId: updateGroupSurvey
+      parameters:
+        - name: groupId
+          in: path
+          required: true
+          schema:
+            type: integer
+            format: int64
+        - name: surveyId
+          in: path
+          required: true
+          schema:
+            type: integer
+            format: int64
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/GroupSurvey'
+      responses:
+        '200':
+          description: Survey updated
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GroupSurvey'
+    delete:
+      summary: Delete group survey
+      operationId: deleteGroupSurvey
+      parameters:
+        - name: groupId
+          in: path
+          required: true
+          schema:
+            type: integer
+            format: int64
+        - name: surveyId
+          in: path
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        '204':
+          description: Survey deleted
+  /groups/{groupId}/survey/{surveyId}/answer:
+    post:
+      summary: Submit survey answer
+      operationId: submitSurveyAnswer
+      parameters:
+        - name: groupId
+          in: path
+          required: true
+          schema:
+            type: integer
+            format: int64
+        - name: surveyId
+          in: path
+          required: true
+          schema:
+            type: integer
+            format: int64
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/GroupSurveyAnswer'
+      responses:
+        '201':
+          description: Answer submitted
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GroupSurveyAnswer'
+  /groups/{groupId}/finance:
+    get:
+      summary: Get group finance summary
+      operationId: getGroupFinance
+      parameters:
+        - name: groupId
+          in: path
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        '200':
+          description: Finance summary
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  totalDeposits:
+                    type: number
+                    format: float
+                  totalExpenses:
+                    type: number
+                    format: float
+                  balance:
+                    type: number
+                    format: float
+  /groups/{groupId}/finance/deposit:
+    post:
+      summary: Deposit money into group
+      operationId: depositIntoGroup
+      parameters:
+        - name: groupId
+          in: path
+          required: true
+          schema:
+            type: integer
+            format: int64
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Transaction'
+      responses:
+        '201':
+          description: Deposit created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Transaction'
+  /groups/{groupId}/finance/withdraw:
+    post:
+      summary: Withdraw money from group
+      operationId: withdrawFromGroup
+      parameters:
+        - name: groupId
+          in: path
+          required: true
+          schema:
+            type: integer
+            format: int64
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Transaction'
+      responses:
+        '201':
+          description: Withdrawal created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Transaction'
+  /groups/{groupId}/appointments:
+    get:
+      summary: Get group appointments
+      operationId: getGroupAppointments
+      parameters:
+        - name: groupId
+          in: path
+          required: true
+          schema:
+            type: integer
+            format: int64
+        - name: format
+          in: query
+          schema:
+            type: string
+            enum: [google, ical]
+      responses:
+        '200':
+          description: List of appointments or export
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/GroupAppointment'
+            text/calendar:
+              schema:
+                type: string
+  /groups/{groupId}/task:
+    get:
+      summary: Get group tasks
+      operationId: getGroupTasks
+      parameters:
+        - name: groupId
+          in: path
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        '200':
+          description: List of tasks
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/GroupTask'
+    post:
+      summary: Create group task
+      operationId: createGroupTask
+      parameters:
+        - name: groupId
+          in: path
+          required: true
+          schema:
+            type: integer
+            format: int64
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/GroupTask'
+      responses:
+        '201':
+          description: Task created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GroupTask'
+  /groups/{groupId}/task/{taskId}:
+    get:
+      summary: Get group task by ID
+      operationId: getGroupTaskById
+      parameters:
+        - name: groupId
+          in: path
+          required: true
+          schema:
+            type: integer
+            format: int64
+        - name: taskId
+          in: path
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        '200':
+          description: Task details
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GroupTask'
+    put:
+      summary: Update group task
+      operationId: updateGroupTask
+      parameters:
+        - name: groupId
+          in: path
+          required: true
+          schema:
+            type: integer
+            format: int64
+        - name: taskId
+          in: path
+          required: true
+          schema:
+            type: integer
+            format: int64
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/GroupTask'
+      responses:
+        '200':
+          description: Task updated
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GroupTask'
+    delete:
+      summary: Delete group task
+      operationId: deleteGroupTask
+      parameters:
+        - name: groupId
+          in: path
+          required: true
+          schema:
+            type: integer
+            format: int64
+        - name: taskId
+          in: path
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        '204':
+          description: Task deleted
+  /providers:
+    get:
+      summary: Get all providers
+      operationId: getProviders
+      responses:
+        '200':
+          description: List of providers
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/ServiceProvider'
+    post:
+      summary: Create a new provider
+      operationId: createProvider
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ServiceProvider'
+      responses:
+        '201':
+          description: Provider created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ServiceProvider'
+  /providers/{providerId}:
+    get:
+      summary: Get provider by ID
+      operationId: getProviderById
+      parameters:
+        - name: providerId
+          in: path
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        '200':
+          description: Provider details
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ServiceProvider'
+    put:
+      summary: Update provider
+      operationId: updateProvider
+      parameters:
+        - name: providerId
+          in: path
+          required: true
+          schema:
+            type: integer
+            format: int64
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ServiceProvider'
+      responses:
+        '200':
+          description: Provider updated
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ServiceProvider'
+    delete:
+      summary: Delete provider
+      operationId: deleteProvider
+      parameters:
+        - name: providerId
+          in: path
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        '204':
+          description: Provider deleted
+  /providers/{providerId}/employee:
+    get:
+      summary: Get provider employees
+      operationId: getProviderEmployees
+      parameters:
+        - name: providerId
+          in: path
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        '200':
+          description: List of employees
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/SpEmployee'
+    post:
+      summary: Create provider employee
+      operationId: createProviderEmployee
+      parameters:
+        - name: providerId
+          in: path
+          required: true
+          schema:
+            type: integer
+            format: int64
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/SpEmployee'
+      responses:
+        '201':
+          description: Employee created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SpEmployee'
+  /providers/{providerId}/employee/{employeeId}:
+    get:
+      summary: Get provider employee by ID
+      operationId: getProviderEmployeeById
+      parameters:
+        - name: providerId
+          in: path
+          required: true
+          schema:
+            type: integer
+            format: int64
+        - name: employeeId
+          in: path
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        '200':
+          description: Employee details
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SpEmployee'
+    put:
+      summary: Update provider employee
+      operationId: updateProviderEmployee
+      parameters:
+        - name: providerId
+          in: path
+          required: true
+          schema:
+            type: integer
+            format: int64
+        - name: employeeId
+          in: path
+          required: true
+          schema:
+            type: integer
+            format: int64
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/SpEmployee'
+      responses:
+        '200':
+          description: Employee updated
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SpEmployee'
+    delete:
+      summary: Delete provider employee
+      operationId: deleteProviderEmployee
+      parameters:
+        - name: providerId
+          in: path
+          required: true
+          schema:
+            type: integer
+            format: int64
+        - name: employeeId
+          in: path
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        '204':
+          description: Employee deleted
+  /providers/{providerId}/employee/{employeeId}/appointments:
+    get:
+      summary: Get employee appointments
+      operationId: getEmployeeAppointments
+      parameters:
+        - name: providerId
+          in: path
+          required: true
+          schema:
+            type: integer
+            format: int64
+        - name: employeeId
+          in: path
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        '200':
+          description: List of appointments
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    startDate:
+                      type: string
+                      format: date-time
+                    endDate:
+                      type: string
+                      format: date-time
+    post:
+      summary: Create employee appointment
+      operationId: createEmployeeAppointment
+      parameters:
+        - name: providerId
+          in: path
+          required: true
+          schema:
+            type: integer
+            format: int64
+        - name: employeeId
+          in: path
+          required: true
+          schema:
+            type: integer
+            format: int64
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                startDate:
+                  type: string
+                  format: date-time
+                endDate:
+                  type: string
+                  format: date-time
+      responses:
+        '201':
+          description: Appointment created
+  /providers/{providerId}/resource:
+    get:
+      summary: Get provider resources
+      operationId: getProviderResources
+      parameters:
+        - name: providerId
+          in: path
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        '200':
+          description: List of resources
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/SpResource'
+    post:
+      summary: Create provider resource
+      operationId: createProviderResource
+      parameters:
+        - name: providerId
+          in: path
+          required: true
+          schema:
+            type: integer
+            format: int64
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/SpResource'
+      responses:
+        '201':
+          description: Resource created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SpResource'
+  /providers/{providerId}/resource/{resourceId}:
+    get:
+      summary: Get provider resource by ID
+      operationId: getProviderResourceById
+      parameters:
+        - name: providerId
+          in: path
+          required: true
+          schema:
+            type: integer
+            format: int64
+        - name: resourceId
+          in: path
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        '200':
+          description: Resource details
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SpResource'
+    put:
+      summary: Update provider resource
+      operationId: updateProviderResource
+      parameters:
+        - name: providerId
+          in: path
+          required: true
+          schema:
+            type: integer
+            format: int64
+        - name: resourceId
+          in: path
+          required: true
+          schema:
+            type: integer
+            format: int64
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/SpResource'
+      responses:
+        '200':
+          description: Resource updated
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SpResource'
+    delete:
+      summary: Delete provider resource
+      operationId: deleteProviderResource
+      parameters:
+        - name: providerId
+          in: path
+          required: true
+          schema:
+            type: integer
+            format: int64
+        - name: resourceId
+          in: path
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        '204':
+          description: Resource deleted
+  /events:
+    get:
+      summary: Get all events
+      operationId: getEvents
+      responses:
+        '200':
+          description: List of events
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/SpGroupEvent'
+    post:
+      summary: Create a new event
+      operationId: createEvent
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/SpGroupEvent'
+      responses:
+        '201':
+          description: Event created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SpGroupEvent'
+  /events/{eventId}:
+    get:
+      summary: Get event by ID
+      operationId: getEventById
+      parameters:
+        - name: eventId
+          in: path
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        '200':
+          description: Event details
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SpGroupEvent'
+    put:
+      summary: Update event
+      operationId: updateEvent
+      parameters:
+        - name: eventId
+          in: path
+          required: true
+          schema:
+            type: integer
+            format: int64
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/SpGroupEvent'
+      responses:
+        '200':
+          description: Event updated
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SpGroupEvent'
+  /events/application:
+    post:
+      summary: Submit event application
+      operationId: submitEventApplication
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                groupId:
+                  type: integer
+                  format: int64
+                providerId:
+                  type: integer
+                  format: int64
+                budget:
+                  type: number
+                  format: float
+      responses:
+        '201':
+          description: Application submitted
+  /events/invoice:
+    post:
+      summary: Generate invoice for event
+      operationId: generateEventInvoice
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/SpGroupInvoice'
+      responses:
+        '201':
+          description: Invoice generated
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SpGroupInvoice'

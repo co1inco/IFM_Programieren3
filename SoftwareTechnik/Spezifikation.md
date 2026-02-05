@@ -275,7 +275,7 @@ UI -->> Invited : Open group
 ### TODO
 
 
-## 5.2 Logical View: Domänen‑Klassendiagramm, ER/DB‑Modell, CRUD‑Matrix, Entitäts‑Attribute, VIF
+## 5.2 Logische Übersicht
 <!--
 - Logical View
   - Domänen‑Klassendiagramm (Entitäten + Schlüsselattribute)
@@ -531,6 +531,34 @@ SP_GROUP_INVOICE |o--|| SP_GROUP_OFFER : "invoice"
 
 ```
 
+### CRUD-Matrix
+
+Die CRUD-Matrix zeigt für jede Entität im ER-Modell die unterstützten Operationen (Create, Read, Update, Delete), basierend auf den funktionalen User Stories und der API-Spezifikation. "Ja" bedeutet, die Operation ist verfügbar; "Nein" bedeutet, sie ist nicht vorgesehen oder nicht erforderlich.
+
+| Entität                  | Create | Read | Update | Delete | Begründung / Einschränkungen |
+|--------------------------|--------|------|--------|--------|------------------------------|
+| USER                     | Ja     | Ja   | Ja     | Ja     | Registrierung (Create), Profil-Update (Update), DSGVO-Löschung (Delete), Profil-Anzeige (Read). |
+| GROUP                    | Ja     | Ja   | Ja     | Ja     | Gruppen erstellen/beitreten (Create), Übersicht (Read), Bearbeiten (Update), Löschen (Delete). |
+| GROUP_MEMBER             | Ja     | Ja   | Ja     | Ja     | Beitritt (Create), Mitgliederliste (Read), Rollen ändern (Update), Entfernen (Delete). |
+| TRANSACTION              | Ja     | Ja   | Nein   | Nein   | Einzahlungen (Create), Finanzübersicht (Read); Rückerstattungen via spezielle API (nicht direkt Update/Delete). |
+| GROUP_NOTE               | Ja     | Ja   | Ja     | Ja     | Notizen hinzufügen (Create), Anzeigen (Read), Bearbeiten (Update), Löschen (Delete). |
+| GROUP_APPOINTMENT        | Ja     | Ja   | Ja     | Ja     | Termine erstellen (Create), Anzeigen (Read), Bearbeiten (Update), Löschen (Delete). |
+| GROUP_SURVEY             | Ja     | Ja   | Ja     | Ja     | Umfragen erstellen (Create), Anzeigen (Read), Bearbeiten (Update), Löschen (Delete). |
+| GROUP_SURVEY_QUESTION    | Ja     | Ja   | Ja     | Ja     | Fragen als Teil der Umfrage (CRUD über Survey-API). |
+| GROUP_SURVEY_ANSWER      | Ja     | Ja   | Nein   | Nein   | Antworten abgeben (Create), Ergebnisse anzeigen (Read); keine Änderung/Löschung nach Abgabe. |
+| GROUP_COMMENT            | Ja     | Ja   | Ja     | Ja     | Kommentare/Media hochladen (Create), Anzeigen (Read), Bearbeiten (Update), Löschen (Delete). |
+| GROUP_TASK               | Ja     | Ja   | Ja     | Ja     | Aufgaben erstellen (Create), Anzeigen (Read), Zuweisen/Abschließen (Update), Löschen (Delete). |
+| SERVICE_PROVIDER         | Ja     | Ja   | Ja     | Ja     | Provider registrieren (Create), Listing (Read), Bearbeiten (Update), Löschen (Delete). |
+| SP_EMPLOYEE              | Ja     | Ja   | Ja     | Ja     | Mitarbeiter hinzufügen (Create), Anzeigen (Read), Bearbeiten (Update), Entfernen (Delete). |
+| SP_EMPLOYEE_APPOINTMENT  | Ja     | Ja   | Ja     | Ja     | Termine planen (Create), Kalender anzeigen (Read), Ändern (Update), Stornieren (Delete). |
+| SP_RESOURCE              | Ja     | Ja   | Ja     | Ja     | Ressourcen hinzufügen (Create), Anzeigen (Read), Bearbeiten (Update), Entfernen (Delete). |
+| SP_RESOURCE_RENT         | Ja     | Ja   | Ja     | Ja     | Verleihhistorie (Create via Buchung), Anzeigen (Read), Ändern (Update), Löschen (Delete). |
+| SP_GROUP_EVENT           | Ja     | Ja   | Ja     | Ja     | Events anlegen (Create), Anzeigen (Read), Bearbeiten (Update), Archivieren (Delete). |
+| SP_GROUP_OFFER           | Ja     | Ja   | Ja     | Ja     | Angebote erstellen (Create), Anzeigen (Read), Bearbeiten (Update), Löschen (Delete). |
+| SP_GROUP_INVOICE         | Ja     | Ja   | Ja     | Ja     | Rechnungen generieren (Create), Anzeigen (Read), Bearbeiten (Update), Löschen (Delete). |
+
+Diese Matrix deckt alle Kernoperationen ab, die in den User Stories definiert sind. Nicht unterstützte Operationen (z. B. Update für TRANSACTION) sind durch Geschäftslogik begründet (z. B. Idempotenz bei Zahlungen). Die Matrix bestätigt, dass die Entitäten vollständig zu den funktionalen Anforderungen passen.
+
 
 
 ## 5.3 Entwicklerübersicht: Komponenten/Module, Paket‑ und Repo‑Struktur, API‑Contract (OpenAPI), Build/CI
@@ -561,6 +589,7 @@ SP_GROUP_INVOICE |o--|| SP_GROUP_OFFER : "invoice"
 Api prefix: `api/v1/`  
 Alle Endpunkte mit Ausnahme von `login` und `register` erfordern einen gültigen session header.
 
+*OpenAPI spec: [SPEC](api.yaml)*
 
 #### User
  * GET user/{userId} → 200 OK
