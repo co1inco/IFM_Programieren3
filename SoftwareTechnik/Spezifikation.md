@@ -31,27 +31,6 @@ Für jedes Kapitel (kurze Checkliste / erwartete Artefakte):
 - Titelblatt
   - Pflicht: Autor(en), Matrikelnummer(n), Datum, Selbstständigkeitserklärung
 
-
-- NFRs & Security
-  - Messbare NFR‑Tabelle (SLO/SLA, retention, latency, throughput)
-  - STRIDE‑Kurzanalyse + Controls (Auth, KMS, Rate‑limit, CSP)
-  - DSGVO: Datenexport & Lösch‑Workflow (API + delays)
-
-- API & Integration
-  - OpenAPI‑stubs für Kernressourcen
-  - Webhook contract (idempotence), retry semantics
-  - 3rd‑party integration checklist (payment, calendar sync)
-
-- Operations & Testplan
-  - Monitoring KPI list, runbooks for top‑5 incidents
-  - CI/CD gates + Testmatrix (unit/integration/e2e/manual)
-
-- Open decisions / Risks
-  - Liste offener Architektur‑/Business‑entscheide + vorgeschlagene Optionen
-
-- Anhänge
-  - PlantUML/XMI, DDL, Mockups (png/svg), Beispiel‑API‑responses, Traceability CSV
-
 ---
 
 Hinweis zur Organisation: Die **Requirements‑Tabelle** ist die kanonische Quelle und bleibt in Kapitel 4; in den 4+1‑Sichten referenzierst du Story‑IDs (nicht kopieren). Eine Traceability‑Matrix (Anhang E) verbindet Requirements mit Use‑cases, Klassen, Endpunkten und Tests.
@@ -195,25 +174,17 @@ Akzeptanz der Zusammenfassung
 | Accessibility (WCAG) | User | barrierefreien Zugang haben | inklusiver Betrieb | WCAG 2.1 AA für Kern-User‑Flows | Soll |
 | Testing & CI/CD | Entwickler | automatisierte Qualitätssicherung | Regressionen verhindert werden | Unit/Integration/E2E in CI; PRs müssen CI grünes Licht haben | Muss |
 
+<!--
 ### Ergänzende nicht‑funktionale Anforderungen (Auswahl / messbar)
 - Performance: 95th‑percentile API latency < 500 ms für Kernendpunkte (list/create/join).
 - Skalierbarkeit: System skaliert horizontal bei 50% CPU‑Auslastung der Instanzgruppe.
 - Sicherheit: TLS 1.2+ enforced; Secrets in KMS; regelmäßige Pen‑Tests (Jährlich).
 - Datenschutz: Datenexport (JSON/CSV), Lösch‑Workflow, Einwilligungs‑Logging für E‑Mails.
+-->
 
-### Quick checklist (für Review)
-1. Alle User Stories haben prüfbare Akzeptanzkriterien? — (✓) größtenteils; offene Punkte in TODO.
-2. DSGVO‑spezifische Stories vorhanden? — (✓)
-3. Nicht‑funktionale Anforderungen (verfügbar, messbar)? — (✓)
-4. Vorschlag: für jede "Soll"/"Muss"‑Story einen Implementierungs‑Task + Tests definieren.
+# 5. 4+1 Sichten
 
-<!-- Ende Stage2 (überarbeitet) -->
-
-
-
-# 5. 4+1 Sichten (jede Sicht: Ziel, Diagramme, Mapping zu Stories, offene Fragen)
-
-## 5.1 Use‑case / Szenarien (the "+1"): Use‑case‑Diagramme, Hauptszenarien, Sequenzdiagramme, Akzeptanzkriterien
+## 5.1 Use‑case / Szenarien
 <!--
 - Use‑case / Szenarien
   - Use‑case‑Diagramm (Actors + top 10 Use‑cases)
@@ -562,7 +533,7 @@ SP_GROUP_INVOICE |o--|| SP_GROUP_OFFER : "invoice"
 
 
 
-## 5.3 Development View: Komponenten/Module, Paket‑ und Repo‑Struktur, API‑Contract (OpenAPI), Build/CI
+## 5.3 Entwicklerübersicht: Komponenten/Module, Paket‑ und Repo‑Struktur, API‑Contract (OpenAPI), Build/CI
 <!--
 - Development View
   - Komponentenübersicht (groups‑service, auth, payments, provider‑portal, ui)
@@ -570,8 +541,116 @@ SP_GROUP_INVOICE |o--|| SP_GROUP_OFFER : "invoice"
   - Build/CI Übersicht, Dependency‑Matrix
 -->
 
+### Komponenten
 
-## 5.4 Process View: Laufzeit‑Architektur, Messaging/Queues, State‑Machines (z. B. Group lifecycle), Performance‑Flows
+ * Website
+ * Mobile app
+ * Authentication service
+ * Gruppenservice
+ * ProviderPortal
+ * ProviderService
+ * Datenbank
+  
+### Repositories
+ * Website
+ * Mobile app
+ * Api-services
+
+### Api-endpunkte
+
+Api prefix: `api/v1/`
+
+#### User
+ * GET user/{userId}
+ * POST user/: {payload}
+ * PUT user/{userId}: {payload}
+ * DELETE user/{userId}
+
+#### Groups
+ * GET groups/{groupId}
+ * GET groups/
+ * POST groups/: {payload}
+ * PUT groups/{groupId}
+ * DELETE groups/{groupId} 
+  
+ + GET groups/start_join/{groupId}
+ + PUT groups/join: {joinId}
+ + GET groups/{id}/invite  
+
+ * GET groups/{id}/member
+ * GET groups/{id}/member/{id}
+ * POST groups/{id}/member: {payload}
+ * PUT groups/{id}/member/{id}
+
+ + GET groups/{id}/note
+ + GET groups/{id}/note/{id}
+ + POST groups/{id}/note/: {payload}
+ + PUT groups/{id}/note/{id}: {payload}
+ + DELETE groups/{id}/note/{id}
+
+ * GET groups/{id}/comment
+ * GET groups/{id}/comment/{id}
+ * POST groups/{id}/comment/: {payload}
+ * PUT groups/{id}/comment/{id}: {payload}
+ * DELETE groups/{id}/comment/{id}
+
+ + GET groups/{id}/survey
+ + GET groups/{id}/survey/{id}
+ + POST groups/{id}/survey {payload}
+ + PUT groups/{id}/survey/{id} {payload}
+ + DELETE groups/{id}/survey/{id}
+ + POST groups/{id}/survey/{id}/answer/ {payload}
+
+ * GET groups/{id}/finance
+ * POST groups/{id}/finance/deposit {payload}
+ * POST groups/{id}/finance/withdraw {payload}
+
+ + GET groups/{id}/appointments {parms: format=[google, ical]}
+
+ * GET groups/{id}/task
+ * GET groups/{id}/task/{id} 
+ * POST groups/{id}/task/: {payload}
+ * PUT groups/{id}/task/{id}: {payload}
+ * DELETE groups/{id}/task/{id}
+  
+#### Providers
+
+ * GET    provider/
+ * GET    provider/{id}
+ * POST   provider/: {payload}
+ * GET    provider/{id}: {payload}
+ * DELETE provider/{id}
+
+ + GET    provider/{id}/employee
+ + GET    provider/{id}/employee/{id}
+ + POST   provider/employee/: {payload}
+ + GET    provider/{id}/employee/{id}: {payload}
+ + DELETE provider/{id}/employee/{id}
+  
+ * GET    provider/{id}/employee/{id}/appointments
+ * GET    provider/{id}/employee/{id}/appointments/{id}
+ * POST   provider/employee/{id}/appointments/: {payload}
+ * GET    provider/{id}/employee/{id}/appointments/{id}: {payload}
+ * DELETE provider/{id}/employee/{id}/appointments/{id}
+
+ + GET    provider/{id}/resource
+ + GET    provider/{id}/resource/{id}
+ + POST   provider/resource/: {payload}
+ + GET    provider/{id}/resource/{id}: {payload}
+ + DELETE provider/{id}/resource/{id}
+
+#### Events managed by provider
+
+ * GET  event/
+ * GET  event/{id}
+ * POST event {payload}
+ * PUT  event/{id} {payload}
+ 
+ * POST event/application {payload}
+ * POST event/invoice {payload}
+
+
+## 5.4 Prozessübersicht: Laufzeit‑Architektur, Messaging/Queues, State‑Machines (z. B. Group lifecycle), Performance‑Flows
 <!--
 - Development View
   - Komponentenübersicht (groups‑service, auth, payments, provider‑portal, ui)
@@ -590,7 +669,44 @@ SP_GROUP_INVOICE |o--|| SP_GROUP_OFFER : "invoice"
 
 ---
 
-# Anhänge 
+# 6 Nicht‑funktionale Anforderungen (NFR) — messbar: Performance, Security, Privacy, Availability, Scalability
+
+
+# 7 Security & Privacy (STRIDE, DSGVO‑Flows, Key‑Management, Aufbewahrung)
+
+<!--
+- NFRs & Security
+  - Messbare NFR‑Tabelle (SLO/SLA, retention, latency, throughput)
+  - STRIDE‑Kurzanalyse + Controls (Auth, KMS, Rate‑limit, CSP)
+  - DSGVO: Datenexport & Lösch‑Workflow (API + delays)
+  - 
+-->
+
+# 8 API & Integration (OpenAPI, Webhooks, Idempotenz, 3rd‑party connectors)
+
+<!--
+- API & Integration
+  - OpenAPI‑stubs für Kernressourcen
+  - Webhook contract (idempotence), retry semantics
+  - 3rd‑party integration checklist (payment, calendar sync)
+-->
+
+# 9 Operations & SRE (Monitoring, Logging, Backups, Runbook, Incident‑Response)
+
+<!--
+- Operations & Testplan
+  - Monitoring KPI list, runbooks for top‑5 incidents
+  - CI/CD gates + Testmatrix (unit/integration/e2e/manual)
+-->
+
+# 10 Testplan / QA (Unit, Integration, E2E, Akzeptanztests, CI/CD‑Gates)
+
+# 11 Anhänge 
+
+<!--
+- Anhänge
+  - PlantUML/XMI, DDL, Mockups (png/svg), Beispiel‑API‑responses, Traceability CSV
+-->
 
 ## Anhang E — initiale Traceability‑Matrix (Auszug)
 
