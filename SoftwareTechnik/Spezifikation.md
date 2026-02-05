@@ -558,86 +558,112 @@ SP_GROUP_INVOICE |o--|| SP_GROUP_OFFER : "invoice"
 
 ### Api-endpunkte
 
-Api prefix: `api/v1/`
+Api prefix: `api/v1/`  
+Alle Endpunkte mit Ausnahme von `login` und `register` erfordern einen gültigen session header.
+
 
 #### User
- * GET user/{userId}
- * POST user/: {payload}
- * PUT user/{userId}: {payload}
- * DELETE user/{userId}
+ * GET user/{userId} → 200 OK
+ * POST user/: {payload} → 201 Created
+ * PUT user/{userId}: {payload} → 200 OK
+ * DELETE user/{userId} → 200 OK
+
+ + GET /users/{id}/export → 200 OK (JSON/CSV mit allen User-Daten)
+ + DELETE /users/{id}/gdpr-delete → 202 Accepted (Anonymisierung nach 30 Tagen)
+
+#### Auth
+
+ * POST /auth/login {username, password} → 200 OK + JWT/Session
+ * POST /auth/register {email, username, password, ...} → 201 Created
+ * POST /auth/reset-password {email} → 200 OK (sendet Reset-Link)
+ * POST /auth/verify-email {token} → 200 OK
+ * POST /auth/logout → 200 OK (invalidates Session)
+ * GET /auth/session → 200 OK (prüft aktive Session)
 
 #### Groups
- * GET groups/{groupId}
- * GET groups/
- * POST groups/: {payload}
- * PUT groups/{groupId}
- * DELETE groups/{groupId} 
+ * GET groups/{groupId} → 200 OK
+ * GET groups/ → 200 OK
+ * POST groups/: {payload} → 201 Created
+ * PUT groups/{groupId} → 200 OK
+ * DELETE groups/{groupId} → 200 OK
   
- + GET groups/start_join/{groupId}
- + PUT groups/join: {joinId}
- + GET groups/{id}/invite  
+ + GET groups/start_join/{groupId} → 200 OK
+ + PUT groups/join: {joinId} → 200 OK
+ + GET groups/{id}/invite → 200 OK
 
- * GET groups/{id}/member
- * GET groups/{id}/member/{id}
- * POST groups/{id}/member: {payload}
- * PUT groups/{id}/member/{id}
+ * GET groups/{id}/member → 200 OK
+ * GET groups/{id}/member/{id} → 200 OK
+ * POST groups/{id}/member: {payload} → 201 Created
+ * PUT groups/{id}/member/{id} → 200 OK
 
- + GET groups/{id}/note
- + GET groups/{id}/note/{id}
- + POST groups/{id}/note/: {payload}
- + PUT groups/{id}/note/{id}: {payload}
- + DELETE groups/{id}/note/{id}
+ + GET groups/{id}/note → 200 OK
+ + GET groups/{id}/note/{id} → 200 OK
+ + POST groups/{id}/note/: {payload} → 201 Created
+ + PUT groups/{id}/note/{id}: {payload} → 200 OK
+ + DELETE groups/{id}/note/{id} → 200 OK
 
- * GET groups/{id}/comment
- * GET groups/{id}/comment/{id}
- * POST groups/{id}/comment/: {payload}
- * PUT groups/{id}/comment/{id}: {payload}
- * DELETE groups/{id}/comment/{id}
+ * GET groups/{id}/comment → 200 OK
+ * GET groups/{id}/comment/{id} → 200 OK
+ * POST groups/{id}/comment/: {payload} → 201 Created
+ * PUT groups/{id}/comment/{id}: {payload} → 200 OK
+ * DELETE groups/{id}/comment/{id} → 200 OK
 
- + GET groups/{id}/survey
- + GET groups/{id}/survey/{id}
- + POST groups/{id}/survey {payload}
- + PUT groups/{id}/survey/{id} {payload}
- + DELETE groups/{id}/survey/{id}
- + POST groups/{id}/survey/{id}/answer/ {payload}
+ + GET groups/{id}/survey → 200 OK
+ + GET groups/{id}/survey/{id} → 200 OK
+ + POST groups/{id}/survey {payload} → 201 Created
+ + PUT groups/{id}/survey/{id} {payload} → 200 OK
+ + DELETE groups/{id}/survey/{id} → 200 OK
+ + POST groups/{id}/survey/{id}/answer/ {payload} → 200 OK
+ + PUT /groups/{id}/survey/{id}/answer {user_id, answers} → 200 OK (Update eigener Antwort)
 
- * GET groups/{id}/finance
- * POST groups/{id}/finance/deposit {payload}
- * POST groups/{id}/finance/withdraw {payload}
+ * GET groups/{id}/finance → 200 OK
+ * POST groups/{id}/finance/deposit {payload} → 200 OK
+ * POST groups/{id}/finance/withdraw {payload} → 200 OK
 
- + GET groups/{id}/appointments {parms: format=[google, ical]}
+ + GET groups/{id}/appointments/export (format=[google, ical]) → 200 OK
 
- * GET groups/{id}/task
- * GET groups/{id}/task/{id} 
- * POST groups/{id}/task/: {payload}
- * PUT groups/{id}/task/{id}: {payload}
- * DELETE groups/{id}/task/{id}
+ * GET groups/{id}/task → 200 OK
+ * GET groups/{id}/task/{id} → 200 OK
+ * POST groups/{id}/task/: {payload} → 201 Created
+ * PUT groups/{id}/task/{id}: {payload} → 200 OK
+ * DELETE groups/{id}/task/{id} → 200 OK
   
+ + POST /payments/webhook {provider_tx_id, amount, ...} → 200 OK (idempotent via provider_tx_id)
+ + GET /groups/{id}/finance/summary → 200 OK (Kassensturz-Übersicht)
+ + POST /groups/{id}/finance/refund {user_id, amount} → 201 Created (manuelle Rückerstattung)
+  
+ * POST /groups/{id}/media {file, type} → 201 Created (Upload mit Virus-Scan)
+ * GET /media/{id} → 200 OK (Download)
+ * DELETE /media/{id} → 204 No Content
+
 #### Providers
 
- * GET    provider/
- * GET    provider/{id}
- * POST   provider/: {payload}
- * GET    provider/{id}: {payload}
- * DELETE provider/{id}
+ * GET    provider/ → 200 OK
+ * GET    provider/{id} → 200 OK
+ * POST   provider/: {payload} → 201 Created
+ * GET    provider/{id}: {payload} → 200 OK
+ * DELETE provider/{id} → 200 OK
 
- + GET    provider/{id}/employee
- + GET    provider/{id}/employee/{id}
- + POST   provider/employee/: {payload}
- + GET    provider/{id}/employee/{id}: {payload}
- + DELETE provider/{id}/employee/{id}
+ + GET    provider/{id}/employee → 200 OK
+ + GET    provider/{id}/employee/{id} → 200 OK
+ + POST   provider/employee/: {payload} → 201 Created
+ + GET    provider/{id}/employee/{id}: {payload} → 200 OK
+ + DELETE provider/{id}/employee/{id} → 200 OK
   
- * GET    provider/{id}/employee/{id}/appointments
- * GET    provider/{id}/employee/{id}/appointments/{id}
- * POST   provider/employee/{id}/appointments/: {payload}
- * GET    provider/{id}/employee/{id}/appointments/{id}: {payload}
- * DELETE provider/{id}/employee/{id}/appointments/{id}
+ * GET    provider/{id}/employee/{id}/appointments → 200 OK
+ * GET    provider/{id}/employee/{id}/appointments/{id} → 200 OK
+ * POST   provider/employee/{id}/appointments/: {payload} → 201 Created
+ * GET    provider/{id}/employee/{id}/appointments/{id}: {payload} → 200 OK
+ * DELETE provider/{id}/employee/{id}/appointments/{id} → 200 OK
 
- + GET    provider/{id}/resource
- + GET    provider/{id}/resource/{id}
- + POST   provider/resource/: {payload}
- + GET    provider/{id}/resource/{id}: {payload}
- + DELETE provider/{id}/resource/{id}
+ + GET    provider/{id}/resource → 200 OK
+ + GET    provider/{id}/resource/{id} → 200 OK
+ + POST   provider/resource/: {payload} → 201 Created
+ + GET    provider/{id}/resource/{id}: {payload} → 200 OK
+ + DELETE provider/{id}/resource/{id} → 200 OK
+
+ * POST /providers/{id}/book {group_id, budget} → 201 Created
+ * POST /providers/{id}/rate {rating, comment} → 200 OK
 
 #### Events managed by provider
 
