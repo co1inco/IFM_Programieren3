@@ -1,426 +1,73 @@
-<!DOCTYPE html>
-<html>
-<head>
-<title>Spezifikation.md</title>
-<meta http-equiv="Content-type" content="text/html;charset=UTF-8">
-
-<style>
-/* https://github.com/microsoft/vscode/blob/master/extensions/markdown-language-features/media/markdown.css */
-/*---------------------------------------------------------------------------------------------
- *  Copyright (c) Microsoft Corporation. All rights reserved.
- *  Licensed under the MIT License. See License.txt in the project root for license information.
- *--------------------------------------------------------------------------------------------*/
-
-body {
-	font-family: var(--vscode-markdown-font-family, -apple-system, BlinkMacSystemFont, "Segoe WPC", "Segoe UI", "Ubuntu", "Droid Sans", sans-serif);
-	font-size: var(--vscode-markdown-font-size, 14px);
-	padding: 0 26px;
-	line-height: var(--vscode-markdown-line-height, 22px);
-	word-wrap: break-word;
-}
-
-#code-csp-warning {
-	position: fixed;
-	top: 0;
-	right: 0;
-	color: white;
-	margin: 16px;
-	text-align: center;
-	font-size: 12px;
-	font-family: sans-serif;
-	background-color:#444444;
-	cursor: pointer;
-	padding: 6px;
-	box-shadow: 1px 1px 1px rgba(0,0,0,.25);
-}
-
-#code-csp-warning:hover {
-	text-decoration: none;
-	background-color:#007acc;
-	box-shadow: 2px 2px 2px rgba(0,0,0,.25);
-}
-
-body.scrollBeyondLastLine {
-	margin-bottom: calc(100vh - 22px);
-}
-
-body.showEditorSelection .code-line {
-	position: relative;
-}
-
-body.showEditorSelection .code-active-line:before,
-body.showEditorSelection .code-line:hover:before {
-	content: "";
-	display: block;
-	position: absolute;
-	top: 0;
-	left: -12px;
-	height: 100%;
-}
-
-body.showEditorSelection li.code-active-line:before,
-body.showEditorSelection li.code-line:hover:before {
-	left: -30px;
-}
-
-.vscode-light.showEditorSelection .code-active-line:before {
-	border-left: 3px solid rgba(0, 0, 0, 0.15);
-}
-
-.vscode-light.showEditorSelection .code-line:hover:before {
-	border-left: 3px solid rgba(0, 0, 0, 0.40);
-}
-
-.vscode-light.showEditorSelection .code-line .code-line:hover:before {
-	border-left: none;
-}
-
-.vscode-dark.showEditorSelection .code-active-line:before {
-	border-left: 3px solid rgba(255, 255, 255, 0.4);
-}
-
-.vscode-dark.showEditorSelection .code-line:hover:before {
-	border-left: 3px solid rgba(255, 255, 255, 0.60);
-}
-
-.vscode-dark.showEditorSelection .code-line .code-line:hover:before {
-	border-left: none;
-}
-
-.vscode-high-contrast.showEditorSelection .code-active-line:before {
-	border-left: 3px solid rgba(255, 160, 0, 0.7);
-}
-
-.vscode-high-contrast.showEditorSelection .code-line:hover:before {
-	border-left: 3px solid rgba(255, 160, 0, 1);
-}
-
-.vscode-high-contrast.showEditorSelection .code-line .code-line:hover:before {
-	border-left: none;
-}
-
-img {
-	max-width: 100%;
-	max-height: 100%;
-}
-
-a {
-	text-decoration: none;
-}
-
-a:hover {
-	text-decoration: underline;
-}
-
-a:focus,
-input:focus,
-select:focus,
-textarea:focus {
-	outline: 1px solid -webkit-focus-ring-color;
-	outline-offset: -1px;
-}
-
-hr {
-	border: 0;
-	height: 2px;
-	border-bottom: 2px solid;
-}
-
-h1 {
-	padding-bottom: 0.3em;
-	line-height: 1.2;
-	border-bottom-width: 1px;
-	border-bottom-style: solid;
-}
-
-h1, h2, h3 {
-	font-weight: normal;
-}
-
-table {
-	border-collapse: collapse;
-}
-
-table > thead > tr > th {
-	text-align: left;
-	border-bottom: 1px solid;
-}
-
-table > thead > tr > th,
-table > thead > tr > td,
-table > tbody > tr > th,
-table > tbody > tr > td {
-	padding: 5px 10px;
-}
-
-table > tbody > tr + tr > td {
-	border-top: 1px solid;
-}
-
-blockquote {
-	margin: 0 7px 0 5px;
-	padding: 0 16px 0 10px;
-	border-left-width: 5px;
-	border-left-style: solid;
-}
-
-code {
-	font-family: Menlo, Monaco, Consolas, "Droid Sans Mono", "Courier New", monospace, "Droid Sans Fallback";
-	font-size: 1em;
-	line-height: 1.357em;
-}
-
-body.wordWrap pre {
-	white-space: pre-wrap;
-}
-
-pre:not(.hljs),
-pre.hljs code > div {
-	padding: 16px;
-	border-radius: 3px;
-	overflow: auto;
-}
-
-pre code {
-	color: var(--vscode-editor-foreground);
-	tab-size: 4;
-}
-
-/** Theming */
-
-.vscode-light pre {
-	background-color: rgba(220, 220, 220, 0.4);
-}
-
-.vscode-dark pre {
-	background-color: rgba(10, 10, 10, 0.4);
-}
-
-.vscode-high-contrast pre {
-	background-color: rgb(0, 0, 0);
-}
-
-.vscode-high-contrast h1 {
-	border-color: rgb(0, 0, 0);
-}
-
-.vscode-light table > thead > tr > th {
-	border-color: rgba(0, 0, 0, 0.69);
-}
-
-.vscode-dark table > thead > tr > th {
-	border-color: rgba(255, 255, 255, 0.69);
-}
-
-.vscode-light h1,
-.vscode-light hr,
-.vscode-light table > tbody > tr + tr > td {
-	border-color: rgba(0, 0, 0, 0.18);
-}
-
-.vscode-dark h1,
-.vscode-dark hr,
-.vscode-dark table > tbody > tr + tr > td {
-	border-color: rgba(255, 255, 255, 0.18);
-}
-
-</style>
-
-<style>
-/* Tomorrow Theme */
-/* http://jmblog.github.com/color-themes-for-google-code-highlightjs */
-/* Original theme - https://github.com/chriskempson/tomorrow-theme */
-
-/* Tomorrow Comment */
-.hljs-comment,
-.hljs-quote {
-	color: #8e908c;
-}
-
-/* Tomorrow Red */
-.hljs-variable,
-.hljs-template-variable,
-.hljs-tag,
-.hljs-name,
-.hljs-selector-id,
-.hljs-selector-class,
-.hljs-regexp,
-.hljs-deletion {
-	color: #c82829;
-}
-
-/* Tomorrow Orange */
-.hljs-number,
-.hljs-built_in,
-.hljs-builtin-name,
-.hljs-literal,
-.hljs-type,
-.hljs-params,
-.hljs-meta,
-.hljs-link {
-	color: #f5871f;
-}
-
-/* Tomorrow Yellow */
-.hljs-attribute {
-	color: #eab700;
-}
-
-/* Tomorrow Green */
-.hljs-string,
-.hljs-symbol,
-.hljs-bullet,
-.hljs-addition {
-	color: #718c00;
-}
-
-/* Tomorrow Blue */
-.hljs-title,
-.hljs-section {
-	color: #4271ae;
-}
-
-/* Tomorrow Purple */
-.hljs-keyword,
-.hljs-selector-tag {
-	color: #8959a8;
-}
-
-.hljs {
-	display: block;
-	overflow-x: auto;
-	color: #4d4d4c;
-	padding: 0.5em;
-}
-
-.hljs-emphasis {
-	font-style: italic;
-}
-
-.hljs-strong {
-	font-weight: bold;
-}
-</style>
-
-<style>
-/*
- * Markdown PDF CSS
- */
-
- body {
-	font-family: -apple-system, BlinkMacSystemFont, "Segoe WPC", "Segoe UI", "Ubuntu", "Droid Sans", sans-serif, "Meiryo";
-	padding: 0 12px;
-}
-
-pre {
-	background-color: #f8f8f8;
-	border: 1px solid #cccccc;
-	border-radius: 3px;
-	overflow-x: auto;
-	white-space: pre-wrap;
-	overflow-wrap: break-word;
-}
-
-pre:not(.hljs) {
-	padding: 23px;
-	line-height: 19px;
-}
-
-blockquote {
-	background: rgba(127, 127, 127, 0.1);
-	border-color: rgba(0, 122, 204, 0.5);
-}
-
-.emoji {
-	height: 1.4em;
-}
-
-code {
-	font-size: 14px;
-	line-height: 19px;
-}
-
-/* for inline code */
-:not(pre):not(.hljs) > code {
-	color: #C9AE75; /* Change the old color so it seems less like an error */
-	font-size: inherit;
-}
-
-/* Page Break : use <div class="page"/> to insert page break
--------------------------------------------------------- */
-.page {
-	page-break-after: always;
-}
-
-</style>
-
-<script src="https://unpkg.com/mermaid@10.4.0/dist/mermaid.min.js"></script>
-</head>
-<body>
-  <script>
-    mermaid.initialize({
-      startOnLoad: true,
-      theme: document.body.classList.contains('vscode-dark') || document.body.classList.contains('vscode-high-contrast')
-          ? 'dark'
-          : 'default'
-    });
-  </script>
+<!DOCTYPE html><html><head>
+      <title>Spezifikation</title>
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width, initial-scale=1.0">
+      
+      <link rel="stylesheet" href="file:///c:\Users\Colin\.vscode\extensions\shd101wyy.markdown-preview-enhanced-0.8.20\crossnote\dependencies\katex\katex.min.css">
+      
+      
+      <script type="text/javascript" src="file:///c:\Users\Colin\.vscode\extensions\shd101wyy.markdown-preview-enhanced-0.8.20\crossnote\dependencies\mermaid\mermaid.min.js" charset="UTF-8"></script>
+      
+      
+      <style>
+      code[class*=language-],pre[class*=language-]{color:#333;background:0 0;font-family:Consolas,"Liberation Mono",Menlo,Courier,monospace;text-align:left;white-space:pre;word-spacing:normal;word-break:normal;word-wrap:normal;line-height:1.4;-moz-tab-size:8;-o-tab-size:8;tab-size:8;-webkit-hyphens:none;-moz-hyphens:none;-ms-hyphens:none;hyphens:none}pre[class*=language-]{padding:.8em;overflow:auto;border-radius:3px;background:#f5f5f5}:not(pre)>code[class*=language-]{padding:.1em;border-radius:.3em;white-space:normal;background:#f5f5f5}.token.blockquote,.token.comment{color:#969896}.token.cdata{color:#183691}.token.doctype,.token.macro.property,.token.punctuation,.token.variable{color:#333}.token.builtin,.token.important,.token.keyword,.token.operator,.token.rule{color:#a71d5d}.token.attr-value,.token.regex,.token.string,.token.url{color:#183691}.token.atrule,.token.boolean,.token.code,.token.command,.token.constant,.token.entity,.token.number,.token.property,.token.symbol{color:#0086b3}.token.prolog,.token.selector,.token.tag{color:#63a35c}.token.attr-name,.token.class,.token.class-name,.token.function,.token.id,.token.namespace,.token.pseudo-class,.token.pseudo-element,.token.url-reference .token.variable{color:#795da3}.token.entity{cursor:help}.token.title,.token.title .token.punctuation{font-weight:700;color:#1d3e81}.token.list{color:#ed6a43}.token.inserted{background-color:#eaffea;color:#55a532}.token.deleted{background-color:#ffecec;color:#bd2c00}.token.bold{font-weight:700}.token.italic{font-style:italic}.language-json .token.property{color:#183691}.language-markup .token.tag .token.punctuation{color:#333}.language-css .token.function,code.language-css{color:#0086b3}.language-yaml .token.atrule{color:#63a35c}code.language-yaml{color:#183691}.language-ruby .token.function{color:#333}.language-markdown .token.url{color:#795da3}.language-makefile .token.symbol{color:#795da3}.language-makefile .token.variable{color:#183691}.language-makefile .token.builtin{color:#0086b3}.language-bash .token.keyword{color:#0086b3}pre[data-line]{position:relative;padding:1em 0 1em 3em}pre[data-line] .line-highlight-wrapper{position:absolute;top:0;left:0;background-color:transparent;display:block;width:100%}pre[data-line] .line-highlight{position:absolute;left:0;right:0;padding:inherit 0;margin-top:1em;background:hsla(24,20%,50%,.08);background:linear-gradient(to right,hsla(24,20%,50%,.1) 70%,hsla(24,20%,50%,0));pointer-events:none;line-height:inherit;white-space:pre}pre[data-line] .line-highlight:before,pre[data-line] .line-highlight[data-end]:after{content:attr(data-start);position:absolute;top:.4em;left:.6em;min-width:1em;padding:0 .5em;background-color:hsla(24,20%,50%,.4);color:#f4f1ef;font:bold 65%/1.5 sans-serif;text-align:center;vertical-align:.3em;border-radius:999px;text-shadow:none;box-shadow:0 1px #fff}pre[data-line] .line-highlight[data-end]:after{content:attr(data-end);top:auto;bottom:.4em}html body{font-family:'Helvetica Neue',Helvetica,'Segoe UI',Arial,freesans,sans-serif;font-size:16px;line-height:1.6;color:#333;background-color:#fff;overflow:initial;box-sizing:border-box;word-wrap:break-word}html body>:first-child{margin-top:0}html body h1,html body h2,html body h3,html body h4,html body h5,html body h6{line-height:1.2;margin-top:1em;margin-bottom:16px;color:#000}html body h1{font-size:2.25em;font-weight:300;padding-bottom:.3em}html body h2{font-size:1.75em;font-weight:400;padding-bottom:.3em}html body h3{font-size:1.5em;font-weight:500}html body h4{font-size:1.25em;font-weight:600}html body h5{font-size:1.1em;font-weight:600}html body h6{font-size:1em;font-weight:600}html body h1,html body h2,html body h3,html body h4,html body h5{font-weight:600}html body h5{font-size:1em}html body h6{color:#5c5c5c}html body strong{color:#000}html body del{color:#5c5c5c}html body a:not([href]){color:inherit;text-decoration:none}html body a{color:#08c;text-decoration:none}html body a:hover{color:#00a3f5;text-decoration:none}html body img{max-width:100%}html body>p{margin-top:0;margin-bottom:16px;word-wrap:break-word}html body>ol,html body>ul{margin-bottom:16px}html body ol,html body ul{padding-left:2em}html body ol.no-list,html body ul.no-list{padding:0;list-style-type:none}html body ol ol,html body ol ul,html body ul ol,html body ul ul{margin-top:0;margin-bottom:0}html body li{margin-bottom:0}html body li.task-list-item{list-style:none}html body li>p{margin-top:0;margin-bottom:0}html body .task-list-item-checkbox{margin:0 .2em .25em -1.8em;vertical-align:middle}html body .task-list-item-checkbox:hover{cursor:pointer}html body blockquote{margin:16px 0;font-size:inherit;padding:0 15px;color:#5c5c5c;background-color:#f0f0f0;border-left:4px solid #d6d6d6}html body blockquote>:first-child{margin-top:0}html body blockquote>:last-child{margin-bottom:0}html body hr{height:4px;margin:32px 0;background-color:#d6d6d6;border:0 none}html body table{margin:10px 0 15px 0;border-collapse:collapse;border-spacing:0;display:block;width:100%;overflow:auto;word-break:normal;word-break:keep-all}html body table th{font-weight:700;color:#000}html body table td,html body table th{border:1px solid #d6d6d6;padding:6px 13px}html body dl{padding:0}html body dl dt{padding:0;margin-top:16px;font-size:1em;font-style:italic;font-weight:700}html body dl dd{padding:0 16px;margin-bottom:16px}html body code{font-family:Menlo,Monaco,Consolas,'Courier New',monospace;font-size:.85em;color:#000;background-color:#f0f0f0;border-radius:3px;padding:.2em 0}html body code::after,html body code::before{letter-spacing:-.2em;content:'\00a0'}html body pre>code{padding:0;margin:0;word-break:normal;white-space:pre;background:0 0;border:0}html body .highlight{margin-bottom:16px}html body .highlight pre,html body pre{padding:1em;overflow:auto;line-height:1.45;border:#d6d6d6;border-radius:3px}html body .highlight pre{margin-bottom:0;word-break:normal}html body pre code,html body pre tt{display:inline;max-width:initial;padding:0;margin:0;overflow:initial;line-height:inherit;word-wrap:normal;background-color:transparent;border:0}html body pre code:after,html body pre code:before,html body pre tt:after,html body pre tt:before{content:normal}html body blockquote,html body dl,html body ol,html body p,html body pre,html body ul{margin-top:0;margin-bottom:16px}html body kbd{color:#000;border:1px solid #d6d6d6;border-bottom:2px solid #c7c7c7;padding:2px 4px;background-color:#f0f0f0;border-radius:3px}@media print{html body{background-color:#fff}html body h1,html body h2,html body h3,html body h4,html body h5,html body h6{color:#000;page-break-after:avoid}html body blockquote{color:#5c5c5c}html body pre{page-break-inside:avoid}html body table{display:table}html body img{display:block;max-width:100%;max-height:100%}html body code,html body pre{word-wrap:break-word;white-space:pre}}.markdown-preview{width:100%;height:100%;box-sizing:border-box}.markdown-preview ul{list-style:disc}.markdown-preview ul ul{list-style:circle}.markdown-preview ul ul ul{list-style:square}.markdown-preview ol{list-style:decimal}.markdown-preview ol ol,.markdown-preview ul ol{list-style-type:lower-roman}.markdown-preview ol ol ol,.markdown-preview ol ul ol,.markdown-preview ul ol ol,.markdown-preview ul ul ol{list-style-type:lower-alpha}.markdown-preview .newpage,.markdown-preview .pagebreak{page-break-before:always}.markdown-preview pre.line-numbers{position:relative;padding-left:3.8em;counter-reset:linenumber}.markdown-preview pre.line-numbers>code{position:relative}.markdown-preview pre.line-numbers .line-numbers-rows{position:absolute;pointer-events:none;top:1em;font-size:100%;left:0;width:3em;letter-spacing:-1px;border-right:1px solid #999;-webkit-user-select:none;-moz-user-select:none;-ms-user-select:none;user-select:none}.markdown-preview pre.line-numbers .line-numbers-rows>span{pointer-events:none;display:block;counter-increment:linenumber}.markdown-preview pre.line-numbers .line-numbers-rows>span:before{content:counter(linenumber);color:#999;display:block;padding-right:.8em;text-align:right}.markdown-preview .mathjax-exps .MathJax_Display{text-align:center!important}.markdown-preview:not([data-for=preview]) .code-chunk .code-chunk-btn-group{display:none}.markdown-preview:not([data-for=preview]) .code-chunk .status{display:none}.markdown-preview:not([data-for=preview]) .code-chunk .output-div{margin-bottom:16px}.markdown-preview .md-toc{padding:0}.markdown-preview .md-toc .md-toc-link-wrapper .md-toc-link{display:inline;padding:.25rem 0}.markdown-preview .md-toc .md-toc-link-wrapper .md-toc-link div,.markdown-preview .md-toc .md-toc-link-wrapper .md-toc-link p{display:inline}.markdown-preview .md-toc .md-toc-link-wrapper.highlighted .md-toc-link{font-weight:800}.scrollbar-style::-webkit-scrollbar{width:8px}.scrollbar-style::-webkit-scrollbar-track{border-radius:10px;background-color:transparent}.scrollbar-style::-webkit-scrollbar-thumb{border-radius:5px;background-color:rgba(150,150,150,.66);border:4px solid rgba(150,150,150,.66);background-clip:content-box}html body[for=html-export]:not([data-presentation-mode]){position:relative;width:100%;height:100%;top:0;left:0;margin:0;padding:0;overflow:auto}html body[for=html-export]:not([data-presentation-mode]) .markdown-preview{position:relative;top:0;min-height:100vh}@media screen and (min-width:914px){html body[for=html-export]:not([data-presentation-mode]) .markdown-preview{padding:2em calc(50% - 457px + 2em)}}@media screen and (max-width:914px){html body[for=html-export]:not([data-presentation-mode]) .markdown-preview{padding:2em}}@media screen and (max-width:450px){html body[for=html-export]:not([data-presentation-mode]) .markdown-preview{font-size:14px!important;padding:1em}}@media print{html body[for=html-export]:not([data-presentation-mode]) #sidebar-toc-btn{display:none}}html body[for=html-export]:not([data-presentation-mode]) #sidebar-toc-btn{position:fixed;bottom:8px;left:8px;font-size:28px;cursor:pointer;color:inherit;z-index:99;width:32px;text-align:center;opacity:.4}html body[for=html-export]:not([data-presentation-mode])[html-show-sidebar-toc] #sidebar-toc-btn{opacity:1}html body[for=html-export]:not([data-presentation-mode])[html-show-sidebar-toc] .md-sidebar-toc{position:fixed;top:0;left:0;width:300px;height:100%;padding:32px 0 48px 0;font-size:14px;box-shadow:0 0 4px rgba(150,150,150,.33);box-sizing:border-box;overflow:auto;background-color:inherit}html body[for=html-export]:not([data-presentation-mode])[html-show-sidebar-toc] .md-sidebar-toc::-webkit-scrollbar{width:8px}html body[for=html-export]:not([data-presentation-mode])[html-show-sidebar-toc] .md-sidebar-toc::-webkit-scrollbar-track{border-radius:10px;background-color:transparent}html body[for=html-export]:not([data-presentation-mode])[html-show-sidebar-toc] .md-sidebar-toc::-webkit-scrollbar-thumb{border-radius:5px;background-color:rgba(150,150,150,.66);border:4px solid rgba(150,150,150,.66);background-clip:content-box}html body[for=html-export]:not([data-presentation-mode])[html-show-sidebar-toc] .md-sidebar-toc a{text-decoration:none}html body[for=html-export]:not([data-presentation-mode])[html-show-sidebar-toc] .md-sidebar-toc .md-toc{padding:0 16px}html body[for=html-export]:not([data-presentation-mode])[html-show-sidebar-toc] .md-sidebar-toc .md-toc .md-toc-link-wrapper .md-toc-link{display:inline;padding:.25rem 0}html body[for=html-export]:not([data-presentation-mode])[html-show-sidebar-toc] .md-sidebar-toc .md-toc .md-toc-link-wrapper .md-toc-link div,html body[for=html-export]:not([data-presentation-mode])[html-show-sidebar-toc] .md-sidebar-toc .md-toc .md-toc-link-wrapper .md-toc-link p{display:inline}html body[for=html-export]:not([data-presentation-mode])[html-show-sidebar-toc] .md-sidebar-toc .md-toc .md-toc-link-wrapper.highlighted .md-toc-link{font-weight:800}html body[for=html-export]:not([data-presentation-mode])[html-show-sidebar-toc] .markdown-preview{left:300px;width:calc(100% - 300px);padding:2em calc(50% - 457px - 300px / 2);margin:0;box-sizing:border-box}@media screen and (max-width:1274px){html body[for=html-export]:not([data-presentation-mode])[html-show-sidebar-toc] .markdown-preview{padding:2em}}@media screen and (max-width:450px){html body[for=html-export]:not([data-presentation-mode])[html-show-sidebar-toc] .markdown-preview{width:100%}}html body[for=html-export]:not([data-presentation-mode]):not([html-show-sidebar-toc]) .markdown-preview{left:50%;transform:translateX(-50%)}html body[for=html-export]:not([data-presentation-mode]):not([html-show-sidebar-toc]) .md-sidebar-toc{display:none}
+/* Please visit the URL below for more information: */
+/*   https://shd101wyy.github.io/markdown-preview-enhanced/#/customize-css */
+
+      </style>
+      <!-- The content below will be included at the end of the <head> element. --><script type="text/javascript">
+  document.addEventListener("DOMContentLoaded", function () {
+    // your code here
+  });
+</script></head><body for="html-export">
+    
+    
+      <div class="crossnote markdown-preview  ">
+      
+<h1>Software Spezifikation</h1>
+<p><strong>Autor:</strong> Colin Meihöfer<br>
+<strong>Matrikelnummer:</strong>  11143898</p>
+<h2 id="selbständigkeitserklärung">Selbständigkeitserklärung </h2>
+<p><em>Die Unterschrift findet sich in der beiligenden Datei: <a href="Selbstst%C3%A4ndigkeitserkl%C3%A4rung.pdf">Selbstständigkeitserklärung.pdf</a></em></p>
+<p>Die Arbeit habe ich selbstständig erledigt. Als hilfsmittel habe ich den in VS-Code integrierten Copilot verwendet. Ich habe in verwendet um meine Ergebnisse zu Prüfen (eg. alle wichtigen Requirements gefunden) und nachzuarbeiten.</p>
+<h1 id="1---inhaltsverzeichnis">1 - Inhaltsverzeichnis </h1>
 <ol>
 <li>Titelblatt, Autoren, Selbstständigkeitserklärung</li>
 <li>Zusammenfassung (Ziele, Scope, Annahmen)</li>
 <li>Glossar / Domain‑Begriffe</li>
-<li>Functional requirements (User‑Stories + zentrale Requirements‑Tabelle)
+<li>Funktionale requirements (User‑Stories + zentrale Requirements‑Tabelle)
 <ul>
-<li>4.1 Mapping: User‑Stories → Akteure / Use‑Cases</li>
-<li>4.2 Akzeptanztests / Test‑Cases (pro Story)</li>
+<li>4.1 User Stories</li>
+<li>4.2 Funktionale Anforderungen</li>
 </ul>
 </li>
-<li>4+1 Sichten (jede Sicht: Ziel, Diagramme, Mapping zu Stories, offene Fragen)
+<li>4+1 Sichten
 <ul>
-<li>5.1 Use‑case / Szenarien (the &quot;+1&quot;): Use‑case‑Diagramme, Hauptszenarien, Sequenzdiagramme, Akzeptanzkriterien</li>
-<li>5.2 Logical View: Domänen‑Klassendiagramm, ER/DB‑Modell, CRUD‑Matrix, Entitäts‑Attribute, VIF</li>
-<li>5.3 Development View: Komponenten/Module, Paket‑ und Repo‑Struktur, API‑Contract (OpenAPI), Build/CI</li>
-<li>5.4 Process View: Laufzeit‑Architektur, Messaging/Queues, State‑Machines (z. B. Group lifecycle), Performance‑Flows</li>
-<li>5.5 Physical View: Deployment‑Diagramm (K8s/VMs), Netz, Sizing, SLO/SLA</li>
+<li>5.1 Use‑case / Szenarien</li>
+<li>5.2 Logische übersicht</li>
+<li>5.3 Entwicklerübersicht</li>
+<li>5.4 Prozessübersicht</li>
+<li>5.5 Physische übersicht</li>
 </ul>
 </li>
-<li>Nicht‑funktionale Anforderungen (NFR) — messbar: Performance, Security, Privacy, Availability, Scalability</li>
-<li>Security &amp; Privacy (STRIDE, DSGVO‑Flows, Key‑Management, Aufbewahrung)</li>
-<li>API &amp; Integration (OpenAPI, Webhooks, Idempotenz, 3rd‑party connectors)</li>
-<li>Operations &amp; SRE (Monitoring, Logging, Backups, Runbook, Incident‑Response)</li>
-<li>Testplan / QA (Unit, Integration, E2E, Akzeptanztests, CI/CD‑Gates)</li>
-<li>Open decisions / Risks / Roadmap (TODOs, Annahmen)</li>
-<li>Anhänge
-<ul>
-<li>A: UML‑Quellen (XMI / PlantUML) — siehe <code>diagrams/</code> (PlantUML‑Quellen)</li>
-<li>B: DB‑Schema (DDL + Beispiel‑daten) — <code>db/schema.sql</code></li>
-<li>C: Mockups / Styleguide — <code>mockups/</code></li>
-<li>D: Beispiel‑API‑Responses (OpenAPI snippets) — <code>api/openapi.yaml</code></li>
-<li>E: Traceability‑Matrix (Requirement → Artifact → Test)</li>
-</ul>
-</li>
+<li>Security &amp; Privacy</li>
 </ol>
-<hr>
-<p>Für jedes Kapitel (kurze Checkliste / erwartete Artefakte):</p>
-<ul>
-<li>Titelblatt
-<ul>
-<li>Pflicht: Autor(en), Matrikelnummer(n), Datum, Selbstständigkeitserklärung</li>
-</ul>
-</li>
-</ul>
-<hr>
-<p>Hinweis zur Organisation: Die <strong>Requirements‑Tabelle</strong> ist die kanonische Quelle und bleibt in Kapitel 4; in den 4+1‑Sichten referenzierst du Story‑IDs (nicht kopieren). Eine Traceability‑Matrix (Anhang E) verbindet Requirements mit Use‑cases, Klassen, Endpunkten und Tests.</p>
-<h1 id="2---zusammenfassung">2 - Zusammenfassung</h1>
+<h1 id="2---zusammenfassung">2 - Zusammenfassung </h1>
 <p>Kurzfassung (Executive Summary)</p>
 <p>Dieses Dokument beschreibt die Spezifikation für eine Plattform zur Planung, Organisation und Durchführung von Gruppen‑Events (z. B. Reisen, Vereins‑ oder Firmenveranstaltungen). Kernnutzen: Teilnehmer können Gruppen anlegen/verwalten, Termine/Umfragen/Finanzen koordinieren und externe Dienstleister (z. B. Veranstaltungstechnik) buchen. Die Lösung adressiert sowohl Privatnutzer als auch kommerzielle Dienstleister und bietet ein Provider‑Portal, Zahlungs‑ und Rechnungsfunktionen sowie Compliance‑ und Betriebsmechanismen (Monitoring, Backups, DSGVO‑Workflows).</p>
 <p>Zielsetzung: Eine sichere, skalierbare Web‑ und Mobile‑Plattform, die Gruppen‑Organisation, Zahlungsabwicklung und Dienstleister‑Management in einem integrierten Workflow unterstützt.</p>
-<p>Wichtige Kennzahlen</p>
+<p>Wichtige Kennzahlen. Da diese nicht weiter spezifiziert wurden, wird von üblichen Kennzahlen ausgegangen</p>
 <ul>
 <li>Verfügbarkeit (SLA target): 99.5% (kritische Dienste: auth, payments, groups).</li>
 <li>Performance: Group‑listing — median &lt; 150 ms, 95th‑percentile &lt; 500 ms.</li>
 <li>Durchsatz: skalierbar auf ~10k gleichzeitige aktive Nutzer pro Region (horizontale Skalierung).</li>
-<li>Backup / RPO / RTO: tägliche Backups (RPO = 24 h); RTO kritisch (auth/payments) &lt; 1 h, RTO nicht‑kritisch &lt; 24 h.</li>
+<li>Backup:
+<ul>
+<li>tägliche Backups (RPO = 24 h);</li>
+<li>RTO kritisch (auth/payments) &lt; 1 h,</li>
+<li>RTO nicht‑kritisch &lt; 24 h.</li>
+</ul>
+</li>
 <li>Datenschutz: Lösch‑Workflow abgeschlossen / Anonymisierung innerhalb 30 Tagen; Datenexport innerhalb 7 Tagen.</li>
 </ul>
 <p>Scope (konkret)</p>
@@ -443,7 +90,7 @@ code {
 </ol>
 <p>Akzeptanzkriterien für die Deliverables (Kurz)</p>
 <ul>
-<li>MVP accepted when: alle &quot;Muss&quot;‑Stories in Kapitel 4 implementiert und durch End‑to‑End‑Tests verifiziert sind; kritische SLOs (auth/payments/group‑listing) werden in Staging‑Loadtests erreicht; DSGVO‑Delete/Export‑Flows getestet.</li>
+<li>MVP accepted when: alle "Muss"‑Stories in Kapitel 4 implementiert und durch End‑to‑End‑Tests verifiziert sind; kritische SLOs (auth/payments/group‑listing) werden in Staging‑Loadtests erreicht; DSGVO‑Delete/Export‑Flows getestet.</li>
 </ul>
 <p>Empfohlene nächste Schritte (priorisiert)</p>
 <ol>
@@ -455,11 +102,7 @@ code {
 <ul>
 <li>Diese Zusammenfassung ist akzeptabel, wenn sie in Review von Product Owner bestätigt wird und die drei NFR‑Defaults (SLA, latency, RTO) als Ausgangswerte genehmigt werden.</li>
 </ul>
-<h1 id="3---glossar">3 - Glossar</h1>
-<!--
-- Glossar
-  - Liste der Domainbegriffe + kurze Definitionen (z. B. Group, Event, Organizer, Provider)
--->
+<h1 id="3---glossar">3 - Glossar </h1>
 <table>
 <thead>
 <tr>
@@ -492,69 +135,31 @@ code {
 <td>Admin</td>
 <td>Ein Gruppenmitglied mit erhöhten rechten innerhalb einer Gruppe</td>
 </tr>
+<tr>
+<td>Provider</td>
+<td>Eng. Synonym für Dienstleister</td>
+</tr>
+<tr>
+<td>ServiceProvider</td>
+<td>Eng. Synonym für Dienstleister</td>
+</tr>
 </tbody>
 </table>
-<h1 id="4---funktionale-requirements">4 - Funktionale requirements</h1>
-<h2 id="14-schnittstellen--systemarchitektur">1.4 Schnittstellen &amp; Systemarchitektur</h2>
-<p><strong>Kurzbeschreibung</strong></p>
-<p>Die Plattform ist als cloud‑native, dreischichtige Web‑/Mobile‑Anwendung ausgelegt: klientenseitig (Web / Mobile), API‑Layer (Gateway / Edge) und ein Backend‑Service‑Ökosystem (auth, groups, payments, provider, media, notifications, background workers). Persistente Daten liegen in einer relationalen Primärdatenbank; große Binärdaten (Fotos/Videos) werden in Object Storage abgelegt. Caching, Message‑Broker und Suchindex sind zusätzliche Komponenten zur Skalierung.</p>
-<p><strong>Hauptkomponenten (Übersicht)</strong></p>
-<ul>
-<li>API Gateway / Ingress: TLS‑Termination, Routing, Rate‑Limiting, Authn/Z</li>
-<li>Auth Service: Login, Sessions, 2FA, Token‑Issuance, Account Management</li>
-<li>Groups Service: Domain‑Logik für Gruppen, Mitglieder, Notizen, Termine, Surveys</li>
-<li>Payments Bridge: Integration zu Stripe/Adyen, Webhook‑Handler (idempotent)</li>
-<li>Provider / Marketplace Service: Provider‑Listing, Angebote, Buchungen, Ressourcenplanung</li>
-<li>Media Service / Object Storage: Uploads, Thumbnails, CDN‑Serving</li>
-<li>Background Workers: E‑Mails, Push, Reconciliations, Refunds, Maintenance Jobs</li>
-<li>Data Stores: Primary RDBMS (ACID), Redis (cache, sessions, rate limits), Search (Elasticsearch/Opensearch)</li>
-<li>Message Broker: RabbitMQ / Kafka für asynchrone Aufgaben und Events</li>
-<li>Observability: Prometheus, Grafana, ELK/Opensearch, Tracing (Jaeger)</li>
-<li>CI/CD, IaC, KMS/Secrets Manager</li>
-</ul>
-<p><strong>Hoch‑level Daten‑/Control‑Flow</strong>
-Client (Web/Mobile) --HTTPS--&gt; API Gateway --Auth--&gt; Backend Service (REST/gRPC) --&gt; RDBMS / Cache / Broker. Asynchrone Aufgaben werden über den Broker an Worker delegiert; Webhooks und externe Integrationen (Payments, Calendar, Email/SMS) laufen über dedizierte adapters mit Idempotenz‑Handling.</p>
-<p><strong>Deployment / Physical View (Kurzfassung)</strong></p>
-<ul>
-<li>Umgebung: K8s Cluster pro Region (Namespaces per environment: staging/prod)</li>
-<li>Netzwerk: Public Ingress (LoadBalancer / CDN) in DMZ; private Back‑end Subnet für Services und DB</li>
-<li>Datenhaltung: Managed RDBMS Multi‑AZ mit Read‑Replicas; Object Storage mit Lifecycle Policies</li>
-<li>Verfügbarkeit: Multi‑AZ, HPA für Pods, SLOs gemäss Kapitel 2 (z. B. 99.5% für auth/payments)</li>
-<li>Backups: tägliche Snapshots (RPO 24h), kritische RTO &lt;1h (auth/payments)</li>
-</ul>
-<p><strong>Integration &amp; API‑Contract</strong></p>
-<ul>
-<li>OpenAPI Spec: <code>api/openapi.yaml</code> (Anhang D). Alle öffentlichen Endpunkte sollen eine Versionierung und Rate‑Limit haben.</li>
-<li>Webhooks: idempotency keys, replay protection, signature verification</li>
-<li>Externe Provider: Payments (Stripe/Adyen), Calendar Sync (Google/Outlook), Email/SMS (SendGrid/Twilio)</li>
-</ul>
-<p><strong>Security — STRIDE (Kurz‑Analyse &amp; Mitigation)</strong></p>
-<ul>
-<li>Spoofing: starke Auth (OAuth2 / JWT, refresh tokens), MFA option; secure session management</li>
-<li>Tampering: input validation, HMAC/signatures für webhooks, integrity checks, WAF</li>
-<li>Repudiation: zentrale Audit‑Logs for critical actions, signed receipts for payments</li>
-<li>Information Disclosure: TLS everywhere, access controls, least privilege, encryption at rest (KMS)</li>
-<li>Denial of Service: rate limits, autoscaling, circuit breakers, WAF, traffic quotas</li>
-<li>Elevation of Privilege: RBAC, privilege separation, hardened service accounts, regular pen‑tests</li>
-</ul>
-<p><strong>Operations &amp; SRE</strong></p>
-<ul>
-<li>Monitoring: metrics (Prometheus), dashboards (Grafana), alerting thresholds aligned with SLOs</li>
-<li>Logging: central log pipeline (ELK/Opensearch) with 90d retention (siehe Kapitel 2)</li>
-<li>Runbooks: incident playbooks for auth outage, payment failure, data‑loss</li>
-<li>Security Ops: rotation of keys, regular vulnerability scans, dependency updates</li>
-</ul>
-<p><strong>Artefakte &amp; Mockups</strong></p>
-<ul>
-<li>UI‑Mockups gehören in Kapitel 1.2 &quot;Graphische Benutzungsschnittstelle&quot; (siehe Modulprüfung.md §1.2). Technische Referenzen und Verlinkungen zu Mockup‑Files liegen im Anhang C (<code>mockups/</code>). Verweise zu einzelnen Screens sind zusätzlich in den Use‑cases (Kapitel 5.1) aufzuführen.</li>
-</ul>
-<h2 id="funktionale-anforderungen">Funktionale Anforderungen</h2>
-<!--
-- Functional requirements (canonical)
-  - Vollständige User‑Stories‑Tabelle (canonical source)
-  - Priorisierung (MoSCoW), Acceptance‑Criteria, einfache Akzeptanztests
-  - Traceability‑IDs (UIDs) für jede Story
--->
+<h1 id="4---funktionale-requirements">4 - Funktionale requirements </h1>
+<h2 id="41--user-stories">4.1 — User stories </h2>
+<h3 id="gruppenübersicht">Gruppenübersicht </h3>
+<p>Ein Nutzer möchte eine Gruppe auswählen und dann eine Übersicht über die Gruppe bekommen. Er möchte wissen, welche Mitglieder der Gruppe angehören und welche Termine als nächstes anstehen anstehen. Er möchte in der Lage sein, die Übersicht über die Informationen in einer, für ihn relevanten, Reihenfolge zu sortieren und zu filtern. Außerdem möchte er Zugriff auf die anderen Aspekte der Gruppe haben. Wie zum Beispiel Kommentare und Einstellungen</p>
+<p><img src="mockups/GroupOverview.png" alt=""></p>
+<h3 id="nutzer-registrieren">Nutzer registrieren </h3>
+<p>Ein Nutzer möchte sich auf unserer Platform Registrieren. Dazu muss er alle Daten eingeben, die wir benötigen, damit wir ihm unseren Service anbieten können. Der Nutzer möchte einen eigen Nutzernahmen angeben, unter dem er auf der Platform angezeigt wird. Er will ein Passwort vergebene, so dass sein Account vor Fremdzugriffen geschützt ist und er möchte seine Präferierte Kontaktmöglichkeit angeben. Außerdem benötigen wir seine E-Mail, um ihn kontaktieren zu können. Zum Beispiel um das Password zurück zu setzen.</p>
+<p><img src="mockups/CreateUser.drawio.png" alt="Nutzer registrieren"></p>
+<h3 id="dienstleister-übersicht">Dienstleister übersicht </h3>
+<p>Ein Dienstleister benötigt eine Zeitliche übersicht über alle Events die er Organisieren soll und welche Mitarbeiter wann blockiert sind, damit er die Mitarbeiterzuweisungen planen kann. Außerdem möchte er sehen, ob er neue Anfragen erhalten hat.</p>
+<p><img src="mockups/ProviderOverview.drawio.png" alt="Provider Übersicht"></p>
+<h3 id="dienstleister-auswählen">Dienstleister auswählen </h3>
+<p>Eine Gruppe möchte über das Portal einen Dienstleiter Beauftragen das Event zu organisieren. Dazu soll ein Gruppenmitglied eine Liste möglicher Dienstleister angezeigt bekommen. Der Nutzer möchte dabei die Bewertungen des Dienstleister sehen. Hat er einen Dienstleister Ausgewählt möchte er eine genauere Beschreibung des Dienstleisters und detaillierte Bewertungen vorheriger Leistungsnehmer sehen. Um den Dienstleister zu beauftragen möchte er eine Beschreibung verfassen, um dem Dienstleister zu beschreiben was von ihm erwartet wird.</p>
+<p><img src="mockups/BookProvider.drawio.png" alt="Provider buchen"></p>
+<h2 id="42--funktionale-anforderungen">4.2 — Funktionale Anforderungen </h2>
 <table>
 <thead>
 <tr>
@@ -780,7 +385,7 @@ Client (Web/Mobile) --HTTPS--&gt; API Gateway --Auth--&gt; Backend Service (REST
 <td>Owner / Admin</td>
 <td>einen Mindestbeitrag für das Event festlegen</td>
 <td>Finanzierungssicherheit des Events</td>
-<td>Mindestbetrag sichtbar auf Event‑Homepage; System meldet &quot;erreicht&quot;/&quot;offen&quot;; automatische Aktionen (z. B. Cancel/Refund) konfigurierbar</td>
+<td>Mindestbetrag sichtbar auf Event‑Homepage; System meldet "erreicht"/"offen"; automatische Aktionen (z. B. Cancel/Refund) konfigurierbar</td>
 <td>Muss</td>
 </tr>
 <tr>
@@ -788,7 +393,7 @@ Client (Web/Mobile) --HTTPS--&gt; API Gateway --Auth--&gt; Backend Service (REST
 <td>Gruppenmitglied</td>
 <td>optional ein System‑Limits setzen/anzeigen</td>
 <td>Missbrauch oder Fehler vermeiden</td>
-<td>System kann ein optionales Oberlimit pro Zahlung konfigurieren; wenn nicht gesetzt, gilt &quot;kein Limit&quot;</td>
+<td>System kann ein optionales Oberlimit pro Zahlung konfigurieren; wenn nicht gesetzt, gilt "kein Limit"</td>
 <td>Kann</td>
 </tr>
 <tr>
@@ -1073,24 +678,11 @@ Client (Web/Mobile) --HTTPS--&gt; API Gateway --Auth--&gt; Backend Service (REST
 </tr>
 </tbody>
 </table>
-<!--
-### Ergänzende nicht‑funktionale Anforderungen (Auswahl / messbar)
-- Performance: 95th‑percentile API latency < 500 ms für Kernendpunkte (list/create/join).
-- Skalierbarkeit: System skaliert horizontal bei 50% CPU‑Auslastung der Instanzgruppe.
-- Sicherheit: TLS 1.2+ enforced; Secrets in KMS; regelmäßige Pen‑Tests (Jährlich).
-- Datenschutz: Datenexport (JSON/CSV), Lösch‑Workflow, Einwilligungs‑Logging für E‑Mails.
--->
-<h1 id="5-41-sichten">5. 4+1 Sichten</h1>
-<h2 id="51-use%E2%80%91case--szenarien">5.1 Use‑case / Szenarien</h2>
-<!--
-- Use‑case / Szenarien
-  - Use‑case‑Diagramm (Actors + top 10 Use‑cases)
-  - 3–5 Sequenzdiagramme (z. B. Create Group, Book Provider, Payment + Refund)
-  - Mapping Story→Use‑case
--->
-<h3 id="gruppe-erstellen">Gruppe erstellen</h3>
+<h1 id="5-41-sichten">5. 4+1 Sichten </h1>
+<h2 id="51-usecase--szenarien">5.1 Use‑case / Szenarien </h2>
+<h3 id="gruppe-erstellen">Gruppe erstellen </h3>
 <p>A user sends a request to create a new group. His session is validated and on successful validation the group is created. After the group is created the user can be redirected to the groups page.</p>
-<pre><code class="language-mermaid"><div class="mermaid">sequenceDiagram
+<div class="mermaid">sequenceDiagram
 
 actor User
 participant UI as Web UI / Mobile
@@ -1098,28 +690,26 @@ participant Groups as Groups Service
 participant Auth as Auth service
 participant DB@{ "type" : "database" }
 
-User ->> UI : Open 'Create group' form
-UI ->> Auth : validate session
-Auth -->> UI : 200 OK
-UI ->> Groups : POST /api/v1/groups {payload}
-Groups ->> DB : INSERT group + owner
-DB -->> Groups : groupId
-Groups -->> UI : 201 Created { groupId }
-UI -->> User : Show confirmation and open Group
+User -&gt;&gt; UI : Open 'Create group' form
+UI -&gt;&gt; Auth : validate session
+Auth --&gt;&gt; UI : 200 OK
+UI -&gt;&gt; Groups : POST /api/v1/groups {payload}
+Groups -&gt;&gt; DB : INSERT group + owner
+DB --&gt;&gt; Groups : groupId
+Groups --&gt;&gt; UI : 201 Created { groupId }
+UI --&gt;&gt; User : Show confirmation and open Group
 
-</div></code></pre>
-<h4 id="gruppendaten">Gruppendaten</h4>
-<pre class="hljs"><code><div>{
+</div><h4 id="gruppendaten">Gruppendaten </h4>
+<pre data-role="codeBlock" data-info="" class="language-text"><code>{
   name : Provided by user
-  groupId&quot; : Automatically generated unique id
+  groupId" : Automatically generated unique id
   visibility : Provided by user (default Private)
 }
-</div></code></pre>
-<h3 id="gruppe-%C3%BCber-link-beitreten">Gruppe über link beitreten</h3>
-<p>An exiting group member can access an invite link through the UI. This invite link can be send to other users.
-If another user opens that invite link, the join process is stared. First it is validated if the user is allowed to join the group (ie: not blocked, etc.). If the user is allowed to join the User is displayed basic information about the Group so that he can ensure that he is joining the group he is intending to. If the user confirms, the user is added as a group member. The user the receives confirmation of the successful join and is redirected to the groups page.
+</code></pre><h3 id="gruppe-über-link-beitreten">Gruppe über link beitreten </h3>
+<p>An exiting group member can access an invite link through the UI. This invite link can be send to other users.<br>
+If another user opens that invite link, the join process is stared. First it is validated if the user is allowed to join the group (ie: not blocked, etc.). If the user is allowed to join the User is displayed basic information about the Group so that he can ensure that he is joining the group he is intending to. If the user confirms, the user is added as a group member. The user the receives confirmation of the successful join and is redirected to the groups page.<br>
 If the user is already part of the group he can be redirected to the groups page directly.</p>
-<pre><code class="language-mermaid"><div class="mermaid">sequenceDiagram
+<div class="mermaid">sequenceDiagram
 
 actor Inviter
 actor Invited
@@ -1128,77 +718,50 @@ participant Groups as Groups Service
 participant Auth as Auth service
 participant DB@{ "type" : "database" }
 
-Inviter ->> UI : Open group info 'Invite' UI
-UI ->> Auth : validate session
-Auth -->> UI : 200 OK
-UI ->> Groups : GET /api/v1/groups/invite_link
-Groups ->> DB : SELECT publicGroupId FROM group
-DB -->> Groups : publicGroupId
-Groups -->> UI : 200 Found { publicGroupId }
-UI ->> Inviter  : Copy invite link
-Inviter ->> Invited : Send invite link
+Inviter -&gt;&gt; UI : Open group info 'Invite' UI
+UI -&gt;&gt; Auth : validate session
+Auth --&gt;&gt; UI : 200 OK
+UI -&gt;&gt; Groups : GET /api/v1/groups/invite_link
+Groups -&gt;&gt; DB : SELECT publicGroupId FROM group
+DB --&gt;&gt; Groups : publicGroupId
+Groups --&gt;&gt; UI : 200 Found { publicGroupId }
+UI -&gt;&gt; Inviter  : Copy invite link
+Inviter -&gt;&gt; Invited : Send invite link
 
-Invited ->> UI : Open 'Invite link'
-UI ->> Auth : validate session
-Auth -->> UI : 200 OK
-UI ->> Groups : GET /api/v1/groups/can_join {userId}
-Groups ->> DB : SELECT user authorized to join, group info
-DB -->> Groups : authorized
-Groups -->> UI : 200 inviteProcessId, authorized, groupInfo
-UI -->> Invited : Request 'confirm join'
-Invited ->> UI : Confirm join
-UI ->> Groups : /api/v1/groups/join/{inviteProcessId}
-Groups ->> DB : INSERT groupMember
-DB -->> Groups : groupMemberId
-Groups -->> UI : 201 Created { groupMemberId }
-UI -->> Invited : Confirm joined
-Groups -->> UI : 303 forward to group { /groups/{publicGroupId} }
-UI -->> Invited : Open group
-</div></code></pre>
-<h3 id="einzahlung-r%C3%BCckerstatten">Einzahlung rückerstatten</h3>
-<pre class="hljs"><code><div>@startuml
-title Payment &amp; Refund (webhook + idempotence)
-actor PaymentProvider
-participant &quot;Payments Service&quot; as Payments
-participant &quot;Orders/Booking Service&quot; as Orders
-database DB
+Invited -&gt;&gt; UI : Open 'Invite link'
+UI -&gt;&gt; Auth : validate session
+Auth --&gt;&gt; UI : 200 OK
+UI -&gt;&gt; Groups : GET /api/v1/groups/can_join {userId}
+Groups -&gt;&gt; DB : SELECT user authorized to join, group info
 
-PaymentProvider -&gt; Payments: POST /api/v1/payments/webhook {event, idempotency_key}
-Payments -&gt; Payments: lookup event by idempotency_key
-alt already processed
-  Payments --&gt; PaymentProvider: 200 (ignored)
-else new event
-  Payments -&gt; Orders: mark payment received (order_id)
-  Orders -&gt; DB: update payment_status
-  DB --&gt; Orders: OK
-  Payments --&gt; PaymentProvider: 200 (processed)
+alt authorized
+
+  DB --&gt;&gt; Groups : authorized
+  Groups --&gt;&gt; UI : 200 inviteProcessId, authorized, groupInfo
+  UI --&gt;&gt; Invited : Request 'confirm join'
+
+  opt User accepts invite
+    Invited -&gt;&gt; UI : Confirm join
+    UI -&gt;&gt; Groups : /api/v1/groups/join/{inviteProcessId}
+    Groups -&gt;&gt; DB : INSERT groupMember
+    DB --&gt;&gt; Groups : groupMemberId
+    Groups --&gt;&gt; UI : 201 Created { groupMemberId }
+    UI --&gt;&gt; Invited : Confirm joined
+    Groups --&gt;&gt; UI : 303 forward to group { /groups/{publicGroupId} }
+    UI --&gt;&gt; Invited : Open group
+  end
+
+else 
+  DB --&gt;&gt; Groups : unauthorized
+  Groups --&gt;&gt; UI : 403 User is not allowed to join group
+  UI --&gt;&gt; Invited : Not allowed to join
 end
-
-== Refund ==
-User -&gt; UI: request refund
-UI -&gt; Payments: POST /api/v1/payments/{id}/refund
-Payments -&gt; PaymentProvider: initiate refund
-PaymentProvider --&gt; Payments: refund_confirm
-Payments -&gt; Orders: update refund_status
-Payments --&gt; UI: 200 (refund scheduled)
-@enduml
-</div></code></pre>
-<h2 id="52-logische-%C3%BCbersicht">5.2 Logische Übersicht</h2>
-<!--
-- Logical View
-  - Domänen‑Klassendiagramm (Entitäten + Schlüsselattribute)
-  - ER‑Diagram + CRUD‑Matrix
-  - Daten‑Retention & Privacy per Entität
--->
-<h3 id="er---model">ER - Model</h3>
-<h2 id="different-diagram-layout">&lt;!--
-different diagram layout</h2>
-<h2 id="title-order-exampleconfiglayout-elk">title: Order example
-config:
-layout: elk</h2>
-<p>--&gt;</p>
-<pre><code class="language-mermaid"><div class="mermaid">
-erDiagram
+</div><h3 id="einzahlung-rückerstatten">Einzahlung rückerstatten </h3>
+<p>Ein Nutzer kann nicht mehr an einem Event Teilnehmen. Zum Beispiel weil er Krank geworden ist. Daher möchte der Nutzer die Einzahlung, welche er gemacht hat, um an dem Event Teilnehmen zu können, zurückerstattet bekommen.</p>
+<p class="plantuml"><svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" contentstyletype="text/css" data-diagram-type="SEQUENCE" height="723px" preserveAspectRatio="none" style="width:1007px;height:723px;background:#FFFFFF;" version="1.1" viewBox="0 0 1007 723" width="1007px" zoomAndPan="magnify"><title>Payment &amp; Refund (webhook + idempotence)</title><defs></defs><g><text fill="#000000" font-family="sans-serif" font-size="14" font-weight="bold" lengthAdjust="spacing" textLength="300.6514" x="349.6477" y="29.5332">Payment &amp; Refund (webhook + idempotence)</text><rect fill="none" height="185.9453" style="stroke:#000000;stroke-width:1.5;" width="842.334" x="10" y="211.9219"></rect><g class="participant-lifeline" data-entity-uid="part1" data-qualified-name="PaymentProvider" id="part1-lifeline"><g><title>PaymentProvider</title><rect fill="#000000" fill-opacity="0.00000" height="520.1094" width="8" x="72.6895" y="121.2188"></rect><line style="stroke:#181818;stroke-width:0.5;stroke-dasharray:5,5;" x1="76" x2="76" y1="121.2188" y2="641.3281"></line></g></g><g class="participant-lifeline" data-entity-uid="part2" data-qualified-name="Payments" id="part2-lifeline"><g><title>Payments Service</title><rect fill="#000000" fill-opacity="0.00000" height="520.1094" width="8" x="442.1099" y="121.2188"></rect><line style="stroke:#181818;stroke-width:0.5;stroke-dasharray:5,5;" x1="445.6997" x2="445.6997" y1="121.2188" y2="641.3281"></line></g></g><g class="participant-lifeline" data-entity-uid="part3" data-qualified-name="Orders" id="part3-lifeline"><g><title>Orders.Booking Service</title><rect fill="#000000" fill-opacity="0.00000" height="520.1094" width="8" x="661.186" y="121.2188"></rect><line style="stroke:#181818;stroke-width:0.5;stroke-dasharray:5,5;" x1="664.2656" x2="664.2656" y1="121.2188" y2="641.3281"></line></g></g><g class="participant-lifeline" data-entity-uid="part4" data-qualified-name="DB" id="part4-lifeline"><g><title>DB</title><rect fill="#000000" fill-opacity="0.00000" height="520.1094" width="8" x="820.334" y="121.2188"></rect><line style="stroke:#181818;stroke-width:0.5;stroke-dasharray:5,5;" x1="824.334" x2="824.334" y1="121.2188" y2="641.3281"></line></g></g><g class="participant-lifeline" data-entity-uid="part5" data-qualified-name="User" id="part5-lifeline"><g><title>User</title><rect fill="#000000" fill-opacity="0.00000" height="520.1094" width="8" x="870.1133" y="121.2188"></rect><line style="stroke:#181818;stroke-width:0.5;stroke-dasharray:5,5;" x1="873.334" x2="873.334" y1="121.2188" y2="641.3281"></line></g></g><g class="participant-lifeline" data-entity-uid="part6" data-qualified-name="UI" id="part6-lifeline"><g><title>UI</title><rect fill="#000000" fill-opacity="0.00000" height="520.1094" width="8" x="977.9468" y="121.2188"></rect><line style="stroke:#181818;stroke-width:0.5;stroke-dasharray:5,5;" x1="981.9468" x2="981.9468" y1="121.2188" y2="641.3281"></line></g></g><g class="participant participant-head" data-entity-uid="part1" data-qualified-name="PaymentProvider" id="part1-head"><text fill="#000000" font-family="sans-serif" font-size="14" lengthAdjust="spacing" textLength="107.3789" x="20" y="118.1426">PaymentProvider</text><ellipse cx="76.6895" cy="52.1094" fill="#E2E2F0" rx="8" ry="8" style="stroke:#181818;stroke-width:0.5;"></ellipse><path d="M76.6895,60.1094 L76.6895,87.1094 M63.6895,68.1094 L89.6895,68.1094 M76.6895,87.1094 L63.6895,102.1094 M76.6895,87.1094 L89.6895,102.1094" fill="none" style="stroke:#181818;stroke-width:0.5;"></path></g><g class="participant participant-tail" data-entity-uid="part1" data-qualified-name="PaymentProvider" id="part1-tail"><text fill="#000000" font-family="sans-serif" font-size="14" lengthAdjust="spacing" textLength="107.3789" x="20" y="654.8613">PaymentProvider</text><ellipse cx="76.6895" cy="666.4375" fill="#E2E2F0" rx="8" ry="8" style="stroke:#181818;stroke-width:0.5;"></ellipse><path d="M76.6895,674.4375 L76.6895,701.4375 M63.6895,682.4375 L89.6895,682.4375 M76.6895,701.4375 L63.6895,716.4375 M76.6895,701.4375 L89.6895,716.4375" fill="none" style="stroke:#181818;stroke-width:0.5;"></path></g><g class="participant participant-head" data-entity-uid="part2" data-qualified-name="Payments" id="part2-head"><rect fill="#E2E2F0" height="31.6094" rx="2.5" ry="2.5" style="stroke:#181818;stroke-width:0.5;" width="126.8203" x="382.6997" y="88.6094"></rect><text fill="#000000" font-family="sans-serif" font-size="14" lengthAdjust="spacing" textLength="112.8203" x="389.6997" y="110.1426">Payments Service</text></g><g class="participant participant-tail" data-entity-uid="part2" data-qualified-name="Payments" id="part2-tail"><rect fill="#E2E2F0" height="31.6094" rx="2.5" ry="2.5" style="stroke:#181818;stroke-width:0.5;" width="126.8203" x="382.6997" y="640.3281"></rect><text fill="#000000" font-family="sans-serif" font-size="14" lengthAdjust="spacing" textLength="112.8203" x="389.6997" y="661.8613">Payments Service</text></g><g class="participant participant-head" data-entity-uid="part3" data-qualified-name="Orders" id="part3-head"><rect fill="#E2E2F0" height="31.6094" rx="2.5" ry="2.5" style="stroke:#181818;stroke-width:0.5;" width="161.8408" x="584.2656" y="88.6094"></rect><text fill="#000000" font-family="sans-serif" font-size="14" lengthAdjust="spacing" textLength="147.8408" x="591.2656" y="110.1426">Orders/Booking Service</text></g><g class="participant participant-tail" data-entity-uid="part3" data-qualified-name="Orders" id="part3-tail"><rect fill="#E2E2F0" height="31.6094" rx="2.5" ry="2.5" style="stroke:#181818;stroke-width:0.5;" width="161.8408" x="584.2656" y="640.3281"></rect><text fill="#000000" font-family="sans-serif" font-size="14" lengthAdjust="spacing" textLength="147.8408" x="591.2656" y="661.8613">Orders/Booking Service</text></g><g class="participant participant-head" data-entity-uid="part4" data-qualified-name="DB" id="part4-head"><text fill="#000000" font-family="sans-serif" font-size="14" lengthAdjust="spacing" textLength="19.4482" x="811.6099" y="118.1426">DB</text><path d="M806.334,67.6094 C806.334,57.6094 824.334,57.6094 824.334,57.6094 C824.334,57.6094 842.334,57.6094 842.334,67.6094 L842.334,93.6094 C842.334,103.6094 824.334,103.6094 824.334,103.6094 C824.334,103.6094 806.334,103.6094 806.334,93.6094 L806.334,67.6094" fill="#E2E2F0" style="stroke:#181818;stroke-width:0.5;"></path><path d="M806.334,67.6094 C806.334,77.6094 824.334,77.6094 824.334,77.6094 C824.334,77.6094 842.334,77.6094 842.334,67.6094" fill="none" style="stroke:#181818;stroke-width:0.5;"></path></g><g class="participant participant-tail" data-entity-uid="part4" data-qualified-name="DB" id="part4-tail"><text fill="#000000" font-family="sans-serif" font-size="14" lengthAdjust="spacing" textLength="19.4482" x="811.6099" y="654.8613">DB</text><path d="M806.334,667.9375 C806.334,657.9375 824.334,657.9375 824.334,657.9375 C824.334,657.9375 842.334,657.9375 842.334,667.9375 L842.334,693.9375 C842.334,703.9375 824.334,703.9375 824.334,703.9375 C824.334,703.9375 806.334,703.9375 806.334,693.9375 L806.334,667.9375" fill="#E2E2F0" style="stroke:#181818;stroke-width:0.5;"></path><path d="M806.334,667.9375 C806.334,677.9375 824.334,677.9375 824.334,677.9375 C824.334,677.9375 842.334,677.9375 842.334,667.9375" fill="none" style="stroke:#181818;stroke-width:0.5;"></path></g><g class="participant participant-head" data-entity-uid="part5" data-qualified-name="User" id="part5-head"><rect fill="#E2E2F0" height="31.6094" rx="2.5" ry="2.5" style="stroke:#181818;stroke-width:0.5;" width="43.5586" x="852.334" y="88.6094"></rect><text fill="#000000" font-family="sans-serif" font-size="14" lengthAdjust="spacing" textLength="29.5586" x="859.334" y="110.1426">User</text></g><g class="participant participant-tail" data-entity-uid="part5" data-qualified-name="User" id="part5-tail"><rect fill="#E2E2F0" height="31.6094" rx="2.5" ry="2.5" style="stroke:#181818;stroke-width:0.5;" width="43.5586" x="852.334" y="640.3281"></rect><text fill="#000000" font-family="sans-serif" font-size="14" lengthAdjust="spacing" textLength="29.5586" x="859.334" y="661.8613">User</text></g><g class="participant participant-head" data-entity-uid="part6" data-qualified-name="UI" id="part6-head"><rect fill="#E2E2F0" height="31.6094" rx="2.5" ry="2.5" style="stroke:#181818;stroke-width:0.5;" width="28" x="967.9468" y="88.6094"></rect><text fill="#000000" font-family="sans-serif" font-size="14" lengthAdjust="spacing" textLength="14" x="974.9468" y="110.1426">UI</text></g><g class="participant participant-tail" data-entity-uid="part6" data-qualified-name="UI" id="part6-tail"><rect fill="#E2E2F0" height="31.6094" rx="2.5" ry="2.5" style="stroke:#181818;stroke-width:0.5;" width="28" x="967.9468" y="640.3281"></rect><text fill="#000000" font-family="sans-serif" font-size="14" lengthAdjust="spacing" textLength="14" x="974.9468" y="661.8613">UI</text></g><g class="message" data-entity-1="part1" data-entity-2="part2" id="msg1"><polygon fill="#181818" points="434.1099,149.5703,444.1099,153.5703,434.1099,157.5703,438.1099,153.5703" style="stroke:#181818;stroke-width:1;"></polygon><line style="stroke:#181818;stroke-width:1;" x1="76.6895" x2="440.1099" y1="153.5703" y2="153.5703"></line><text fill="#000000" font-family="sans-serif" font-size="13" lengthAdjust="spacing" textLength="345.4204" x="83.6895" y="148.7139">POST /api/v1/payments/webhook {event, idempotency_key}</text></g><g class="message" data-entity-1="part2" data-entity-2="part2" id="msg2"><line style="stroke:#181818;stroke-width:1;" x1="446.1099" x2="488.1099" y1="183.9219" y2="183.9219"></line><line style="stroke:#181818;stroke-width:1;" x1="488.1099" x2="488.1099" y1="183.9219" y2="196.9219"></line><line style="stroke:#181818;stroke-width:1;" x1="447.1099" x2="488.1099" y1="196.9219" y2="196.9219"></line><polygon fill="#181818" points="457.1099,192.9219,447.1099,196.9219,457.1099,200.9219,453.1099,196.9219" style="stroke:#181818;stroke-width:1;"></polygon><text fill="#000000" font-family="sans-serif" font-size="13" lengthAdjust="spacing" textLength="195.8442" x="453.1099" y="179.0654">lookup event by idempotency_key</text></g><path d="M10,211.9219 L70.1709,211.9219 L70.1709,220.2734 L60.1709,230.2734 L10,230.2734 L10,211.9219" fill="#EEEEEE" style="stroke:#000000;stroke-width:1.5;"></path><rect fill="none" height="185.9453" style="stroke:#000000;stroke-width:1.5;" width="842.334" x="10" y="211.9219"></rect><text fill="#000000" font-family="sans-serif" font-size="13" font-weight="bold" lengthAdjust="spacing" textLength="15.1709" x="25" y="226.417">alt</text><text fill="#000000" font-family="sans-serif" font-size="11" font-weight="bold" lengthAdjust="spacing" textLength="103.936" x="85.1709" y="225.3408">[already processed]</text><g class="message" data-entity-1="part2" data-entity-2="part1" id="msg3"><polygon fill="#181818" points="87.6895,248.625,77.6895,252.625,87.6895,256.625,83.6895,252.625" style="stroke:#181818;stroke-width:1;"></polygon><line style="stroke:#181818;stroke-width:1;stroke-dasharray:2,2;" x1="81.6895" x2="445.1099" y1="252.625" y2="252.625"></line><text fill="#000000" font-family="sans-serif" font-size="13" lengthAdjust="spacing" textLength="77.3271" x="93.6895" y="247.7686">200 (ignored)</text></g><line style="stroke:#000000;stroke-width:1;stroke-dasharray:2,2;" x1="10" x2="852.334" y1="261.625" y2="261.625"></line><text fill="#000000" font-family="sans-serif" font-size="11" font-weight="bold" lengthAdjust="spacing" textLength="60.5107" x="15" y="273.0439">[new event]</text><g class="message" data-entity-1="part2" data-entity-2="part3" id="msg4"><polygon fill="#181818" points="653.186,294.8125,663.186,298.8125,653.186,302.8125,657.186,298.8125" style="stroke:#181818;stroke-width:1;"></polygon><line style="stroke:#181818;stroke-width:1;" x1="446.1099" x2="659.186" y1="298.8125" y2="298.8125"></line><text fill="#000000" font-family="sans-serif" font-size="13" lengthAdjust="spacing" textLength="195.0762" x="453.1099" y="293.9561">mark payment received (order_id)</text></g><g class="message" data-entity-1="part3" data-entity-2="part4" id="msg5"><polygon fill="#181818" points="812.334,325.1641,822.334,329.1641,812.334,333.1641,816.334,329.1641" style="stroke:#181818;stroke-width:1;"></polygon><line style="stroke:#181818;stroke-width:1;" x1="665.186" x2="818.334" y1="329.1641" y2="329.1641"></line><text fill="#000000" font-family="sans-serif" font-size="13" lengthAdjust="spacing" textLength="135.1479" x="672.186" y="324.3076">update payment_status</text></g><g class="message" data-entity-1="part4" data-entity-2="part3" id="msg6"><polygon fill="#181818" points="676.186,355.5156,666.186,359.5156,676.186,363.5156,672.186,359.5156" style="stroke:#181818;stroke-width:1;"></polygon><line style="stroke:#181818;stroke-width:1;stroke-dasharray:2,2;" x1="670.186" x2="823.334" y1="359.5156" y2="359.5156"></line><text fill="#000000" font-family="sans-serif" font-size="13" lengthAdjust="spacing" textLength="18.7827" x="682.186" y="354.6592">OK</text></g><g class="message" data-entity-1="part2" data-entity-2="part1" id="msg7"><polygon fill="#181818" points="87.6895,385.8672,77.6895,389.8672,87.6895,393.8672,83.6895,389.8672" style="stroke:#181818;stroke-width:1;"></polygon><line style="stroke:#181818;stroke-width:1;stroke-dasharray:2,2;" x1="81.6895" x2="445.1099" y1="389.8672" y2="389.8672"></line><text fill="#000000" font-family="sans-serif" font-size="13" lengthAdjust="spacing" textLength="93.939" x="93.6895" y="385.0107">200 (processed)</text></g><rect fill="#EEEEEE" height="3" style="stroke:#EEEEEE;stroke-width:1;" width="1000.9468" x="0" y="426.043"></rect><line style="stroke:#000000;stroke-width:1;" x1="0" x2="1000.9468" y1="426.043" y2="426.043"></line><line style="stroke:#000000;stroke-width:1;" x1="0" x2="1000.9468" y1="429.043" y2="429.043"></line><rect fill="#EEEEEE" height="24.3516" style="stroke:#000000;stroke-width:2;" width="62.3818" x="469.2825" y="414.8672"></rect><text fill="#000000" font-family="sans-serif" font-size="13" font-weight="bold" lengthAdjust="spacing" textLength="44.77" x="475.2825" y="432.3623">Refund</text><g class="message" data-entity-1="part5" data-entity-2="part6" id="msg8"><polygon fill="#181818" points="969.9468,467.5703,979.9468,471.5703,969.9468,475.5703,973.9468,471.5703" style="stroke:#181818;stroke-width:1;"></polygon><line style="stroke:#181818;stroke-width:1;" x1="874.1133" x2="975.9468" y1="471.5703" y2="471.5703"></line><text fill="#000000" font-family="sans-serif" font-size="13" lengthAdjust="spacing" textLength="83.8335" x="881.1133" y="466.7139">request refund</text></g><g class="message" data-entity-1="part6" data-entity-2="part2" id="msg9"><polygon fill="#181818" points="457.1099,497.9219,447.1099,501.9219,457.1099,505.9219,453.1099,501.9219" style="stroke:#181818;stroke-width:1;"></polygon><line style="stroke:#181818;stroke-width:1;" x1="451.1099" x2="980.9468" y1="501.9219" y2="501.9219"></line><text fill="#000000" font-family="sans-serif" font-size="13" lengthAdjust="spacing" textLength="200.167" x="463.1099" y="497.0654">POST /api/v1/payments/{id}/refund</text></g><g class="message" data-entity-1="part2" data-entity-2="part1" id="msg10"><polygon fill="#181818" points="87.6895,528.2734,77.6895,532.2734,87.6895,536.2734,83.6895,532.2734" style="stroke:#181818;stroke-width:1;"></polygon><line style="stroke:#181818;stroke-width:1;" x1="81.6895" x2="445.1099" y1="532.2734" y2="532.2734"></line><text fill="#000000" font-family="sans-serif" font-size="13" lengthAdjust="spacing" textLength="78.0508" x="93.6895" y="527.417">initiate refund</text></g><g class="message" data-entity-1="part1" data-entity-2="part2" id="msg11"><polygon fill="#181818" points="434.1099,558.625,444.1099,562.625,434.1099,566.625,438.1099,562.625" style="stroke:#181818;stroke-width:1;"></polygon><line style="stroke:#181818;stroke-width:1;stroke-dasharray:2,2;" x1="76.6895" x2="440.1099" y1="562.625" y2="562.625"></line><text fill="#000000" font-family="sans-serif" font-size="13" lengthAdjust="spacing" textLength="86.709" x="83.6895" y="557.7686">refund_confirm</text></g><g class="message" data-entity-1="part2" data-entity-2="part3" id="msg12"><polygon fill="#181818" points="653.186,588.9766,663.186,592.9766,653.186,596.9766,657.186,592.9766" style="stroke:#181818;stroke-width:1;"></polygon><line style="stroke:#181818;stroke-width:1;" x1="446.1099" x2="659.186" y1="592.9766" y2="592.9766"></line><text fill="#000000" font-family="sans-serif" font-size="13" lengthAdjust="spacing" textLength="122.1479" x="453.1099" y="588.1201">update refund_status</text></g><g class="message" data-entity-1="part2" data-entity-2="part6" id="msg13"><polygon fill="#181818" points="969.9468,619.3281,979.9468,623.3281,969.9468,627.3281,973.9468,623.3281" style="stroke:#181818;stroke-width:1;"></polygon><line style="stroke:#181818;stroke-width:1;stroke-dasharray:2,2;" x1="446.1099" x2="975.9468" y1="623.3281" y2="623.3281"></line><text fill="#000000" font-family="sans-serif" font-size="13" lengthAdjust="spacing" textLength="133.7007" x="453.1099" y="618.4717">200 (refund scheduled)</text></g><!--?plantuml-src ZLAnRi8m5Dpz5KyC5QYjGZj62aF4WZg0IfaZOp_08h5TsmcA4FzUXpYaGGoCoRkxTtVFJhWSOKNh0gM35_Z6NIavZ4-uFIXrX5SG70kj74g64qAPKwQ3huog_DGGJOqJJ6Zg9KPXQ66DfX8CHq1jnx13wD9ujerIlqZ8_O3GZWYdZcwfHPYdXDojXVVPJJU6rNBz0n7L8ge-8Xr-HrsCCrR---rVc3exOdqXDxS3iTnpIWrN4cphUngXkGEQ6wIy1cqKGskH4u1UhPVhxCRmEPt2MEobCiWd17CVI-AftJ8WpqBy60fgZX3IW466ea9_7TMCC-5L840RqZoDeTI-CkmecNNKbTQZvkdLKwUx_7hExIsSzoiv8KdIlP0a8HlR7c6pYBsttn9jux6PaitYcUkS1Rz4WV7W4BqN8OKJJQuXk7y9WsKjA6DAxeGfoADUGqq16LeQzD64kbRGOi2o0_8ozqty0G00?--></g></svg></p><h2 id="52-logische-übersicht-logical-view">5.2 Logische Übersicht (Logical view) </h2>
+<p><strong>Ziel:</strong> Darstellung der logischen Strukturen</p>
+<h3 id="er---model">ER - Model </h3>
+<div class="mermaid">erDiagram
 direction LR;
 
 USER {
@@ -1430,9 +993,8 @@ SP_GROUP_INVOICE {
 
 SP_GROUP_INVOICE |o--|| SP_GROUP_OFFER : "invoice"
 
-</div></code></pre>
-<h3 id="crud-matrix">CRUD-Matrix</h3>
-<p>Die CRUD-Matrix zeigt für jede Entität im ER-Modell die unterstützten Operationen (Create, Read, Update, Delete), basierend auf den funktionalen User Stories und der API-Spezifikation. &quot;Ja&quot; bedeutet, die Operation ist verfügbar; &quot;Nein&quot; bedeutet, sie ist nicht vorgesehen oder nicht erforderlich.</p>
+</div><h3 id="crud-matrix">CRUD-Matrix </h3>
+<p>Die CRUD-Matrix zeigt für jede Entität im ER-Modell die unterstützten Operationen (Create, Read, Update, Delete), basierend auf den funktionalen User Stories und der API-Spezifikation. "Ja" bedeutet, die Operation ist verfügbar; "Nein" bedeutet, sie ist nicht vorgesehen oder nicht erforderlich.</p>
 <table>
 <thead>
 <tr>
@@ -1600,50 +1162,64 @@ SP_GROUP_INVOICE |o--|| SP_GROUP_OFFER : "invoice"
 </tbody>
 </table>
 <p>Diese Matrix deckt alle Kernoperationen ab, die in den User Stories definiert sind. Nicht unterstützte Operationen (z. B. Update für TRANSACTION) sind durch Geschäftslogik begründet (z. B. Idempotenz bei Zahlungen). Die Matrix bestätigt, dass die Entitäten vollständig zu den funktionalen Anforderungen passen.</p>
-<h2 id="53-entwickler%C3%BCbersicht-komponentenmodule-paket%E2%80%91-und-repo%E2%80%91struktur-api%E2%80%91contract-openapi-buildci">5.3 Entwicklerübersicht: Komponenten/Module, Paket‑ und Repo‑Struktur, API‑Contract (OpenAPI), Build/CI</h2>
-<!--
-- Development View
-  - Komponentenübersicht (groups‑service, auth, payments, provider‑portal, ui)
-  - API‑Endpunkte (stubs) für Kernflows (Groups, Membership, Payments)
-  - Build/CI Übersicht, Dependency‑Matrix
--->
-<p><strong>Kurzbeschreibung</strong></p>
-<p>Die Plattform ist als cloud‑native, dreischichtige Web‑/Mobile‑Anwendung ausgelegt: klientenseitig (Web / Mobile), API‑Layer (Gateway / Edge) und ein Backend‑Service‑Ökosystem (auth, groups, payments, provider, media, notifications, background workers). Persistente Daten liegen in einer relationalen Primärdatenbank; große Binärdaten (Fotos/Videos) werden in Object Storage abgelegt. Caching, Message‑Broker und Suchindex sind zusätzliche Komponenten zur Skalierung.</p>
-<p><strong>Hauptkomponenten (Übersicht)</strong></p>
+<h2 id="53-entwicklerübersicht-development-view">5.3 Entwicklerübersicht (Development View) </h2>
+<p><strong>Ziel:</strong> Darstellung der modularen Struktur, der Komponenten und deren Abhängigkeiten.</p>
+<p><strong>Komponentenübersicht</strong></p>
 <ul>
-<li>API Gateway / Ingress: TLS‑Termination, Routing, Rate‑Limiting, Authn/Z</li>
-<li>Auth Service: Login, Sessions, 2FA, Token‑Issuance, Account Management</li>
-<li>Groups Service: Domain‑Logik für Gruppen, Mitglieder, Notizen, Termine, Surveys</li>
-<li>Payments Bridge: Integration zu Stripe/Adyen, Webhook‑Handler (idempotent)</li>
-<li>Provider / Marketplace Service: Provider‑Listing, Angebote, Buchungen, Ressourcenplanung</li>
-<li>Media Service / Object Storage: Uploads, Thumbnails, CDN‑Serving</li>
-<li>Background Workers: E‑Mails, Push, Reconciliations, Refunds, Maintenance Jobs</li>
-<li>Data Stores: Primary RDBMS (ACID), Redis (cache, sessions, rate limits), Search (Elasticsearch/Opensearch)</li>
-<li>Message Broker: RabbitMQ / Kafka für asynchrone Aufgaben und Events</li>
-<li>Observability: Prometheus, Grafana, ELK/Opensearch, Tracing (Jaeger)</li>
-<li>CI/CD, IaC, KMS/Secrets Manager</li>
-</ul>
-<h3 id="komponenten">Komponenten</h3>
+<li><strong>Frontend-Layer:</strong> Web (React/Vue), Mobile (React Native / Flutter) — shared client code wo möglich</li>
+<li><strong>API-Gateway:</strong> Kong / Envoy — Routing, Auth, Rate-Limiting</li>
+<li><strong>Microservices (Backend):</strong>
 <ul>
-<li>Website</li>
-<li>Mobile app</li>
-<li>Authentication service</li>
-<li>Gruppenservice</li>
-<li>ProviderPortal</li>
-<li>ProviderService</li>
-<li>Datenbank</li>
+<li>Auth Service (login, sessions, 2FA, token management)</li>
+<li>Groups Service (CRUD groups, members, notes, surveys, tasks)</li>
+<li>Payments Service (payment processing, webhook handling, reconciliation)</li>
+<li>Provider Service (provider management, bookings, offers, invoices)</li>
+<li>Media Service (uploads, CDN delivery)</li>
+<li>Notification Service (email, SMS, push)</li>
+<li>Export Service (DSGVO data export, deletion)</li>
 </ul>
-<h3 id="repositories">Repositories</h3>
+</li>
+<li><strong>Data Layer:</strong> PostgreSQL</li>
+<li><strong>Messaging:</strong> RabbitMQ / Kafka (background jobs, event streaming)</li>
+<li><strong>CI/CD:</strong> GitHub Actions / GitLab CI, Docker, Helm, Terraform</li>
+</ul>
+<p><strong>Repository-Struktur</strong></p>
+<pre data-role="codeBlock" data-info="" class="language-text"><code>event-platform/
+├── frontend/
+│   ├── web/          # React/Vue app
+│   ├── mobile/       # React Native/Flutter app
+│   └── shared/       # Shared UI libs, types
+├── backend/
+│   ├── api-gateway/  # Kong/Envoy config
+│   ├── services/
+│   │   ├── auth/
+│   │   ├── groups/
+│   │   ├── payments/
+│   │   ├── providers/
+│   │   ├── media/
+│   │   ├── notifications/
+│   │   └── export/
+│   ├── libs/         # Shared backend libs
+│   └── workers/      # Background jobs
+├── infra/
+│   ├── k8s/          # Helm charts, K8s manifests
+│   ├── terraform/    # IaC for cloud resources
+│   └── docker/       # Dockerfiles
+├── db/               # Database migrations, schemas
+└── api/              # OpenAPI specs
+</code></pre><h3 id="buildcicd-pipeline">Build/CI/CD Pipeline </h3>
 <ul>
-<li>Website</li>
-<li>Mobile app</li>
-<li>Api-services</li>
+<li>Units tests auf jeden commit (Jest / Go testing)</li>
+<li>Integration tests gegen test DB</li>
+<li>E2E tests gegen staging (Cypress / Playwright)</li>
+<li>Container build &amp; push to registry (ECR / Docker Hub)</li>
+<li>Helm deployment (staging → prod) mit approval gate</li>
 </ul>
-<h3 id="api-endpunkte">Api-endpunkte</h3>
+<h3 id="api-endpunkte">Api-endpunkte </h3>
 <p>Api prefix: <code>api/v1/</code><br>
 Alle Endpunkte mit Ausnahme von <code>login</code> und <code>register</code> erfordern einen gültigen session header.</p>
 <p><em>OpenAPI spec: <a href="api/Openapi.yaml">SPEC</a></em></p>
-<h4 id="user">User</h4>
+<h4 id="user">User </h4>
 <ul>
 <li>GET user/{userId} → 200 OK</li>
 <li>POST user/: {payload} → 201 Created</li>
@@ -1654,7 +1230,7 @@ Alle Endpunkte mit Ausnahme von <code>login</code> und <code>register</code> erf
 <li>GET /users/{id}/export → 200 OK (JSON/CSV mit allen User-Daten)</li>
 <li>DELETE /users/{id}/gdpr-delete → 202 Accepted (Anonymisierung nach 30 Tagen)</li>
 </ul>
-<h4 id="auth">Auth</h4>
+<h4 id="auth">Auth </h4>
 <ul>
 <li>POST /auth/login {username, password} → 200 OK + JWT/Session</li>
 <li>POST /auth/register {email, username, password, ...} → 201 Created</li>
@@ -1663,7 +1239,7 @@ Alle Endpunkte mit Ausnahme von <code>login</code> und <code>register</code> erf
 <li>POST /auth/logout → 200 OK (invalidates Session)</li>
 <li>GET /auth/session → 200 OK (prüft aktive Session)</li>
 </ul>
-<h4 id="groups">Groups</h4>
+<h4 id="groups">Groups </h4>
 <ul>
 <li>GET groups/{groupId} → 200 OK</li>
 <li>GET groups/ → 200 OK</li>
@@ -1730,7 +1306,7 @@ Alle Endpunkte mit Ausnahme von <code>login</code> und <code>register</code> erf
 <li>GET /media/{id} → 200 OK (Download)</li>
 <li>DELETE /media/{id} → 204 No Content</li>
 </ul>
-<h4 id="providers">Providers</h4>
+<h4 id="providers">Providers </h4>
 <ul>
 <li>GET    provider/ → 200 OK</li>
 <li>GET    provider/{id} → 200 OK</li>
@@ -1763,7 +1339,7 @@ Alle Endpunkte mit Ausnahme von <code>login</code> und <code>register</code> erf
 <li>POST /providers/{id}/book {group_id, budget} → 201 Created</li>
 <li>POST /providers/{id}/rate {rating, comment} → 200 OK</li>
 </ul>
-<h4 id="events-managed-by-provider">Events managed by provider</h4>
+<h4 id="events-managed-by-provider">Events managed by provider </h4>
 <ul>
 <li>
 <p>GET  event/</p>
@@ -1784,150 +1360,178 @@ Alle Endpunkte mit Ausnahme von <code>login</code> und <code>register</code> erf
 <p>POST event/invoice {payload}</p>
 </li>
 </ul>
-<h2 id="54-prozess%C3%BCbersicht-laufzeit%E2%80%91architektur-messagingqueues-state%E2%80%91machines-z-b-group-lifecycle-performance%E2%80%91flows">5.4 Prozessübersicht: Laufzeit‑Architektur, Messaging/Queues, State‑Machines (z. B. Group lifecycle), Performance‑Flows</h2>
-<!--
-- Development View
-  - Komponentenübersicht (groups‑service, auth, payments, provider‑portal, ui)
-  - API‑Endpunkte (stubs) für Kernflows (Groups, Membership, Payments)
-  - Build/CI Übersicht, Dependency‑Matrix
--->
-<h2 id="55-physical-view-deployment%E2%80%91diagramm-k8svms-netz-sizing-slosla">5.5 Physical View: Deployment‑Diagramm (K8s/VMs), Netz, Sizing, SLO/SLA</h2>
-<!--
-- Physical View
-  - Beispiel‑Deployment (k8s/VM), Netz‑Diagram, Storage/BLOB, CDN
-  - Backup/Restore, DR‑Plan, Sizing‑Annäherungen
--->
+<h2 id="54-prozessübersicht-process-view">5.4 Prozessübersicht (Process View) </h2>
+<p><strong>Ziel:</strong> Darstellung der Runtime-Architektur und der Kommunikationsmuster zwischen Services.</p>
+<p><strong>Asynchrone Kommunikation &amp; Messaging</strong></p>
 <ul>
-<li>Umgebung: K8s Cluster pro Region (Namespaces per environment: staging/prod)</li>
-<li>Netzwerk: Public Ingress (LoadBalancer / CDN) in DMZ; private Back‑end Subnet für Services und DB</li>
-<li>Datenhaltung: Managed RDBMS Multi‑AZ mit Read‑Replicas; Object Storage mit Lifecycle Policies</li>
-<li>Verfügbarkeit: Multi‑AZ, HPA für Pods, SLOs gemäss Kapitel 2 (z. B. 99.5% für auth/payments)</li>
-<li>Backups: tägliche Snapshots (RPO 24h), kritische RTO &lt;1h (auth/payments)</li>
+<li>Payment webhooks → RabbitMQ → Idempotent Handler → DB update</li>
+<li>Group lifecycle events (created/cancelled) → RabbitMQ fanout → Notifications, Export-service</li>
+<li>Background jobs (email, SMS, refunds) → Worker pool mit exponential backoff</li>
+<li>Calendar sync (daily cron) → External APIs (Google/Outlook)</li>
 </ul>
-<hr>
-<h1 id="6-nicht%E2%80%91funktionale-anforderungen-nfr--messbar-performance-security-privacy-availability-scalability">6 Nicht‑funktionale Anforderungen (NFR) — messbar: Performance, Security, Privacy, Availability, Scalability</h1>
-<h1 id="7-security--privacy-stride-dsgvo%E2%80%91flows-key%E2%80%91management-aufbewahrung">7 Security &amp; Privacy (STRIDE, DSGVO‑Flows, Key‑Management, Aufbewahrung)</h1>
-<!--
-- NFRs & Security
-  - Messbare NFR‑Tabelle (SLO/SLA, retention, latency, throughput)
-  - STRIDE‑Kurzanalyse + Controls (Auth, KMS, Rate‑limit, CSP)
-  - DSGVO: Datenexport & Lösch‑Workflow (API + delays)
-  - 
--->
+<p><strong>State Machines</strong></p>
 <ul>
-<li>Spoofing: starke Auth (OAuth2 / JWT, refresh tokens), MFA option; secure session management</li>
-<li>Tampering: input validation, HMAC/signatures für webhooks, integrity checks, WAF</li>
-<li>Repudiation: zentrale Audit‑Logs for critical actions, signed receipts for payments</li>
-<li>Information Disclosure: TLS everywhere, access controls, least privilege, encryption at rest (KMS)</li>
-<li>Denial of Service: rate limits, autoscaling, circuit breakers, WAF, traffic quotas</li>
-<li>Elevation of Privilege: RBAC, privilege separation, hardened service accounts, regular pen‑tests</li>
-</ul>
-<h1 id="8-api--integration-openapi-webhooks-idempotenz-3rd%E2%80%91party-connectors">8 API &amp; Integration (OpenAPI, Webhooks, Idempotenz, 3rd‑party connectors)</h1>
-<!--
-- API & Integration
-  - OpenAPI‑stubs für Kernressourcen
-  - Webhook contract (idempotence), retry semantics
-  - 3rd‑party integration checklist (payment, calendar sync)
--->
+<li><strong>Group Lifecycle:</strong> Draft → Open → Confirmed → Closed/Cancelled → Archived
 <ul>
-<li>OpenAPI Spec: <code>api.yaml</code> (Anhang D). Alle öffentlichen Endpunkte sollen eine Versionierung und Rate‑Limit haben.</li>
-<li>Webhooks: idempotency keys, replay protection, signature verification</li>
-<li>Externe Provider: Payments (Stripe/Adyen), Calendar Sync (Google/Outlook), Email/SMS (SendGrid/Twilio)</li>
+<li>Triggers: user action, time-based (lifecycle rules), payment threshold</li>
+<li>Side effects: notifications, auto-refunds (bei Cancel), archiving</li>
 </ul>
-<h1 id="9-operations--sre-monitoring-logging-backups-runbook-incident%E2%80%91response">9 Operations &amp; SRE (Monitoring, Logging, Backups, Runbook, Incident‑Response)</h1>
-<!--
-- Operations & Testplan
-  - Monitoring KPI list, runbooks for top‑5 incidents
-  - CI/CD gates + Testmatrix (unit/integration/e2e/manual)
--->
+</li>
+<li><strong>Payment State:</strong> Pending → Processing → Completed / Failed → Refunded (optional)</li>
+<li><strong>Task State:</strong> Created → Assigned → In-Progress → Completed / Cancelled</li>
+</ul>
+<p><strong>Performance Flows / Caching</strong></p>
 <ul>
-<li>Monitoring: metrics (Prometheus), dashboards (Grafana), alerting thresholds aligned with SLOs</li>
-<li>Logging: central log pipeline (ELK/Opensearch) with 90d retention (siehe Kapitel 2)</li>
-<li>Runbooks: incident playbooks for auth outage, payment failure, data‑loss</li>
-<li>Security Ops: rotation of keys, regular vulnerability scans, dependency updates</li>
+<li>User sessions (Redis TTL 30 min idle)</li>
+<li>Group membership cache (invalidate on member change)</li>
+<li>Provider listings (CDN + Redis with 5 min TTL)</li>
+<li>Search index (Elasticsearch, async indexing)</li>
 </ul>
-<h1 id="10-testplan--qa-unit-integration-e2e-akzeptanztests-cicd%E2%80%91gates">10 Testplan / QA (Unit, Integration, E2E, Akzeptanztests, CI/CD‑Gates)</h1>
-<h1 id="11-anh%C3%A4nge">11 Anhänge</h1>
-<h2 id="anhang-a--ui-mockups">Anhang A — UI Mockups</h2>
-<h3 id="guppen-homepage">Guppen-Homepage</h3>
-<p><img src="mockups/GroupOverview.png" alt=""></p>
-<h3 id="nutzer-registrieren">Nutzer registrieren</h3>
-<p><img src="mockups/CreateUser.drawio.png" alt="Nutzer registrieren"></p>
-<h3 id="service-provider-%C3%BCbersicht">Service Provider Übersicht</h3>
-<p><img src="mockups/ProviderOverview.drawio.png" alt="Provider Übersicht"></p>
-<h2 id="anhang-b--aip">Anhang B — AIP</h2>
-<p><a href="api/openapi.yaml">api/openapi.xaml</a></p>
-<h2 id="anhang-c--initiale-traceability%E2%80%91matrix-auszug">Anhang C — initiale Traceability‑Matrix (Auszug)</h2>
-<table>
-<thead>
-<tr>
-<th>Requirement ID</th>
-<th>Kurzbezeichnung</th>
-<th>Use‑case</th>
-<th>Component</th>
-<th>API endpoint</th>
-<th>Testcase ID</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>REQ-001</td>
-<td>User login</td>
-<td>Authenticate user</td>
-<td>auth-service</td>
-<td>POST /api/v1/auth/login</td>
-<td>TC-001</td>
-</tr>
-<tr>
-<td>REQ-003</td>
-<td>Create group</td>
-<td>Create Group</td>
-<td>groups-service</td>
-<td>POST /api/v1/groups</td>
-<td>TC-010</td>
-</tr>
-<tr>
-<td>REQ-004</td>
-<td>Join group</td>
-<td>Join Group</td>
-<td>membership-service</td>
-<td>POST /api/v1/groups/{group_id}/join</td>
-<td>TC-011</td>
-</tr>
-<tr>
-<td>REQ-006</td>
-<td>Book provider</td>
-<td>Provider booking</td>
-<td>booking-service</td>
-<td>POST /api/v1/providers/{id}/book</td>
-<td>TC-030</td>
-</tr>
-<tr>
-<td>REQ-007</td>
-<td>Payment webhook idempotence</td>
-<td>Payment notification</td>
-<td>payments-service</td>
-<td>POST /api/v1/payments/webhook</td>
-<td>TC-040</td>
-</tr>
-<tr>
-<td>REQ-009</td>
-<td>Data export</td>
-<td>User data export</td>
-<td>export-service</td>
-<td>GET /api/v1/users/{id}/export</td>
-<td>TC-050</td>
-</tr>
-</tbody>
-</table>
-<p>Details / Dateien:</p>
+<p><strong>Data Consistency</strong></p>
 <ul>
-<li>Vollständige CSV (expandable): <code>SoftwareTechnik/traceability.csv</code></li>
-<li>Sequenzdiagramme (PlantUML): <code>SoftwareTechnik/diagrams/create_group.puml</code>, <code>.../book_provider.puml</code>, <code>.../payment_refund.puml</code></li>
+<li>Multi-AZ replication for primary DB (1-2 sec lag acceptable for reads)</li>
+<li>Eventual consistency for caches (invalidation on write)</li>
+<li>Strong consistency for payments (immediate confirmation via webhook ACK)</li>
 </ul>
-<!--
-Hinweis: das oben ist ein initialer, prüfbarer Auszug für die wichtigsten MVP‑Flows — erweitere die CSV, bis jede Story aus Kapitel 4 abgebildet ist.
--->
+<h2 id="55-physische-übersicht--deployment-physical-view">5.5 Physische Übersicht &amp; Deployment (Physical View) </h2>
+<p><strong>Ziel:</strong> Darstellung der Hardware-Ressourcen, Netzwerk-Topologie und Deployment-Architektur.</p>
+<h3 id="deployment-architektur-3-tier">Deployment-Architektur (3-Tier) </h3>
+<div class="mermaid">graph TD
 
-</body>
-</html>
+  subgraph "Client"
+    Web["Web Browser&lt;br/&gt;Chrome, Firefox, Safari, Edge&lt;br/&gt;React/Vue SPA"]
+    Mobile["Mobile App&lt;br/&gt;iOS/Android&lt;br/&gt;React Native/Flutter"]
+  end
+
+  subgraph "Server"
+    ReverseProxy["Proxy and load balancer"]
+    PaymentService
+    AuthService
+    GroupService
+    ProviderService
+    MediaService
+    NotificationService 
+    ExportService
+  end
+
+  subgraph "DB"
+    Database["PostgresSQL database"]
+  end
+
+  subgraph "External"
+    PaymentProvider["Stripe"]
+  end
+
+  Web --&gt;|https| ReverseProxy
+  Mobile --&gt;|https| ReverseProxy
+
+  ReverseProxy --&gt;|RESR/gRPC| AuthService
+  ReverseProxy --&gt;|RESR/gRPC| GroupService
+  ReverseProxy --&gt;|RESR/gRPC| PaymentService
+  ReverseProxy --&gt;|RESR/gRPC| ProviderService
+  ReverseProxy --&gt;|RESR/gRPC| MediaService
+  ReverseProxy --&gt;|RESR/gRPC| NotificationService
+  ReverseProxy --&gt;|RESR/gRPC| ExportService
+
+  PaymentService --&gt; Database
+  AuthService --&gt; Database
+  GroupService --&gt; Database
+  ProviderService --&gt; Database
+  MediaService --&gt; Database
+  NotificationService --&gt; Database
+  ExportService --&gt; Database
+
+  PaymentService --&gt;|https| PaymentProvider
+</div><h1 id="6-security--privacy">6 Security &amp; Privacy </h1>
+<h2 id="spoofing">Spoofing </h2>
+<p><strong>Problem:</strong> Der Illegale Zugriff auf den Account eines anderen Nutzers<br>
+<strong>Lösung:</strong> Die Verwendung einer Zwei-Factor Authentifizierung. Dadurch wird verbindet, dass ein Fremder auf einen Account zugriff bekommt, auch wenn er die Login Daten kennt, da ein zweiter Faktor benötigt wird.</p>
+<h2 id="tampering">Tampering </h2>
+<p><strong>Problem:</strong> Nutzer können eg. einen SQL exploit in ein Textfeld eingeben und somit zugriff auf die Datenbank erhalten.<br>
+<strong>Problem:</strong> Nutzer können exploits in ein Textfeld eingeben, welcher anderen Usern schade, indem der eingegebene Text als code ausgeführt wird.<br>
+<strong>Lösung:</strong> Alle Nutzereingaben müssen gereinigt (sanitized) werden</p>
+<ul>
+<li>Eingaben validieren</li>
+<li>Eingaben säubern</li>
+<li>Datenintegrität überprüfen</li>
+</ul>
+<h2 id="repudiation">Repudiation </h2>
+<p><strong>Problem:</strong> Ein Nutzer bestreitet eine Aktion durchgeführt zu haben. Zum Beispiel kann er behaupten, eine Abbuchung nicht erhalten zu haben.<br>
+<strong>Lösung:</strong> Alle kritischen stellen sollten Protokolliert werden. Transaktionen werden niemals gelöscht, es wird lediglich ihr status aktualisiert.</p>
+<ul>
+<li>Zentrale Audit-Logs</li>
+<li>Signierte Quittungen für Transaktionen</li>
+</ul>
+<h2 id="information-disclosure">Information Disclosure </h2>
+<p><strong>Problem:</strong> Nutzer können auf sensible Daten zugreifen, auf die sie keinen Zugriff haben sollten.<br>
+<strong>Lösung:</strong> Die Authentizität des Nutzers muss überprüft werden, bevor sensible Daten an ihn herausgegeben werden.</p>
+<p><strong>Problem:</strong> Dritte könnten Daten abfangen (Man In The Middle)<br>
+<strong>Lösung:</strong> Sämtliche Kommunikation sollte verschlüsselt stattfinden.</p>
+<ul>
+<li>Verschlüsselte Kommunikation</li>
+<li>Zugriffskontrollen</li>
+<li>Nur die nötigsten Privilegien vergeben</li>
+</ul>
+<h2 id="denial-of-service">Denial of Service </h2>
+<p><strong>Problem:</strong> Ein Nutzer könnte verhindern, das sich andere Nutzer über eine Gruppe austauschen inn dem er sie schließt.<br>
+<strong>Lösung:</strong> Nur Nutzer mit entsprechender Autorisation in einer Gruppe sollten in der Lage sein, kritische Änderungen vorzunehmen.</p>
+<p><strong>Problem:</strong> Degradierung des services aufgrund hoher Nutzeranfragen<br>
+<strong>Lösung:</strong></p>
+<ul>
+<li>Rate limits</li>
+<li>Autoscaling</li>
+<li>Circuit breaker</li>
+</ul>
+<h2 id="elevation-of-privilege">Elevation of Privilege </h2>
+<ul>
+<li>Regelmäßiger Penetrationstests</li>
+<li>Privilegien separieren</li>
+</ul>
+
+      </div>
+      
+      
+    
+    
+    <script type="module">
+// TODO: If ZenUML gets integrated into mermaid in the future,
+//      we can remove the following lines.
+
+
+var MERMAID_CONFIG = ({"startOnLoad":false});
+if (typeof MERMAID_CONFIG !== 'undefined') {
+  MERMAID_CONFIG.startOnLoad = false
+  MERMAID_CONFIG.cloneCssStyles = false
+  MERMAID_CONFIG.theme = "default"
+}
+
+mermaid.initialize(MERMAID_CONFIG || {})
+if (typeof(window['Reveal']) !== 'undefined') {
+  function mermaidRevealHelper(event) {
+    var currentSlide = event.currentSlide
+    var diagrams = currentSlide.querySelectorAll('.mermaid')
+    for (var i = 0; i < diagrams.length; i++) {
+      var diagram = diagrams[i]
+      if (!diagram.hasAttribute('data-processed')) {
+        mermaid.init(null, diagram, ()=> {
+          Reveal.slide(event.indexh, event.indexv)
+        })
+      }
+    }
+  }
+  Reveal.addEventListener('slidetransitionend', mermaidRevealHelper)
+  Reveal.addEventListener('ready', mermaidRevealHelper)
+  await mermaid.run({
+    nodes: document.querySelectorAll('.mermaid')
+  })
+} else {
+  await mermaid.run({
+    nodes: document.querySelectorAll('.mermaid')
+  })
+}
+</script>
+    
+    
+    
+  
+    </body></html>
