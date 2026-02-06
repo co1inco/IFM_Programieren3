@@ -101,6 +101,30 @@ Akzeptanz der Zusammenfassung
 
 # 4 - Funktionale requirements
 
+## 1.4 Schnittstellen & Systemarchitektur
+
+**Kurzbeschreibung**
+
+Die Plattform ist als cloud‑native, dreischichtige Web‑/Mobile‑Anwendung ausgelegt: klientenseitig (Web / Mobile), API‑Layer (Gateway / Edge) und ein Backend‑Service‑Ökosystem (auth, groups, payments, provider, media, notifications, background workers). Persistente Daten liegen in einer relationalen Primärdatenbank; große Binärdaten (Fotos/Videos) werden in Object Storage abgelegt. Caching, Message‑Broker und Suchindex sind zusätzliche Komponenten zur Skalierung.
+
+**Hauptkomponenten (Übersicht)**
+- API Gateway / Ingress: TLS‑Termination, Routing, Rate‑Limiting, Authn/Z
+- Auth Service: Login, Sessions, 2FA, Token‑Issuance, Account Management
+- Groups Service: Domain‑Logik für Gruppen, Mitglieder, Notizen, Termine, Surveys
+- Payments Bridge: Integration zu Stripe/Adyen, Webhook‑Handler (idempotent)
+- Provider / Marketplace Service: Provider‑Listing, Angebote, Buchungen, Ressourcenplanung
+- Media Service / Object Storage: Uploads, Thumbnails, CDN‑Serving
+- Background Workers: E‑Mails, Push, Reconciliations, Refunds, Maintenance Jobs
+- Data Stores: Primary RDBMS (ACID), Redis (cache, sessions, rate limits), Search (Elasticsearch/Opensearch)
+- Message Broker: RabbitMQ / Kafka für asynchrone Aufgaben und Events
+- Observability: Prometheus, Grafana, ELK/Opensearch, Tracing (Jaeger)
+- CI/CD, IaC, KMS/Secrets Manager
+
+**Hoch‑level Daten‑/Control‑Flow**
+Client (Web/Mobile) --HTTPS--> API Gateway --Auth--> Backend Service (REST/gRPC) --> RDBMS / Cache / Broker. Asynchrone Aufgaben werden über den Broker an Worker delegiert; Webhooks und externe Integrationen (Payments, Calendar, Email/SMS) laufen über dedizierte adapters mit Idempotenz‑Handling.
+
+
+## Funktionale Anforderungen
 <!--
 - Functional requirements (canonical)
   - Vollständige User‑Stories‑Tabelle (canonical source)
@@ -272,7 +296,36 @@ Groups -->> UI : 303 forward to group { /groups/{publicGroupId} }
 UI -->> Invited : Open group
 ```
 
-### TODO
+### Einzahlung rückerstatten
+
+```plantuml
+@startuml
+title Payment & Refund (webhook + idempotence)
+actor PaymentProvider
+participant "Payments Service" as Payments
+participant "Orders/Booking Service" as Orders
+database DB
+
+PaymentProvider -> Payments: POST /api/v1/payments/webhook {event, idempotency_key}
+Payments -> Payments: lookup event by idempotency_key
+alt already processed
+  Payments --> PaymentProvider: 200 (ignored)
+else new event
+  Payments -> Orders: mark payment received (order_id)
+  Orders -> DB: update payment_status
+  DB --> Orders: OK
+  Payments --> PaymentProvider: 200 (processed)
+end
+
+== Refund ==
+User -> UI: request refund
+UI -> Payments: POST /api/v1/payments/{id}/refund
+Payments -> PaymentProvider: initiate refund
+PaymentProvider --> Payments: refund_confirm
+Payments -> Orders: update refund_status
+Payments --> UI: 200 (refund scheduled)
+@enduml
+```
 
 
 ## 5.2 Logische Übersicht
@@ -569,6 +622,23 @@ Diese Matrix deckt alle Kernoperationen ab, die in den User Stories definiert si
   - Build/CI Übersicht, Dependency‑Matrix
 -->
 
+**Kurzbeschreibung**
+
+Die Plattform ist als cloud‑native, dreischichtige Web‑/Mobile‑Anwendung ausgelegt: klientenseitig (Web / Mobile), API‑Layer (Gateway / Edge) und ein Backend‑Service‑Ökosystem (auth, groups, payments, provider, media, notifications, background workers). Persistente Daten liegen in einer relationalen Primärdatenbank; große Binärdaten (Fotos/Videos) werden in Object Storage abgelegt. Caching, Message‑Broker und Suchindex sind zusätzliche Komponenten zur Skalierung.
+
+**Hauptkomponenten (Übersicht)**
+- API Gateway / Ingress: TLS‑Termination, Routing, Rate‑Limiting, Authn/Z
+- Auth Service: Login, Sessions, 2FA, Token‑Issuance, Account Management
+- Groups Service: Domain‑Logik für Gruppen, Mitglieder, Notizen, Termine, Surveys
+- Payments Bridge: Integration zu Stripe/Adyen, Webhook‑Handler (idempotent)
+- Provider / Marketplace Service: Provider‑Listing, Angebote, Buchungen, Ressourcenplanung
+- Media Service / Object Storage: Uploads, Thumbnails, CDN‑Serving
+- Background Workers: E‑Mails, Push, Reconciliations, Refunds, Maintenance Jobs
+- Data Stores: Primary RDBMS (ACID), Redis (cache, sessions, rate limits), Search (Elasticsearch/Opensearch)
+- Message Broker: RabbitMQ / Kafka für asynchrone Aufgaben und Events
+- Observability: Prometheus, Grafana, ELK/Opensearch, Tracing (Jaeger)
+- CI/CD, IaC, KMS/Secrets Manager
+
 ### Komponenten
 
  * Website
@@ -589,7 +659,7 @@ Diese Matrix deckt alle Kernoperationen ab, die in den User Stories definiert si
 Api prefix: `api/v1/`  
 Alle Endpunkte mit Ausnahme von `login` und `register` erfordern einen gültigen session header.
 
-*OpenAPI spec: [SPEC](api.yaml)*
+*OpenAPI spec: [SPEC](api/Openapi.yaml)*
 
 #### User
  * GET user/{userId} → 200 OK
@@ -721,6 +791,12 @@ Alle Endpunkte mit Ausnahme von `login` und `register` erfordern einen gültigen
   - Backup/Restore, DR‑Plan, Sizing‑Annäherungen
 -->
 
+- Umgebung: K8s Cluster pro Region (Namespaces per environment: staging/prod)
+- Netzwerk: Public Ingress (LoadBalancer / CDN) in DMZ; private Back‑end Subnet für Services und DB
+- Datenhaltung: Managed RDBMS Multi‑AZ mit Read‑Replicas; Object Storage mit Lifecycle Policies
+- Verfügbarkeit: Multi‑AZ, HPA für Pods, SLOs gemäss Kapitel 2 (z. B. 99.5% für auth/payments)
+- Backups: tägliche Snapshots (RPO 24h), kritische RTO <1h (auth/payments)
+
 
 ---
 
@@ -737,6 +813,14 @@ Alle Endpunkte mit Ausnahme von `login` und `register` erfordern einen gültigen
   - 
 -->
 
+- Spoofing: starke Auth (OAuth2 / JWT, refresh tokens), MFA option; secure session management
+- Tampering: input validation, HMAC/signatures für webhooks, integrity checks, WAF
+- Repudiation: zentrale Audit‑Logs for critical actions, signed receipts for payments
+- Information Disclosure: TLS everywhere, access controls, least privilege, encryption at rest (KMS)
+- Denial of Service: rate limits, autoscaling, circuit breakers, WAF, traffic quotas
+- Elevation of Privilege: RBAC, privilege separation, hardened service accounts, regular pen‑tests
+
+
 # 8 API & Integration (OpenAPI, Webhooks, Idempotenz, 3rd‑party connectors)
 
 <!--
@@ -746,6 +830,11 @@ Alle Endpunkte mit Ausnahme von `login` und `register` erfordern einen gültigen
   - 3rd‑party integration checklist (payment, calendar sync)
 -->
 
+- OpenAPI Spec: `api.yaml` (Anhang D). Alle öffentlichen Endpunkte sollen eine Versionierung und Rate‑Limit haben.
+- Webhooks: idempotency keys, replay protection, signature verification
+- Externe Provider: Payments (Stripe/Adyen), Calendar Sync (Google/Outlook), Email/SMS (SendGrid/Twilio)
+
+
 # 9 Operations & SRE (Monitoring, Logging, Backups, Runbook, Incident‑Response)
 
 <!--
@@ -754,16 +843,31 @@ Alle Endpunkte mit Ausnahme von `login` und `register` erfordern einen gültigen
   - CI/CD gates + Testmatrix (unit/integration/e2e/manual)
 -->
 
+- Monitoring: metrics (Prometheus), dashboards (Grafana), alerting thresholds aligned with SLOs
+- Logging: central log pipeline (ELK/Opensearch) with 90d retention (siehe Kapitel 2)
+- Runbooks: incident playbooks for auth outage, payment failure, data‑loss
+- Security Ops: rotation of keys, regular vulnerability scans, dependency updates
+
 # 10 Testplan / QA (Unit, Integration, E2E, Akzeptanztests, CI/CD‑Gates)
 
 # 11 Anhänge 
+    
+## Anhang A — UI Mockups
 
-<!--
-- Anhänge
-  - PlantUML/XMI, DDL, Mockups (png/svg), Beispiel‑API‑responses, Traceability CSV
--->
+### Guppen-Homepage
+ ![](mockups/GroupOverview.png)
 
-## Anhang E — initiale Traceability‑Matrix (Auszug)
+### Nutzer registrieren
+ ![Nutzer registrieren](mockups/CreateUser.drawio.png)
+
+### Service Provider Übersicht
+ ![Provider Übersicht](mockups/ProviderOverview.drawio.png)
+
+## Anhang B — AIP
+[api/openapi.xaml](api/openapi.yaml)
+
+
+## Anhang C — initiale Traceability‑Matrix (Auszug)
 
 | Requirement ID | Kurzbezeichnung | Use‑case | Component | API endpoint | Testcase ID |
 |---|---|---|---|---|---|

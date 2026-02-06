@@ -1,0 +1,52 @@
+<mxfile host="app.diagrams.net" agent="Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:147.0) Gecko/20100101 Firefox/147.0" version="29.3.7">
+  <diagram name="Page-1" id="UcbTS5xyj7lqEXvbwO9B">
+    <mxGraphModel dx="1584" dy="1111" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="850" pageHeight="1100" math="0" shadow="0">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+        <mxCell id="oPvTnUFBjhAW8F8UqWiR-2" parent="1" style="rounded=0;whiteSpace=wrap;html=1;" value="" vertex="1">
+          <mxGeometry height="760" width="760" x="50" y="120" as="geometry" />
+        </mxCell>
+        <mxCell id="oPvTnUFBjhAW8F8UqWiR-3" parent="1" style="rounded=1;whiteSpace=wrap;html=1;" value="Mitgliederliste" vertex="1">
+          <mxGeometry height="540" width="130" x="660" y="310" as="geometry" />
+        </mxCell>
+        <mxCell id="oPvTnUFBjhAW8F8UqWiR-4" parent="1" style="text;html=1;whiteSpace=wrap;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;rounded=0;" value="&lt;font style=&quot;font-size: 18px;&quot;&gt;&lt;b&gt;Gruppenname&lt;/b&gt;&lt;/font&gt;" vertex="1">
+          <mxGeometry height="50" width="160" x="90" y="130" as="geometry" />
+        </mxCell>
+        <mxCell id="oPvTnUFBjhAW8F8UqWiR-5" parent="1" style="rounded=1;whiteSpace=wrap;html=1;" value="&lt;div&gt;&lt;b&gt;Termin&amp;nbsp;&lt;/b&gt;&lt;/div&gt;&lt;div&gt;&lt;b&gt;01.01.2000 12:00 Uhr &lt;/b&gt;(in &lt;b&gt;xx &lt;/b&gt;Tagen)&lt;/div&gt;&lt;div&gt;Beschreibung ...&lt;/div&gt;" vertex="1">
+          <mxGeometry height="80" width="540" x="90" y="310" as="geometry" />
+        </mxCell>
+        <mxCell id="oPvTnUFBjhAW8F8UqWiR-6" parent="1" style="rounded=1;whiteSpace=wrap;html=1;align=center;" value="&lt;div align=&quot;center&quot;&gt;&lt;b&gt;Umfrage&lt;/b&gt;&lt;/div&gt;&lt;div align=&quot;center&quot;&gt;&lt;br&gt;&lt;/div&gt;&lt;div align=&quot;center&quot;&gt;[ ] Option A&lt;/div&gt;&lt;div align=&quot;center&quot;&gt;[ ] Option B&lt;/div&gt;&lt;div align=&quot;center&quot;&gt;[ ] Option C&lt;/div&gt;" vertex="1">
+          <mxGeometry height="130" width="540" x="90" y="410" as="geometry" />
+        </mxCell>
+        <mxCell id="oPvTnUFBjhAW8F8UqWiR-7" parent="1" style="rounded=1;whiteSpace=wrap;html=1;" value="&lt;div&gt;&lt;b&gt;Notiz&lt;/b&gt;&lt;/div&gt;Lotrem Ipsum ..." vertex="1">
+          <mxGeometry height="130" width="540" x="90" y="560" as="geometry" />
+        </mxCell>
+        <mxCell id="oPvTnUFBjhAW8F8UqWiR-8" parent="1" style="rounded=0;whiteSpace=wrap;html=1;" value="Info" vertex="1">
+          <mxGeometry height="40" width="120" x="90" y="210" as="geometry" />
+        </mxCell>
+        <mxCell id="oPvTnUFBjhAW8F8UqWiR-9" parent="1" style="rounded=1;whiteSpace=wrap;html=1;" value="..." vertex="1">
+          <mxGeometry height="60" width="540" x="90" y="710" as="geometry" />
+        </mxCell>
+        <mxCell id="oPvTnUFBjhAW8F8UqWiR-10" parent="1" style="rounded=1;whiteSpace=wrap;html=1;" value="..." vertex="1">
+          <mxGeometry height="60" width="540" x="90" y="790" as="geometry" />
+        </mxCell>
+        <mxCell id="oPvTnUFBjhAW8F8UqWiR-13" parent="1" style="rounded=0;whiteSpace=wrap;html=1;" value="Sortierung: Datum aufsteigend" vertex="1">
+          <mxGeometry height="30" width="190" x="90" y="270" as="geometry" />
+        </mxCell>
+        <mxCell id="oPvTnUFBjhAW8F8UqWiR-14" parent="1" style="rounded=0;whiteSpace=wrap;html=1;" value="Filter: alle" vertex="1">
+          <mxGeometry height="30" width="180" x="300" y="270" as="geometry" />
+        </mxCell>
+        <mxCell id="oPvTnUFBjhAW8F8UqWiR-15" parent="1" style="rounded=0;whiteSpace=wrap;html=1;" value="Kommentare" vertex="1">
+          <mxGeometry height="40" width="120" x="230" y="210" as="geometry" />
+        </mxCell>
+        <mxCell id="oPvTnUFBjhAW8F8UqWiR-16" parent="1" style="rounded=0;whiteSpace=wrap;html=1;" value="Einstellungen" vertex="1">
+          <mxGeometry height="40" width="120" x="370" y="210" as="geometry" />
+        </mxCell>
+        <mxCell id="oPvTnUFBjhAW8F8UqWiR-18" parent="1" style="rounded=0;whiteSpace=wrap;html=1;" value="Neu" vertex="1">
+          <mxGeometry height="30" width="90" x="540" y="270" as="geometry" />
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>

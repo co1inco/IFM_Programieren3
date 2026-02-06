@@ -1,0 +1,1933 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Spezifikation.md</title>
+<meta http-equiv="Content-type" content="text/html;charset=UTF-8">
+
+<style>
+/* https://github.com/microsoft/vscode/blob/master/extensions/markdown-language-features/media/markdown.css */
+/*---------------------------------------------------------------------------------------------
+ *  Copyright (c) Microsoft Corporation. All rights reserved.
+ *  Licensed under the MIT License. See License.txt in the project root for license information.
+ *--------------------------------------------------------------------------------------------*/
+
+body {
+	font-family: var(--vscode-markdown-font-family, -apple-system, BlinkMacSystemFont, "Segoe WPC", "Segoe UI", "Ubuntu", "Droid Sans", sans-serif);
+	font-size: var(--vscode-markdown-font-size, 14px);
+	padding: 0 26px;
+	line-height: var(--vscode-markdown-line-height, 22px);
+	word-wrap: break-word;
+}
+
+#code-csp-warning {
+	position: fixed;
+	top: 0;
+	right: 0;
+	color: white;
+	margin: 16px;
+	text-align: center;
+	font-size: 12px;
+	font-family: sans-serif;
+	background-color:#444444;
+	cursor: pointer;
+	padding: 6px;
+	box-shadow: 1px 1px 1px rgba(0,0,0,.25);
+}
+
+#code-csp-warning:hover {
+	text-decoration: none;
+	background-color:#007acc;
+	box-shadow: 2px 2px 2px rgba(0,0,0,.25);
+}
+
+body.scrollBeyondLastLine {
+	margin-bottom: calc(100vh - 22px);
+}
+
+body.showEditorSelection .code-line {
+	position: relative;
+}
+
+body.showEditorSelection .code-active-line:before,
+body.showEditorSelection .code-line:hover:before {
+	content: "";
+	display: block;
+	position: absolute;
+	top: 0;
+	left: -12px;
+	height: 100%;
+}
+
+body.showEditorSelection li.code-active-line:before,
+body.showEditorSelection li.code-line:hover:before {
+	left: -30px;
+}
+
+.vscode-light.showEditorSelection .code-active-line:before {
+	border-left: 3px solid rgba(0, 0, 0, 0.15);
+}
+
+.vscode-light.showEditorSelection .code-line:hover:before {
+	border-left: 3px solid rgba(0, 0, 0, 0.40);
+}
+
+.vscode-light.showEditorSelection .code-line .code-line:hover:before {
+	border-left: none;
+}
+
+.vscode-dark.showEditorSelection .code-active-line:before {
+	border-left: 3px solid rgba(255, 255, 255, 0.4);
+}
+
+.vscode-dark.showEditorSelection .code-line:hover:before {
+	border-left: 3px solid rgba(255, 255, 255, 0.60);
+}
+
+.vscode-dark.showEditorSelection .code-line .code-line:hover:before {
+	border-left: none;
+}
+
+.vscode-high-contrast.showEditorSelection .code-active-line:before {
+	border-left: 3px solid rgba(255, 160, 0, 0.7);
+}
+
+.vscode-high-contrast.showEditorSelection .code-line:hover:before {
+	border-left: 3px solid rgba(255, 160, 0, 1);
+}
+
+.vscode-high-contrast.showEditorSelection .code-line .code-line:hover:before {
+	border-left: none;
+}
+
+img {
+	max-width: 100%;
+	max-height: 100%;
+}
+
+a {
+	text-decoration: none;
+}
+
+a:hover {
+	text-decoration: underline;
+}
+
+a:focus,
+input:focus,
+select:focus,
+textarea:focus {
+	outline: 1px solid -webkit-focus-ring-color;
+	outline-offset: -1px;
+}
+
+hr {
+	border: 0;
+	height: 2px;
+	border-bottom: 2px solid;
+}
+
+h1 {
+	padding-bottom: 0.3em;
+	line-height: 1.2;
+	border-bottom-width: 1px;
+	border-bottom-style: solid;
+}
+
+h1, h2, h3 {
+	font-weight: normal;
+}
+
+table {
+	border-collapse: collapse;
+}
+
+table > thead > tr > th {
+	text-align: left;
+	border-bottom: 1px solid;
+}
+
+table > thead > tr > th,
+table > thead > tr > td,
+table > tbody > tr > th,
+table > tbody > tr > td {
+	padding: 5px 10px;
+}
+
+table > tbody > tr + tr > td {
+	border-top: 1px solid;
+}
+
+blockquote {
+	margin: 0 7px 0 5px;
+	padding: 0 16px 0 10px;
+	border-left-width: 5px;
+	border-left-style: solid;
+}
+
+code {
+	font-family: Menlo, Monaco, Consolas, "Droid Sans Mono", "Courier New", monospace, "Droid Sans Fallback";
+	font-size: 1em;
+	line-height: 1.357em;
+}
+
+body.wordWrap pre {
+	white-space: pre-wrap;
+}
+
+pre:not(.hljs),
+pre.hljs code > div {
+	padding: 16px;
+	border-radius: 3px;
+	overflow: auto;
+}
+
+pre code {
+	color: var(--vscode-editor-foreground);
+	tab-size: 4;
+}
+
+/** Theming */
+
+.vscode-light pre {
+	background-color: rgba(220, 220, 220, 0.4);
+}
+
+.vscode-dark pre {
+	background-color: rgba(10, 10, 10, 0.4);
+}
+
+.vscode-high-contrast pre {
+	background-color: rgb(0, 0, 0);
+}
+
+.vscode-high-contrast h1 {
+	border-color: rgb(0, 0, 0);
+}
+
+.vscode-light table > thead > tr > th {
+	border-color: rgba(0, 0, 0, 0.69);
+}
+
+.vscode-dark table > thead > tr > th {
+	border-color: rgba(255, 255, 255, 0.69);
+}
+
+.vscode-light h1,
+.vscode-light hr,
+.vscode-light table > tbody > tr + tr > td {
+	border-color: rgba(0, 0, 0, 0.18);
+}
+
+.vscode-dark h1,
+.vscode-dark hr,
+.vscode-dark table > tbody > tr + tr > td {
+	border-color: rgba(255, 255, 255, 0.18);
+}
+
+</style>
+
+<style>
+/* Tomorrow Theme */
+/* http://jmblog.github.com/color-themes-for-google-code-highlightjs */
+/* Original theme - https://github.com/chriskempson/tomorrow-theme */
+
+/* Tomorrow Comment */
+.hljs-comment,
+.hljs-quote {
+	color: #8e908c;
+}
+
+/* Tomorrow Red */
+.hljs-variable,
+.hljs-template-variable,
+.hljs-tag,
+.hljs-name,
+.hljs-selector-id,
+.hljs-selector-class,
+.hljs-regexp,
+.hljs-deletion {
+	color: #c82829;
+}
+
+/* Tomorrow Orange */
+.hljs-number,
+.hljs-built_in,
+.hljs-builtin-name,
+.hljs-literal,
+.hljs-type,
+.hljs-params,
+.hljs-meta,
+.hljs-link {
+	color: #f5871f;
+}
+
+/* Tomorrow Yellow */
+.hljs-attribute {
+	color: #eab700;
+}
+
+/* Tomorrow Green */
+.hljs-string,
+.hljs-symbol,
+.hljs-bullet,
+.hljs-addition {
+	color: #718c00;
+}
+
+/* Tomorrow Blue */
+.hljs-title,
+.hljs-section {
+	color: #4271ae;
+}
+
+/* Tomorrow Purple */
+.hljs-keyword,
+.hljs-selector-tag {
+	color: #8959a8;
+}
+
+.hljs {
+	display: block;
+	overflow-x: auto;
+	color: #4d4d4c;
+	padding: 0.5em;
+}
+
+.hljs-emphasis {
+	font-style: italic;
+}
+
+.hljs-strong {
+	font-weight: bold;
+}
+</style>
+
+<style>
+/*
+ * Markdown PDF CSS
+ */
+
+ body {
+	font-family: -apple-system, BlinkMacSystemFont, "Segoe WPC", "Segoe UI", "Ubuntu", "Droid Sans", sans-serif, "Meiryo";
+	padding: 0 12px;
+}
+
+pre {
+	background-color: #f8f8f8;
+	border: 1px solid #cccccc;
+	border-radius: 3px;
+	overflow-x: auto;
+	white-space: pre-wrap;
+	overflow-wrap: break-word;
+}
+
+pre:not(.hljs) {
+	padding: 23px;
+	line-height: 19px;
+}
+
+blockquote {
+	background: rgba(127, 127, 127, 0.1);
+	border-color: rgba(0, 122, 204, 0.5);
+}
+
+.emoji {
+	height: 1.4em;
+}
+
+code {
+	font-size: 14px;
+	line-height: 19px;
+}
+
+/* for inline code */
+:not(pre):not(.hljs) > code {
+	color: #C9AE75; /* Change the old color so it seems less like an error */
+	font-size: inherit;
+}
+
+/* Page Break : use <div class="page"/> to insert page break
+-------------------------------------------------------- */
+.page {
+	page-break-after: always;
+}
+
+</style>
+
+<script src="https://unpkg.com/mermaid@10.4.0/dist/mermaid.min.js"></script>
+</head>
+<body>
+  <script>
+    mermaid.initialize({
+      startOnLoad: true,
+      theme: document.body.classList.contains('vscode-dark') || document.body.classList.contains('vscode-high-contrast')
+          ? 'dark'
+          : 'default'
+    });
+  </script>
+<ol>
+<li>Titelblatt, Autoren, Selbstständigkeitserklärung</li>
+<li>Zusammenfassung (Ziele, Scope, Annahmen)</li>
+<li>Glossar / Domain‑Begriffe</li>
+<li>Functional requirements (User‑Stories + zentrale Requirements‑Tabelle)
+<ul>
+<li>4.1 Mapping: User‑Stories → Akteure / Use‑Cases</li>
+<li>4.2 Akzeptanztests / Test‑Cases (pro Story)</li>
+</ul>
+</li>
+<li>4+1 Sichten (jede Sicht: Ziel, Diagramme, Mapping zu Stories, offene Fragen)
+<ul>
+<li>5.1 Use‑case / Szenarien (the &quot;+1&quot;): Use‑case‑Diagramme, Hauptszenarien, Sequenzdiagramme, Akzeptanzkriterien</li>
+<li>5.2 Logical View: Domänen‑Klassendiagramm, ER/DB‑Modell, CRUD‑Matrix, Entitäts‑Attribute, VIF</li>
+<li>5.3 Development View: Komponenten/Module, Paket‑ und Repo‑Struktur, API‑Contract (OpenAPI), Build/CI</li>
+<li>5.4 Process View: Laufzeit‑Architektur, Messaging/Queues, State‑Machines (z. B. Group lifecycle), Performance‑Flows</li>
+<li>5.5 Physical View: Deployment‑Diagramm (K8s/VMs), Netz, Sizing, SLO/SLA</li>
+</ul>
+</li>
+<li>Nicht‑funktionale Anforderungen (NFR) — messbar: Performance, Security, Privacy, Availability, Scalability</li>
+<li>Security &amp; Privacy (STRIDE, DSGVO‑Flows, Key‑Management, Aufbewahrung)</li>
+<li>API &amp; Integration (OpenAPI, Webhooks, Idempotenz, 3rd‑party connectors)</li>
+<li>Operations &amp; SRE (Monitoring, Logging, Backups, Runbook, Incident‑Response)</li>
+<li>Testplan / QA (Unit, Integration, E2E, Akzeptanztests, CI/CD‑Gates)</li>
+<li>Open decisions / Risks / Roadmap (TODOs, Annahmen)</li>
+<li>Anhänge
+<ul>
+<li>A: UML‑Quellen (XMI / PlantUML) — siehe <code>diagrams/</code> (PlantUML‑Quellen)</li>
+<li>B: DB‑Schema (DDL + Beispiel‑daten) — <code>db/schema.sql</code></li>
+<li>C: Mockups / Styleguide — <code>mockups/</code></li>
+<li>D: Beispiel‑API‑Responses (OpenAPI snippets) — <code>api/openapi.yaml</code></li>
+<li>E: Traceability‑Matrix (Requirement → Artifact → Test)</li>
+</ul>
+</li>
+</ol>
+<hr>
+<p>Für jedes Kapitel (kurze Checkliste / erwartete Artefakte):</p>
+<ul>
+<li>Titelblatt
+<ul>
+<li>Pflicht: Autor(en), Matrikelnummer(n), Datum, Selbstständigkeitserklärung</li>
+</ul>
+</li>
+</ul>
+<hr>
+<p>Hinweis zur Organisation: Die <strong>Requirements‑Tabelle</strong> ist die kanonische Quelle und bleibt in Kapitel 4; in den 4+1‑Sichten referenzierst du Story‑IDs (nicht kopieren). Eine Traceability‑Matrix (Anhang E) verbindet Requirements mit Use‑cases, Klassen, Endpunkten und Tests.</p>
+<h1 id="2---zusammenfassung">2 - Zusammenfassung</h1>
+<p>Kurzfassung (Executive Summary)</p>
+<p>Dieses Dokument beschreibt die Spezifikation für eine Plattform zur Planung, Organisation und Durchführung von Gruppen‑Events (z. B. Reisen, Vereins‑ oder Firmenveranstaltungen). Kernnutzen: Teilnehmer können Gruppen anlegen/verwalten, Termine/Umfragen/Finanzen koordinieren und externe Dienstleister (z. B. Veranstaltungstechnik) buchen. Die Lösung adressiert sowohl Privatnutzer als auch kommerzielle Dienstleister und bietet ein Provider‑Portal, Zahlungs‑ und Rechnungsfunktionen sowie Compliance‑ und Betriebsmechanismen (Monitoring, Backups, DSGVO‑Workflows).</p>
+<p>Zielsetzung: Eine sichere, skalierbare Web‑ und Mobile‑Plattform, die Gruppen‑Organisation, Zahlungsabwicklung und Dienstleister‑Management in einem integrierten Workflow unterstützt.</p>
+<p>Wichtige Kennzahlen</p>
+<ul>
+<li>Verfügbarkeit (SLA target): 99.5% (kritische Dienste: auth, payments, groups).</li>
+<li>Performance: Group‑listing — median &lt; 150 ms, 95th‑percentile &lt; 500 ms.</li>
+<li>Durchsatz: skalierbar auf ~10k gleichzeitige aktive Nutzer pro Region (horizontale Skalierung).</li>
+<li>Backup / RPO / RTO: tägliche Backups (RPO = 24 h); RTO kritisch (auth/payments) &lt; 1 h, RTO nicht‑kritisch &lt; 24 h.</li>
+<li>Datenschutz: Lösch‑Workflow abgeschlossen / Anonymisierung innerhalb 30 Tagen; Datenexport innerhalb 7 Tagen.</li>
+</ul>
+<p>Scope (konkret)</p>
+<ul>
+<li>In Scope (MVP): User‑Management (Auth, Sessions, 2FA optional), Gruppen (Erstellen, Beitreten, Rollen), Notizen/Termine/Umfragen, Einzahlungen &amp; einfache Abrechnung, Provider‑Listing + Buchung, Basis UI (Web + responsive Mobile), Audit &amp; DSGVO‑Flows.</li>
+<li>Out of Scope (MVP): vollständiges End‑to‑End E2E‑Verschlüsselung, komplexe Market‑Place‑Features (Gebotsauktionen), Enterprise‑SAML (optional später), vollständige Offline‑Mobile‑Funktionalität.</li>
+</ul>
+<p>Priorisierte Annahmen</p>
+<ul>
+<li>Nutzerdaten und Transaktionen sind primär in einer zentralen Region gespeichert; system ist regional skalierbar.</li>
+<li>Zahlungen werden über einen externen Provider (Stripe/Adyen) angebunden — Zahlungs‑Reconciliation via API.</li>
+<li>Externe Kalender‑Sync (Google/Outlook/iCal) wird als Integrationsfeature implementiert; initial nur Pull/Sync‑Opt‑in.</li>
+</ul>
+<p>Top‑Risiken (priorisiert)</p>
+<ol>
+<li>Business/Integration: Unklare Payment‑Provider‑Entscheidung verzögert MVP (Mitigation: Auswahl‑kriterien + PoC innerhalb 2 Wochen).</li>
+<li>Datenschutz: Lösch‑/Export‑Workflow komplex (Mitigation: API‑Contract + automatisierte Tests für Delete/Anonymize).</li>
+<li>Security: Unzureichende Auth/Session‑Hardening → Account‑Kompromittierung (Mitigation: starke PW‑Policy, 2FA, WAF, regelmäßige Pen‑Tests).</li>
+<li>Operational: Fehlen von Runbooks/Monitoring führt zu langen Ausfallzeiten (Mitigation: Runbook + SLOs vor Produktionsstart).</li>
+</ol>
+<p>Akzeptanzkriterien für die Deliverables (Kurz)</p>
+<ul>
+<li>MVP accepted when: alle &quot;Muss&quot;‑Stories in Kapitel 4 implementiert und durch End‑to‑End‑Tests verifiziert sind; kritische SLOs (auth/payments/group‑listing) werden in Staging‑Loadtests erreicht; DSGVO‑Delete/Export‑Flows getestet.</li>
+</ul>
+<p>Empfohlene nächste Schritte (priorisiert)</p>
+<ol>
+<li>Entscheidung: Payment‑Provider (PoC → 1 chosen) — blocker für Invoicing/Refunds.</li>
+<li>Erzeuge Traceability‑Matrix (Requirement → Use‑case → API → Test).</li>
+<li>Erstelle Runbook‑Draft für Top‑3 Incidents (auth outage, payment failure, data‑loss).</li>
+</ol>
+<p>Akzeptanz der Zusammenfassung</p>
+<ul>
+<li>Diese Zusammenfassung ist akzeptabel, wenn sie in Review von Product Owner bestätigt wird und die drei NFR‑Defaults (SLA, latency, RTO) als Ausgangswerte genehmigt werden.</li>
+</ul>
+<h1 id="3---glossar">3 - Glossar</h1>
+<!--
+- Glossar
+  - Liste der Domainbegriffe + kurze Definitionen (z. B. Group, Event, Organizer, Provider)
+-->
+<table>
+<thead>
+<tr>
+<th>Name</th>
+<th>Beschreibung</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Gruppe</td>
+<td>Eine Sammlung an Nutzern die sich über eine Gruppe austauschen können</td>
+</tr>
+<tr>
+<td>Benutzer</td>
+<td>Ein Nutzer von unserem Service</td>
+</tr>
+<tr>
+<td>Dienstleister</td>
+<td>Ein Externer Dienstleister der auf unser Platform vertreten ist und von Gruppen beauftragt werden können</td>
+</tr>
+<tr>
+<td>System</td>
+<td>Stellvertreten für uns als Service oder Serviceanbieter</td>
+</tr>
+<tr>
+<td>Owner</td>
+<td>Der Benutzer, der eine Gruppe erstellt hat</td>
+</tr>
+<tr>
+<td>Admin</td>
+<td>Ein Gruppenmitglied mit erhöhten rechten innerhalb einer Gruppe</td>
+</tr>
+</tbody>
+</table>
+<h1 id="4---funktionale-requirements">4 - Funktionale requirements</h1>
+<h2 id="14-schnittstellen--systemarchitektur">1.4 Schnittstellen &amp; Systemarchitektur</h2>
+<p><strong>Kurzbeschreibung</strong></p>
+<p>Die Plattform ist als cloud‑native, dreischichtige Web‑/Mobile‑Anwendung ausgelegt: klientenseitig (Web / Mobile), API‑Layer (Gateway / Edge) und ein Backend‑Service‑Ökosystem (auth, groups, payments, provider, media, notifications, background workers). Persistente Daten liegen in einer relationalen Primärdatenbank; große Binärdaten (Fotos/Videos) werden in Object Storage abgelegt. Caching, Message‑Broker und Suchindex sind zusätzliche Komponenten zur Skalierung.</p>
+<p><strong>Hauptkomponenten (Übersicht)</strong></p>
+<ul>
+<li>API Gateway / Ingress: TLS‑Termination, Routing, Rate‑Limiting, Authn/Z</li>
+<li>Auth Service: Login, Sessions, 2FA, Token‑Issuance, Account Management</li>
+<li>Groups Service: Domain‑Logik für Gruppen, Mitglieder, Notizen, Termine, Surveys</li>
+<li>Payments Bridge: Integration zu Stripe/Adyen, Webhook‑Handler (idempotent)</li>
+<li>Provider / Marketplace Service: Provider‑Listing, Angebote, Buchungen, Ressourcenplanung</li>
+<li>Media Service / Object Storage: Uploads, Thumbnails, CDN‑Serving</li>
+<li>Background Workers: E‑Mails, Push, Reconciliations, Refunds, Maintenance Jobs</li>
+<li>Data Stores: Primary RDBMS (ACID), Redis (cache, sessions, rate limits), Search (Elasticsearch/Opensearch)</li>
+<li>Message Broker: RabbitMQ / Kafka für asynchrone Aufgaben und Events</li>
+<li>Observability: Prometheus, Grafana, ELK/Opensearch, Tracing (Jaeger)</li>
+<li>CI/CD, IaC, KMS/Secrets Manager</li>
+</ul>
+<p><strong>Hoch‑level Daten‑/Control‑Flow</strong>
+Client (Web/Mobile) --HTTPS--&gt; API Gateway --Auth--&gt; Backend Service (REST/gRPC) --&gt; RDBMS / Cache / Broker. Asynchrone Aufgaben werden über den Broker an Worker delegiert; Webhooks und externe Integrationen (Payments, Calendar, Email/SMS) laufen über dedizierte adapters mit Idempotenz‑Handling.</p>
+<p><strong>Deployment / Physical View (Kurzfassung)</strong></p>
+<ul>
+<li>Umgebung: K8s Cluster pro Region (Namespaces per environment: staging/prod)</li>
+<li>Netzwerk: Public Ingress (LoadBalancer / CDN) in DMZ; private Back‑end Subnet für Services und DB</li>
+<li>Datenhaltung: Managed RDBMS Multi‑AZ mit Read‑Replicas; Object Storage mit Lifecycle Policies</li>
+<li>Verfügbarkeit: Multi‑AZ, HPA für Pods, SLOs gemäss Kapitel 2 (z. B. 99.5% für auth/payments)</li>
+<li>Backups: tägliche Snapshots (RPO 24h), kritische RTO &lt;1h (auth/payments)</li>
+</ul>
+<p><strong>Integration &amp; API‑Contract</strong></p>
+<ul>
+<li>OpenAPI Spec: <code>api/openapi.yaml</code> (Anhang D). Alle öffentlichen Endpunkte sollen eine Versionierung und Rate‑Limit haben.</li>
+<li>Webhooks: idempotency keys, replay protection, signature verification</li>
+<li>Externe Provider: Payments (Stripe/Adyen), Calendar Sync (Google/Outlook), Email/SMS (SendGrid/Twilio)</li>
+</ul>
+<p><strong>Security — STRIDE (Kurz‑Analyse &amp; Mitigation)</strong></p>
+<ul>
+<li>Spoofing: starke Auth (OAuth2 / JWT, refresh tokens), MFA option; secure session management</li>
+<li>Tampering: input validation, HMAC/signatures für webhooks, integrity checks, WAF</li>
+<li>Repudiation: zentrale Audit‑Logs for critical actions, signed receipts for payments</li>
+<li>Information Disclosure: TLS everywhere, access controls, least privilege, encryption at rest (KMS)</li>
+<li>Denial of Service: rate limits, autoscaling, circuit breakers, WAF, traffic quotas</li>
+<li>Elevation of Privilege: RBAC, privilege separation, hardened service accounts, regular pen‑tests</li>
+</ul>
+<p><strong>Operations &amp; SRE</strong></p>
+<ul>
+<li>Monitoring: metrics (Prometheus), dashboards (Grafana), alerting thresholds aligned with SLOs</li>
+<li>Logging: central log pipeline (ELK/Opensearch) with 90d retention (siehe Kapitel 2)</li>
+<li>Runbooks: incident playbooks for auth outage, payment failure, data‑loss</li>
+<li>Security Ops: rotation of keys, regular vulnerability scans, dependency updates</li>
+</ul>
+<p><strong>Artefakte &amp; Mockups</strong></p>
+<ul>
+<li>UI‑Mockups gehören in Kapitel 1.2 &quot;Graphische Benutzungsschnittstelle&quot; (siehe Modulprüfung.md §1.2). Technische Referenzen und Verlinkungen zu Mockup‑Files liegen im Anhang C (<code>mockups/</code>). Verweise zu einzelnen Screens sind zusätzlich in den Use‑cases (Kapitel 5.1) aufzuführen.</li>
+</ul>
+<h2 id="funktionale-anforderungen">Funktionale Anforderungen</h2>
+<!--
+- Functional requirements (canonical)
+  - Vollständige User‑Stories‑Tabelle (canonical source)
+  - Priorisierung (MoSCoW), Acceptance‑Criteria, einfache Akzeptanztests
+  - Traceability‑IDs (UIDs) für jede Story
+-->
+<table>
+<thead>
+<tr>
+<th>Name/ID</th>
+<th>In meiner Rolle als ...</th>
+<th>möchte ich ...</th>
+<th>, so dass...</th>
+<th>Akzeptiert, wenn...</th>
+<th>Priorität</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>user anmelden</td>
+<td>Benutzer</td>
+<td>mich bei dem Service Anmelden</td>
+<td>ich mich anmelden kann</td>
+<td>User können sich anmelden</td>
+<td>Muss</td>
+</tr>
+<tr>
+<td>user registrieren</td>
+<td>Benutzer</td>
+<td>mich bei dem Service registrieren</td>
+<td>ich mich registrieren kann</td>
+<td>User können sich registrieren</td>
+<td>Muss</td>
+</tr>
+<tr>
+<td>user username</td>
+<td>Benutzer</td>
+<td>einen benutzernahmen angeben</td>
+<td>dieser für mich angezeigt wird</td>
+<td>User kann username eingeben</td>
+<td>Kann</td>
+</tr>
+<tr>
+<td>user name</td>
+<td>Benutzer</td>
+<td>Meinen legalen Namen angeben können</td>
+<td>Rechnungen Automatisch erstellt werden können</td>
+<td>der User seinen Namen angeben kann</td>
+<td>Kann</td>
+</tr>
+<tr>
+<td>user email</td>
+<td>Benutzer</td>
+<td>eine E-Mail angeben</td>
+<td>ich benachrichtigt werden kann</td>
+<td>User kann E-Mail eingeben</td>
+<td>Kann</td>
+</tr>
+<tr>
+<td>user communication</td>
+<td>Benutzer</td>
+<td>meinen bevorzugten Kommunikationsweg angeben</td>
+<td>ich über diesen Weg wichtige Benachrichtigungen erhalten kann</td>
+<td>der User seinen bevorzugten Kommunikationsweg angeben kann</td>
+<td>Kann</td>
+</tr>
+<tr>
+<td>user password (double)</td>
+<td>Benutzer</td>
+<td>ein Password angeben (zweimal)</td>
+<td>Schreibfehler werden vermieden</td>
+<td>Passwort muss zweimal eingegeben werden; Mindeststärke geprüft (z.B. 8+ Zeichen, Zahl, Sonderzeichen)</td>
+<td>Muss</td>
+</tr>
+<tr>
+<td>password hash</td>
+<td>System</td>
+<td>dass mein Password gehasht und gesaltet wird</td>
+<td>Passwörter nicht im Klartext gespeichert werden</td>
+<td>Passwörter mit einem modernen KDF (z. B. Argon2/bcrypt) + Salt gespeichert</td>
+<td>Muss</td>
+</tr>
+<tr>
+<td>password reset</td>
+<td>Benutzer</td>
+<td>mein Passwort zurücksetzen können</td>
+<td>ich wieder Zugriff erhalte</td>
+<td>Reset per E‑Mail mit einmaligem Token (gültig 1 h); nach Reset erfolgt Benachrichtigung an alle aktiven Sessions</td>
+<td>Muss</td>
+</tr>
+<tr>
+<td>session &amp; logout</td>
+<td>Benutzer / System</td>
+<td>aktiv angemeldete Sessions verwalten (Logout, Session‑Timeout, Revoke)</td>
+<td>Konten sicher bleiben, auch bei Geräteverlust</td>
+<td>Benutzer können sich abmelden; Sessions verfallen automatisch (configurierbar); Admin kann Sessions widerrufen</td>
+<td>Muss</td>
+</tr>
+<tr>
+<td>register captcha</td>
+<td>System</td>
+<td>dass der User bei der Registrierung ein Captcha lösen muss</td>
+<td>sich Bots nicht so einfach registrieren können</td>
+<td>Registrierung kann optional ein Captcha verlangen (konfigurierbar)</td>
+<td>Soll</td>
+</tr>
+<tr>
+<td>E‑Mail verification</td>
+<td>System</td>
+<td>dass der User bei der Registrierung seine E‑Mail überprüfen muss</td>
+<td>E‑Mail‑Besitz ist verifiziert</td>
+<td>Verifikationslink (24 h Gültigkeit); Konto eingeschränkt bis zur Verifikation</td>
+<td>Muss</td>
+</tr>
+<tr>
+<td>user page after login</td>
+<td>Benutzer</td>
+<td>nach dem login auf eine Seite mit einer übersicht über Gruppen kommen</td>
+<td>ich auf Anhieb eine Übersicht über meine Gruppen habe</td>
+<td>wenn die user homepage die Gruppenübersicht ist</td>
+<td>Muss</td>
+</tr>
+<tr>
+<td>Gruppenübersicht</td>
+<td>Benutzer</td>
+<td>eine übersicht über Mein, Beigetretenen und Öffentliche Gruppen haben</td>
+<td>ich eine Übersicht über die für mich interessanten Gruppen habe</td>
+<td>der User eine Übersicht über die Gruppen, denen er beigetreten, die er erstellt und die für ihn interessant sind, hat</td>
+<td>Muss</td>
+</tr>
+<tr>
+<td>Gruppenübersicht sortieren</td>
+<td>Benutzer</td>
+<td>die Liste der verfügbaren Gruppen sortieren</td>
+<td>mir Gruppen entsprechend meines aktuellen Interesses angezeigt werden</td>
+<td>der User die angezeigte Liste an Gruppen sortieren kann</td>
+<td>Kann</td>
+</tr>
+<tr>
+<td>Gruppenübersicht navigieren</td>
+<td>Benutzer</td>
+<td>durch anwählen zu der angewählten Gruppe gelangen</td>
+<td>ich mit der Angewählten Gruppe interagieren kann</td>
+<td>der User durch anwählen zu einer Gruppe Navigieren kann</td>
+<td>Muss</td>
+</tr>
+<tr>
+<td>Gruppe erstellen</td>
+<td>Benutzer</td>
+<td>eine neue Gruppe erstellen können</td>
+<td>eine Gruppe mit Start‑/Enddatum anlegen</td>
+<td>Pflichtfelder: Name, Sichtbarkeit (öffentlich/privat/hidden); Ersteller = Owner; Erzeugung liefert feste Event‑URL und Join‑Code</td>
+<td>Muss</td>
+</tr>
+<tr>
+<td>Gruppe löschen (Owner)</td>
+<td>Owner</td>
+<td>eine selbst erstellte Gruppe löschen können</td>
+<td>die Daten nicht mehr für Teilnehmer sichtbar sind</td>
+<td>Nur Owner kann löschen; Lösch‑Workflow zeigt Folgen (Archivieren vs. vollständiges Löschen) und erfordert Bestätigung</td>
+<td>Muss</td>
+</tr>
+<tr>
+<td>Gruppe beitreten</td>
+<td>Benutzer</td>
+<td>einer bestehenden Gruppe beitreten können</td>
+<td>ich Teilnehmer der Gruppe werde</td>
+<td>Beitritt per Join‑Code / Einladungs‑Link oder öffentliche Gruppe; Beitritt erscheint sofort in Mitgliederliste</td>
+<td>Muss</td>
+</tr>
+<tr>
+<td>Gruppenmitglieder</td>
+<td>Gruppenmitglied</td>
+<td>sehen, wer sonst noch in der Gruppe ist</td>
+<td>ich weiß, wer teilnimmt</td>
+<td>Mitgliederliste mit Rollen (Owner, Admin, Member); Datenschutz: nur für berechtigte Nutzer sichtbar</td>
+<td>Muss</td>
+</tr>
+<tr>
+<td>Invite‑Code verwalten</td>
+<td>Owner / Admin</td>
+<td>Join‑Codes erzeugen, Ablaufdatum setzen und widerrufen</td>
+<td>nur berechtigte Personen beitreten können</td>
+<td>Codes haben optionales Ablaufdatum; Owner kann Codes sofort invalidieren</td>
+<td>Muss</td>
+</tr>
+<tr>
+<td>Gruppeneinladung link</td>
+<td>Benutzer</td>
+<td>einer Gruppe über einen festen Link beitreten können</td>
+<td>einfache Einladung möglich ist</td>
+<td>Einladungs‑Link ist stabil oder hat konfigurierbares Ablaufdatum; Nutzung protokolliert</td>
+<td>Muss</td>
+</tr>
+<tr>
+<td>Gruppeneinladung qr</td>
+<td>Benutzer</td>
+<td>einer Gruppe über einen QR‑Code beitreten können</td>
+<td>einfacher Beitritt via Mobilgerät</td>
+<td>QR codiert die Event‑URL/Join‑Code; Ablaufregel wie bei Link</td>
+<td>Kann</td>
+</tr>
+<tr>
+<td>Gruppenbeschreibung setzen</td>
+<td>Gruppenmitglied</td>
+<td>eine Gruppenbeschreibung setzen</td>
+<td>klarer Kontext für die Gruppe</td>
+<td>Beschreibung editierbar; Änderungen protokolliert; nur berechtigte Rollen dürfen großflächig bearbeiten</td>
+<td>Kann</td>
+</tr>
+<tr>
+<td>Gruppe verlassen</td>
+<td>Gruppenmitglied</td>
+<td>eine Gruppe verlassen können</td>
+<td>ich erhalte keine weiteren Benachrichtigungen</td>
+<td>Mitglieder können selbstständig austreten; Einzahlungen werden gemäß Regeln behandelt (siehe Einzahlungs‑Policy)</td>
+<td>Muss</td>
+</tr>
+<tr>
+<td>Gruppe Mindestteilnehmer</td>
+<td>Owner / Admin</td>
+<td>eine Mindestteilnehmerzahl festlegen</td>
+<td>Event findet nur ab Mindestanzahl statt</td>
+<td>Mindestanzahl wird angezeigt; bei Unterschreitung Benachrichtigung an Owner</td>
+<td>Muss</td>
+</tr>
+<tr>
+<td>Gruppe Mindestbetrag (vereint)</td>
+<td>Owner / Admin</td>
+<td>einen Mindestbeitrag für das Event festlegen</td>
+<td>Finanzierungssicherheit des Events</td>
+<td>Mindestbetrag sichtbar auf Event‑Homepage; System meldet &quot;erreicht&quot;/&quot;offen&quot;; automatische Aktionen (z. B. Cancel/Refund) konfigurierbar</td>
+<td>Muss</td>
+</tr>
+<tr>
+<td>Gruppe max. Einzahlung (optional)</td>
+<td>Gruppenmitglied</td>
+<td>optional ein System‑Limits setzen/anzeigen</td>
+<td>Missbrauch oder Fehler vermeiden</td>
+<td>System kann ein optionales Oberlimit pro Zahlung konfigurieren; wenn nicht gesetzt, gilt &quot;kein Limit&quot;</td>
+<td>Kann</td>
+</tr>
+<tr>
+<td>Gruppe Einzahlungsübersicht</td>
+<td>Gruppenmitglied</td>
+<td>Übersicht über alle eingegangenen Zahlungen</td>
+<td>ich sehe wer wie viel bezahlt hat</td>
+<td>Tabelle mit Beträgen, Datum, Zahler; Summen und ausstehender Betrag; Export (CSV/JSON) möglich</td>
+<td>Muss</td>
+</tr>
+<tr>
+<td>Gruppe Kassensturz</td>
+<td>Gruppenmitglied</td>
+<td>eine Übersicht über alle Ausgaben der Gruppe habe</td>
+<td>ich diese den Einzahlungen gegenüber stellen kann</td>
+<td>Gruppenmitglieder eine Übersicht über die Ausgaben einer Gruppe haben</td>
+<td>Muss</td>
+</tr>
+<tr>
+<td>Gruppe Info-Übersicht</td>
+<td>Gruppenmitglied</td>
+<td>eine Chronologische übersicht über alle Notizen, Termine und Umfragen</td>
+<td>neue Infos auf den ersten Blick erkenne</td>
+<td>Gruppenmitglieder eine chronologische Übersicht über die Gruppeninformationen haben</td>
+<td>Muss</td>
+</tr>
+<tr>
+<td>Gruppe Info-Übersicht sortieren</td>
+<td>Gruppenmitglied</td>
+<td>die Angezeigten Infos sortieren können</td>
+<td>die für mich relevanten Infos an erste stelle stehen</td>
+<td>Gruppenmitglieder können die angezeigten Infos sortieren</td>
+<td>Kann</td>
+</tr>
+<tr>
+<td>Gruppe Notizen</td>
+<td>Gruppenmitglied</td>
+<td>der Gruppe eine neue Notiz hinzufügen</td>
+<td>ich Infos und Erlebnisse mit den anderen Gruppenmitgliedern teilen kann</td>
+<td>Gruppenmitglieder neue Notizen hinzu fügen können</td>
+<td>Muss</td>
+</tr>
+<tr>
+<td>Gruppen Termine</td>
+<td>Gruppenmitglied</td>
+<td>der Gruppe ein neues Datum als Termin hinzufügen können</td>
+<td>ich wichtige Termine mit den anderen Gruppenmitgliedern Teilen kann</td>
+<td>Gruppenmitglieder einer Gruppe Termine hinzufügen können</td>
+<td>Muss</td>
+</tr>
+<tr>
+<td>Gruppenumfragen</td>
+<td>Gruppenmitglied</td>
+<td>der Gruppe eine Umfrage hinzufügen können</td>
+<td>ich die Präferenzen der anderen Gruppenmitglieder erfragen kann</td>
+<td>Gruppenmitglieder Umfragen erstellen können</td>
+<td>Kann</td>
+</tr>
+<tr>
+<td>Umfrage type</td>
+<td>Gruppenmitglied</td>
+<td>Umfragen mit verschiedene Typen erstellen</td>
+<td>ich Gruppenmitgliedern Single und Multiple choice fragen stellen</td>
+<td>Gruppenmitglieder bei der Erstellung von Umfragen die Wahl zwischen Single und Multiple choice Aufgaben haben</td>
+<td>Muss</td>
+</tr>
+<tr>
+<td>Zufriedenheit‑Umfrage</td>
+<td>Gruppenersteller</td>
+<td>nach dem Event / Urlaub eine Zufriedenheitsumfrage erstellen</td>
+<td>ich weiß, wie zufrieden die Gruppenmitglieder mit der Planung / Durchführung des Events waren</td>
+<td>Gruppenersteller nach einem Event eine Zufriedenheitsumfrage an die Gruppenmitglieder senden können</td>
+<td>Kann</td>
+</tr>
+<tr>
+<td>Gruppendokumentation (Media)</td>
+<td>Gruppenmitglied</td>
+<td>Kommentare, Bilder und Videos hochladen</td>
+<td>Event dokumentieren</td>
+<td>Upload erlaubt (Whitelist‑MIME), Max‑Größe konfigurierbar, Moderations‑Flag</td>
+<td>Kann</td>
+</tr>
+<tr>
+<td>Gruppen‑Lifecycle (state machine)</td>
+<td>Owner / System</td>
+<td>Eventzustände (Draft→Open→Confirmed→Cancelled→Archived) verwalten</td>
+<td>automatisierbare Abläufe möglich</td>
+<td>Zustandsübergänge definiert; bei Cancel automatischer Refund‑Pfad / Benachrichtigung möglich</td>
+<td>Muss</td>
+</tr>
+<tr>
+<td>Zahlungs‑Webhook Idempotenz</td>
+<td>System</td>
+<td>eingehende Payment‑Events idempotent verarbeiten</td>
+<td>keine Doppelbuchungen entstehen</td>
+<td>Webhook‑Events mit Idempotency‑Key; wiederholte Zustellungen erzeugen kein Duplikat</td>
+<td>Muss</td>
+</tr>
+<tr>
+<td>Gruppen‑Zeitraum</td>
+<td>Gruppenmitglied</td>
+<td>einen Zeitpunkt / Zeitraum festlegen</td>
+<td>ich kommuniziere, wann das Event stattfindet</td>
+<td>Start/End‑Datum vorhanden; Zeitzone angegeben; wiederkehrende Termine optional</td>
+<td>Muss</td>
+</tr>
+<tr>
+<td>Gruppen: Aufgaben (create)</td>
+<td>Gruppenmitglied</td>
+<td>Aufgaben erstellen</td>
+<td>Team-Aufgaben verwaltbar sind</td>
+<td>Neue Aufgabe wird in Gruppen-Task‑Liste angezeigt; Pflichtfelder: Titel, Fälligkeitsdatum; API-Response 201</td>
+<td>Muss</td>
+</tr>
+<tr>
+<td>Gruppen: Aufgabe zuweisen</td>
+<td>Gruppenmitglied</td>
+<td>Aufgaben einem Mitglied zuweisen</td>
+<td>Zuständigkeiten klar sind</td>
+<td>Zuweisung ändert Task-Status; Benachrichtigung an Empfänger innerhalb 5 min</td>
+<td>Muss</td>
+</tr>
+<tr>
+<td>Gruppen: Aufgabe abschließen</td>
+<td>Gruppenmitglied</td>
+<td>Aufgabe als erledigt markieren</td>
+<td>Aufgabenstatus aktuell ist</td>
+<td>Statuswechsel sichtbar für alle Mitglieder; Änderungs-Log vorhanden</td>
+<td>Muss</td>
+</tr>
+<tr>
+<td>Aufgaben: Erinnerungen (configurable)</td>
+<td>Gruppenmitglied</td>
+<td>Erinnerungen per bevorzugtem Kanal erhalten</td>
+<td>Deadlines nicht verpasst werden</td>
+<td>Erinnerung per E‑Mail/Push/SMS laut Präferenz; konfigurierbar; Zustellung innerhalb 5 min vor Fälligkeit (configurable)</td>
+<td>Kann</td>
+</tr>
+<tr>
+<td>Rollen &amp; Rechte (RBAC Basis)</td>
+<td>Gruppen-Owner</td>
+<td>Rollen (Owner/Admin/Member) vergeben</td>
+<td>Zugriff und Aktionen steuerbar sind</td>
+<td>Owner kann Rollen ändern; Berechtigungen enforced (z. B. nur Owner kann Gruppe löschen)</td>
+<td>Muss</td>
+</tr>
+<tr>
+<td>Owner auto‑assignment</td>
+<td>Gruppenersteller</td>
+<td>nach Erstellung Owner sein</td>
+<td>Einstellungen verwalten zu können</td>
+<td>Ersteller ist Owner; Owner-Flag in DB gesetzt</td>
+<td>Muss</td>
+</tr>
+<tr>
+<td>Mitgliederverwaltung</td>
+<td>Gruppen-Admin</td>
+<td>Mitglieder entfernen / einladen</td>
+<td>Moderation möglich ist</td>
+<td>Admin kann Mitglied entfernen; Aktion audit‑logged; entfernte Nutzer verlieren Zugriff sofort</td>
+<td>Muss</td>
+</tr>
+<tr>
+<td>Editions: Community / Premium</td>
+<td>User</td>
+<td>freie / kostenpflichtige Pläne nutzen</td>
+<td>Produkt‑Limits durchsetzen</td>
+<td>Community: ≤3 aktive Gruppen; Premium: keine Limit; Abrechnung aktiviert für Premium</td>
+<td>Muss</td>
+</tr>
+<tr>
+<td>Multi‑device parity</td>
+<td>User</td>
+<td>gleiches Funktionsset auf allen Geräten</td>
+<td>konsistente UX</td>
+<td>Kernfunktionen auf Mobile/Web verfügbar; responsives Layout (breakpoints)</td>
+<td>Muss</td>
+</tr>
+<tr>
+<td>Dienstleister: Listing &amp; Angebot</td>
+<td>Dienstleister</td>
+<td>Dienstleistung einstellen &amp; Angebot erstellen</td>
+<td>Veranstalter finden passende Anbieter</td>
+<td>Listing mit Pflichtfeldern; Angebot enthält Preise (Netto/Brutto), Positionen, Fotos; Download als PDF möglich</td>
+<td>Muss</td>
+</tr>
+<tr>
+<td>Dienstleister: Buchung &amp; Budget</td>
+<td>Gruppenmitglied</td>
+<td>Dienstleister buchen; Budget setzen</td>
+<td>Planung &amp; Kostenkontrolle möglich</td>
+<td>Buchung erzeugt Reservierung; Budget‑Limit verhindert Überbuchung; Bestätigung &amp; Storno‑API vorhanden</td>
+<td>Muss</td>
+</tr>
+<tr>
+<td>Dienstleister: Ressourcen &amp; Mitarbeiter</td>
+<td>Dienstleister</td>
+<td>Material &amp; Personal verwalten</td>
+<td>Verfügbarkeit planbar ist</td>
+<td>Ressourcen können geblockt/entblockt werden; Mitarbeiter‑Calendar sichtbar; Konflikte verhindert</td>
+<td>Muss</td>
+</tr>
+<tr>
+<td>Bewertungen &amp; Feedback</td>
+<td>Gruppenmitglied</td>
+<td>Dienstleister bewerten</td>
+<td>Qualität transparent wird</td>
+<td>Bewertung nur nach abgeschlossenem Event; Anzeige mittelt Bewertungen; Missbrauchs-Moderation möglich</td>
+<td>Kann</td>
+</tr>
+<tr>
+<td>Material‑Lifecycle (Wartung)</td>
+<td>Dienstleister</td>
+<td>Wartungszyklen verwalten</td>
+<td>Ausfälle planbar sind</td>
+<td>Wartungs‑Reminder configurable; Historie pro Asset vorhanden</td>
+<td>Muss</td>
+</tr>
+<tr>
+<td>Abrechnung: Rechnung + Mahnwesen</td>
+<td>Dienstleister / Organisator</td>
+<td>Rechnungen automatisch erzeugen / Mahnungen senden</td>
+<td>Zahlungen eingetrieben werden</td>
+<td>Rechnung generiert aus Angebot; PDF/CSV-Export; Mahnung nach konfigurierbarer Frist (z. B. 30 Tage)</td>
+<td>Muss</td>
+</tr>
+<tr>
+<td>DSGVO – Datenexport &amp; Löschung</td>
+<td>Benutzer</td>
+<td>meine Daten exportieren/ löschen lassen</td>
+<td>Recht auf Auskunft / Vergessenwerden erfüllt ist</td>
+<td>User kann vollständigen Datenexport (JSON/CSV) anfordern; Löschung führt zu Anonymisierung/Entfernung innerhalb 30 Tage; Audit-Log der Anfrage</td>
+<td>Muss</td>
+</tr>
+<tr>
+<td>Sicherheit: Auth &amp; Sessions</td>
+<td>Benutzer/System</td>
+<td>2‑Faktor, Session‑Timeout, Account‑Lockout</td>
+<td>Konten sicher sind</td>
+<td>Passwort-Hashing mit Argon2/bcrypt; 2FA optional; Session default 30 min idle; Account lock after 5 failed attempts (configurable)</td>
+<td>Muss</td>
+</tr>
+<tr>
+<td>Payments: Webhook Idempotenz &amp; Refunds</td>
+<td>System</td>
+<td>sichere Zahlungsabwicklung</td>
+<td>keine Doppelbuchungen; Rückerstattungen möglich</td>
+<td>Webhooks idempotent; Refunds via API in &lt;72 h; reconciliations reportierbar</td>
+<td>Muss</td>
+</tr>
+<tr>
+<td>Observability &amp; Ops</td>
+<td>Betreiber</td>
+<td>Monitoring, Logging, Backups</td>
+<td>Betriebssicherheit gewährleistet</td>
+<td>99.5% availability target (SLA); zentrale Logs (retention 90d); tägliche Backups; Alerts bei Fehlern</td>
+<td>Soll</td>
+</tr>
+<tr>
+<td>API: Contract &amp; Rate Limits</td>
+<td>Integrator</td>
+<td>stabile API nutzen</td>
+<td>Integration zuverlässig bleibt</td>
+<td>OpenAPI spec vorhanden; 95th pct response &lt;500ms; rate limit 1000 req/min per API key</td>
+<td>Soll</td>
+</tr>
+<tr>
+<td>Accessibility (WCAG)</td>
+<td>User</td>
+<td>barrierefreien Zugang haben</td>
+<td>inklusiver Betrieb</td>
+<td>WCAG 2.1 AA für Kern-User‑Flows</td>
+<td>Soll</td>
+</tr>
+<tr>
+<td>Testing &amp; CI/CD</td>
+<td>Entwickler</td>
+<td>automatisierte Qualitätssicherung</td>
+<td>Regressionen verhindert werden</td>
+<td>Unit/Integration/E2E in CI; PRs müssen CI grünes Licht haben</td>
+<td>Muss</td>
+</tr>
+</tbody>
+</table>
+<!--
+### Ergänzende nicht‑funktionale Anforderungen (Auswahl / messbar)
+- Performance: 95th‑percentile API latency < 500 ms für Kernendpunkte (list/create/join).
+- Skalierbarkeit: System skaliert horizontal bei 50% CPU‑Auslastung der Instanzgruppe.
+- Sicherheit: TLS 1.2+ enforced; Secrets in KMS; regelmäßige Pen‑Tests (Jährlich).
+- Datenschutz: Datenexport (JSON/CSV), Lösch‑Workflow, Einwilligungs‑Logging für E‑Mails.
+-->
+<h1 id="5-41-sichten">5. 4+1 Sichten</h1>
+<h2 id="51-use%E2%80%91case--szenarien">5.1 Use‑case / Szenarien</h2>
+<!--
+- Use‑case / Szenarien
+  - Use‑case‑Diagramm (Actors + top 10 Use‑cases)
+  - 3–5 Sequenzdiagramme (z. B. Create Group, Book Provider, Payment + Refund)
+  - Mapping Story→Use‑case
+-->
+<h3 id="gruppe-erstellen">Gruppe erstellen</h3>
+<p>A user sends a request to create a new group. His session is validated and on successful validation the group is created. After the group is created the user can be redirected to the groups page.</p>
+<pre><code class="language-mermaid"><div class="mermaid">sequenceDiagram
+
+actor User
+participant UI as Web UI / Mobile
+participant Groups as Groups Service
+participant Auth as Auth service
+participant DB@{ "type" : "database" }
+
+User ->> UI : Open 'Create group' form
+UI ->> Auth : validate session
+Auth -->> UI : 200 OK
+UI ->> Groups : POST /api/v1/groups {payload}
+Groups ->> DB : INSERT group + owner
+DB -->> Groups : groupId
+Groups -->> UI : 201 Created { groupId }
+UI -->> User : Show confirmation and open Group
+
+</div></code></pre>
+<h4 id="gruppendaten">Gruppendaten</h4>
+<pre class="hljs"><code><div>{
+  name : Provided by user
+  groupId&quot; : Automatically generated unique id
+  visibility : Provided by user (default Private)
+}
+</div></code></pre>
+<h3 id="gruppe-%C3%BCber-link-beitreten">Gruppe über link beitreten</h3>
+<p>An exiting group member can access an invite link through the UI. This invite link can be send to other users.
+If another user opens that invite link, the join process is stared. First it is validated if the user is allowed to join the group (ie: not blocked, etc.). If the user is allowed to join the User is displayed basic information about the Group so that he can ensure that he is joining the group he is intending to. If the user confirms, the user is added as a group member. The user the receives confirmation of the successful join and is redirected to the groups page.
+If the user is already part of the group he can be redirected to the groups page directly.</p>
+<pre><code class="language-mermaid"><div class="mermaid">sequenceDiagram
+
+actor Inviter
+actor Invited
+participant UI as Web UI / Mobile
+participant Groups as Groups Service
+participant Auth as Auth service
+participant DB@{ "type" : "database" }
+
+Inviter ->> UI : Open group info 'Invite' UI
+UI ->> Auth : validate session
+Auth -->> UI : 200 OK
+UI ->> Groups : GET /api/v1/groups/invite_link
+Groups ->> DB : SELECT publicGroupId FROM group
+DB -->> Groups : publicGroupId
+Groups -->> UI : 200 Found { publicGroupId }
+UI ->> Inviter  : Copy invite link
+Inviter ->> Invited : Send invite link
+
+Invited ->> UI : Open 'Invite link'
+UI ->> Auth : validate session
+Auth -->> UI : 200 OK
+UI ->> Groups : GET /api/v1/groups/can_join {userId}
+Groups ->> DB : SELECT user authorized to join, group info
+DB -->> Groups : authorized
+Groups -->> UI : 200 inviteProcessId, authorized, groupInfo
+UI -->> Invited : Request 'confirm join'
+Invited ->> UI : Confirm join
+UI ->> Groups : /api/v1/groups/join/{inviteProcessId}
+Groups ->> DB : INSERT groupMember
+DB -->> Groups : groupMemberId
+Groups -->> UI : 201 Created { groupMemberId }
+UI -->> Invited : Confirm joined
+Groups -->> UI : 303 forward to group { /groups/{publicGroupId} }
+UI -->> Invited : Open group
+</div></code></pre>
+<h3 id="einzahlung-r%C3%BCckerstatten">Einzahlung rückerstatten</h3>
+<pre class="hljs"><code><div>@startuml
+title Payment &amp; Refund (webhook + idempotence)
+actor PaymentProvider
+participant &quot;Payments Service&quot; as Payments
+participant &quot;Orders/Booking Service&quot; as Orders
+database DB
+
+PaymentProvider -&gt; Payments: POST /api/v1/payments/webhook {event, idempotency_key}
+Payments -&gt; Payments: lookup event by idempotency_key
+alt already processed
+  Payments --&gt; PaymentProvider: 200 (ignored)
+else new event
+  Payments -&gt; Orders: mark payment received (order_id)
+  Orders -&gt; DB: update payment_status
+  DB --&gt; Orders: OK
+  Payments --&gt; PaymentProvider: 200 (processed)
+end
+
+== Refund ==
+User -&gt; UI: request refund
+UI -&gt; Payments: POST /api/v1/payments/{id}/refund
+Payments -&gt; PaymentProvider: initiate refund
+PaymentProvider --&gt; Payments: refund_confirm
+Payments -&gt; Orders: update refund_status
+Payments --&gt; UI: 200 (refund scheduled)
+@enduml
+</div></code></pre>
+<h2 id="52-logische-%C3%BCbersicht">5.2 Logische Übersicht</h2>
+<!--
+- Logical View
+  - Domänen‑Klassendiagramm (Entitäten + Schlüsselattribute)
+  - ER‑Diagram + CRUD‑Matrix
+  - Daten‑Retention & Privacy per Entität
+-->
+<h3 id="er---model">ER - Model</h3>
+<h2 id="different-diagram-layout">&lt;!--
+different diagram layout</h2>
+<h2 id="title-order-exampleconfiglayout-elk">title: Order example
+config:
+layout: elk</h2>
+<p>--&gt;</p>
+<pre><code class="language-mermaid"><div class="mermaid">
+erDiagram
+direction LR;
+
+USER {
+  int id PK
+  string username
+  string name
+  string familyName
+  bool emailVerified
+  string email
+  string phone
+  int preferredCommunication
+  byte[64] passwordHash
+  byte[64] passwordSalt
+  bool consent
+}
+
+GROUP {
+  int id PK
+  string name
+  string groupId "Public unique id used in invite links"
+  int minUsersForEvent "min number of users so that the event can happen"
+  float minDepositForEvent "min amount deposited so that the event can happen"
+  DateTime startDate "start of the event"
+  DateTime endDate "end of the event"
+  int visibility "0 = private; 1 = public"
+  DateTime archivedOn "Date when the group was archived. Null if not archived"
+  DateTime deletedOn "Date when the group was deleted. Null if not deleted"
+}
+
+GROUP_MEMBER {
+  int id PK
+  int groupId FK
+  int userId FK "relevant user. May be removed if a user left the group"
+  string role
+  bool isBlocked
+  DateTime joinedOn
+  DateTime leftOn
+}
+
+USER |o--o{ GROUP_MEMBER : "member of"
+GROUP ||--|{ GROUP_MEMBER : "group members"
+
+
+TRANSACTION {
+  int id PK
+  int groupId FK "group the money was deposited into"
+  int userId FK "user that deposited the money"
+  float amount "amount deposited into the group in $"
+  Date transactionDate
+  string description
+  int direction "0 = deposited; 1 = payed out"
+  int status "0 = created; 1 = processing; 2 = completed"
+}
+
+TRANSACTION }o--|| GROUP : "deposit into"
+TRANSACTION }o--|| GROUP : "payout from"
+TRANSACTION }o--|| USER : "relevant user"
+
+
+GROUP_NOTE {
+  int id PK
+  int groupId FK
+  string text
+  DateTime creationDate
+}
+
+GROUP_NOTE }o--|| GROUP  : "notes"
+
+
+GROUP_APPOINTMENT {
+  int id PK
+  int groupId FK
+  DateTime startDate
+  DateTime endDate
+  string description 
+}
+
+GROUP ||--o{ GROUP_APPOINTMENT : "appointments"
+
+
+GROUP_SURVEY {
+  int id PK
+  int groupId Fk
+  string description 
+  DateTime createDate
+}
+
+GROUP_SURVEY_QUESTION {
+  int id PK
+  int surveyId FK
+  string question
+  int type "0 = single choice; 1 = multiple choice"
+  string[] options
+}
+
+GROUP_SURVEY_ANSWER {
+  int id PK
+  int questionId FK
+  int groupMemberId FK
+  int answer
+}
+
+GROUP_SURVEY }o--|| GROUP  : "surveys"
+GROUP_SURVEY ||--o{ GROUP_SURVEY_QUESTION : "questions"
+GROUP_SURVEY_ANSWER }o--|| GROUP_SURVEY_QUESTION : "answers"
+GROUP_SURVEY_ANSWER }o--|| GROUP_MEMBER : "survey user"
+
+
+GROUP_COMMENT {
+  int id PK
+  int groupId FK
+  int memberId FK
+  string text
+  Image[] pictures
+  Video[] videos
+}
+
+GROUP_COMMENT }o--|| GROUP : "user comment on event"
+GROUP_COMMENT }o--|| GROUP_MEMBER : "poster"
+
+
+GROUP_TASK {
+  int id PK
+  int groupId FK
+  int creatorId FK
+  int memberId FK
+  string description
+  int state "0 = open; 1 = in progress; 2 = done"
+  DateTime deadline
+}
+
+GROUP_TASK }o--|| GROUP : "group task"
+GROUP_TASK }o--o| GROUP_MEMBER : "assigned"
+GROUP_TASK ||--|| GROUP_MEMBER : "created"
+
+
+SERVICE_PROVIDER {
+  int id PK
+  string name
+  string providerId "unique id that can be used to identify the provider (eg: link)"
+}
+
+SP_EMPLOYEE {
+  int id PK
+  int employerId FK
+  string name
+  float wage
+  string qualification "the qualification the employee has"
+  string subject "field of expertise"
+}
+
+SP_EMPLOYEE }o--|| SERVICE_PROVIDER : "employees"
+
+SP_EMPLOYEE_APPOINTMENT {
+  int id PK
+  int employeeId FK
+  DateTime startDate
+  DateTime endDate
+  int spGroupEventId 
+}
+
+SP_EMPLOYEE_APPOINTMENT }o--|| SP_EMPLOYEE : "Date range when the employee is occupied"
+SP_EMPLOYEE_APPOINTMENT }o--o| SP_GROUP_EVENT : "id of event if assigned to one. Can be null if occupied otherwise (vacation)"
+
+SP_RESOURCE {
+  int id PK
+  int ownerId FK
+  float buyPrice "Price the item was bought for"
+  float rentPrice "Price of the item per day"
+  Image picture "Image of the resource"
+  float weight "storage weight"
+  DateTime nextMaintenance
+  float requiredPower
+  Dimension size
+}
+
+SP_RESOURCE }o--|| SERVICE_PROVIDER : "owned resources"
+
+SP_RESOURCE_RENT {
+  int id PK
+  int resourceId 
+  DateTime startDate "Day the rented item is send out"
+  DateTime endDate "Day the item is returned"
+  int onDays "Number of on-days of the device while rented"
+  float rent "Price the item was rented for"
+}
+
+SP_RESOURCE_RENT }o--|| SP_RESOURCE : "rent history"
+
+
+SP_GROUP_EVENT {
+  int id PK
+  int providerId FK "commissioned"
+  int groupId FK "service provider commissioner"
+
+}
+
+SP_GROUP_EVENT }o--|| GROUP : "event"
+SP_GROUP_EVENT }o--|| SERVICE_PROVIDER : "operational provider"
+
+
+SP_GROUP_OFFER {
+  int id
+  int spGroupEventId FK
+  bool offerAccepted "Weather the group has accepted the offer"
+  float priceGross
+  float priceNet
+  float discount
+  float employeeCost
+  float drivingCost
+  float operationalCost
+  string location
+  DateTime date
+  string author
+  int[] materialIds
+}
+
+SP_GROUP_OFFER |o--|| SP_GROUP_EVENT : "offer for operation"
+
+
+SP_GROUP_INVOICE {
+  int id
+  int spGroupOfferId FK
+  string invoiceNumber
+  DateTime creationDate
+  DateTime invoiceDeadline
+  bool warningSend
+}
+
+SP_GROUP_INVOICE |o--|| SP_GROUP_OFFER : "invoice"
+
+</div></code></pre>
+<h3 id="crud-matrix">CRUD-Matrix</h3>
+<p>Die CRUD-Matrix zeigt für jede Entität im ER-Modell die unterstützten Operationen (Create, Read, Update, Delete), basierend auf den funktionalen User Stories und der API-Spezifikation. &quot;Ja&quot; bedeutet, die Operation ist verfügbar; &quot;Nein&quot; bedeutet, sie ist nicht vorgesehen oder nicht erforderlich.</p>
+<table>
+<thead>
+<tr>
+<th>Entität</th>
+<th>Create</th>
+<th>Read</th>
+<th>Update</th>
+<th>Delete</th>
+<th>Begründung / Einschränkungen</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>USER</td>
+<td>Ja</td>
+<td>Ja</td>
+<td>Ja</td>
+<td>Ja</td>
+<td>Registrierung (Create), Profil-Update (Update), DSGVO-Löschung (Delete), Profil-Anzeige (Read).</td>
+</tr>
+<tr>
+<td>GROUP</td>
+<td>Ja</td>
+<td>Ja</td>
+<td>Ja</td>
+<td>Ja</td>
+<td>Gruppen erstellen/beitreten (Create), Übersicht (Read), Bearbeiten (Update), Löschen (Delete).</td>
+</tr>
+<tr>
+<td>GROUP_MEMBER</td>
+<td>Ja</td>
+<td>Ja</td>
+<td>Ja</td>
+<td>Ja</td>
+<td>Beitritt (Create), Mitgliederliste (Read), Rollen ändern (Update), Entfernen (Delete).</td>
+</tr>
+<tr>
+<td>TRANSACTION</td>
+<td>Ja</td>
+<td>Ja</td>
+<td>Nein</td>
+<td>Nein</td>
+<td>Einzahlungen (Create), Finanzübersicht (Read); Rückerstattungen via spezielle API (nicht direkt Update/Delete).</td>
+</tr>
+<tr>
+<td>GROUP_NOTE</td>
+<td>Ja</td>
+<td>Ja</td>
+<td>Ja</td>
+<td>Ja</td>
+<td>Notizen hinzufügen (Create), Anzeigen (Read), Bearbeiten (Update), Löschen (Delete).</td>
+</tr>
+<tr>
+<td>GROUP_APPOINTMENT</td>
+<td>Ja</td>
+<td>Ja</td>
+<td>Ja</td>
+<td>Ja</td>
+<td>Termine erstellen (Create), Anzeigen (Read), Bearbeiten (Update), Löschen (Delete).</td>
+</tr>
+<tr>
+<td>GROUP_SURVEY</td>
+<td>Ja</td>
+<td>Ja</td>
+<td>Ja</td>
+<td>Ja</td>
+<td>Umfragen erstellen (Create), Anzeigen (Read), Bearbeiten (Update), Löschen (Delete).</td>
+</tr>
+<tr>
+<td>GROUP_SURVEY_QUESTION</td>
+<td>Ja</td>
+<td>Ja</td>
+<td>Ja</td>
+<td>Ja</td>
+<td>Fragen als Teil der Umfrage (CRUD über Survey-API).</td>
+</tr>
+<tr>
+<td>GROUP_SURVEY_ANSWER</td>
+<td>Ja</td>
+<td>Ja</td>
+<td>Nein</td>
+<td>Nein</td>
+<td>Antworten abgeben (Create), Ergebnisse anzeigen (Read); keine Änderung/Löschung nach Abgabe.</td>
+</tr>
+<tr>
+<td>GROUP_COMMENT</td>
+<td>Ja</td>
+<td>Ja</td>
+<td>Ja</td>
+<td>Ja</td>
+<td>Kommentare/Media hochladen (Create), Anzeigen (Read), Bearbeiten (Update), Löschen (Delete).</td>
+</tr>
+<tr>
+<td>GROUP_TASK</td>
+<td>Ja</td>
+<td>Ja</td>
+<td>Ja</td>
+<td>Ja</td>
+<td>Aufgaben erstellen (Create), Anzeigen (Read), Zuweisen/Abschließen (Update), Löschen (Delete).</td>
+</tr>
+<tr>
+<td>SERVICE_PROVIDER</td>
+<td>Ja</td>
+<td>Ja</td>
+<td>Ja</td>
+<td>Ja</td>
+<td>Provider registrieren (Create), Listing (Read), Bearbeiten (Update), Löschen (Delete).</td>
+</tr>
+<tr>
+<td>SP_EMPLOYEE</td>
+<td>Ja</td>
+<td>Ja</td>
+<td>Ja</td>
+<td>Ja</td>
+<td>Mitarbeiter hinzufügen (Create), Anzeigen (Read), Bearbeiten (Update), Entfernen (Delete).</td>
+</tr>
+<tr>
+<td>SP_EMPLOYEE_APPOINTMENT</td>
+<td>Ja</td>
+<td>Ja</td>
+<td>Ja</td>
+<td>Ja</td>
+<td>Termine planen (Create), Kalender anzeigen (Read), Ändern (Update), Stornieren (Delete).</td>
+</tr>
+<tr>
+<td>SP_RESOURCE</td>
+<td>Ja</td>
+<td>Ja</td>
+<td>Ja</td>
+<td>Ja</td>
+<td>Ressourcen hinzufügen (Create), Anzeigen (Read), Bearbeiten (Update), Entfernen (Delete).</td>
+</tr>
+<tr>
+<td>SP_RESOURCE_RENT</td>
+<td>Ja</td>
+<td>Ja</td>
+<td>Ja</td>
+<td>Ja</td>
+<td>Verleihhistorie (Create via Buchung), Anzeigen (Read), Ändern (Update), Löschen (Delete).</td>
+</tr>
+<tr>
+<td>SP_GROUP_EVENT</td>
+<td>Ja</td>
+<td>Ja</td>
+<td>Ja</td>
+<td>Ja</td>
+<td>Events anlegen (Create), Anzeigen (Read), Bearbeiten (Update), Archivieren (Delete).</td>
+</tr>
+<tr>
+<td>SP_GROUP_OFFER</td>
+<td>Ja</td>
+<td>Ja</td>
+<td>Ja</td>
+<td>Ja</td>
+<td>Angebote erstellen (Create), Anzeigen (Read), Bearbeiten (Update), Löschen (Delete).</td>
+</tr>
+<tr>
+<td>SP_GROUP_INVOICE</td>
+<td>Ja</td>
+<td>Ja</td>
+<td>Ja</td>
+<td>Ja</td>
+<td>Rechnungen generieren (Create), Anzeigen (Read), Bearbeiten (Update), Löschen (Delete).</td>
+</tr>
+</tbody>
+</table>
+<p>Diese Matrix deckt alle Kernoperationen ab, die in den User Stories definiert sind. Nicht unterstützte Operationen (z. B. Update für TRANSACTION) sind durch Geschäftslogik begründet (z. B. Idempotenz bei Zahlungen). Die Matrix bestätigt, dass die Entitäten vollständig zu den funktionalen Anforderungen passen.</p>
+<h2 id="53-entwickler%C3%BCbersicht-komponentenmodule-paket%E2%80%91-und-repo%E2%80%91struktur-api%E2%80%91contract-openapi-buildci">5.3 Entwicklerübersicht: Komponenten/Module, Paket‑ und Repo‑Struktur, API‑Contract (OpenAPI), Build/CI</h2>
+<!--
+- Development View
+  - Komponentenübersicht (groups‑service, auth, payments, provider‑portal, ui)
+  - API‑Endpunkte (stubs) für Kernflows (Groups, Membership, Payments)
+  - Build/CI Übersicht, Dependency‑Matrix
+-->
+<p><strong>Kurzbeschreibung</strong></p>
+<p>Die Plattform ist als cloud‑native, dreischichtige Web‑/Mobile‑Anwendung ausgelegt: klientenseitig (Web / Mobile), API‑Layer (Gateway / Edge) und ein Backend‑Service‑Ökosystem (auth, groups, payments, provider, media, notifications, background workers). Persistente Daten liegen in einer relationalen Primärdatenbank; große Binärdaten (Fotos/Videos) werden in Object Storage abgelegt. Caching, Message‑Broker und Suchindex sind zusätzliche Komponenten zur Skalierung.</p>
+<p><strong>Hauptkomponenten (Übersicht)</strong></p>
+<ul>
+<li>API Gateway / Ingress: TLS‑Termination, Routing, Rate‑Limiting, Authn/Z</li>
+<li>Auth Service: Login, Sessions, 2FA, Token‑Issuance, Account Management</li>
+<li>Groups Service: Domain‑Logik für Gruppen, Mitglieder, Notizen, Termine, Surveys</li>
+<li>Payments Bridge: Integration zu Stripe/Adyen, Webhook‑Handler (idempotent)</li>
+<li>Provider / Marketplace Service: Provider‑Listing, Angebote, Buchungen, Ressourcenplanung</li>
+<li>Media Service / Object Storage: Uploads, Thumbnails, CDN‑Serving</li>
+<li>Background Workers: E‑Mails, Push, Reconciliations, Refunds, Maintenance Jobs</li>
+<li>Data Stores: Primary RDBMS (ACID), Redis (cache, sessions, rate limits), Search (Elasticsearch/Opensearch)</li>
+<li>Message Broker: RabbitMQ / Kafka für asynchrone Aufgaben und Events</li>
+<li>Observability: Prometheus, Grafana, ELK/Opensearch, Tracing (Jaeger)</li>
+<li>CI/CD, IaC, KMS/Secrets Manager</li>
+</ul>
+<h3 id="komponenten">Komponenten</h3>
+<ul>
+<li>Website</li>
+<li>Mobile app</li>
+<li>Authentication service</li>
+<li>Gruppenservice</li>
+<li>ProviderPortal</li>
+<li>ProviderService</li>
+<li>Datenbank</li>
+</ul>
+<h3 id="repositories">Repositories</h3>
+<ul>
+<li>Website</li>
+<li>Mobile app</li>
+<li>Api-services</li>
+</ul>
+<h3 id="api-endpunkte">Api-endpunkte</h3>
+<p>Api prefix: <code>api/v1/</code><br>
+Alle Endpunkte mit Ausnahme von <code>login</code> und <code>register</code> erfordern einen gültigen session header.</p>
+<p><em>OpenAPI spec: <a href="api/Openapi.yaml">SPEC</a></em></p>
+<h4 id="user">User</h4>
+<ul>
+<li>GET user/{userId} → 200 OK</li>
+<li>POST user/: {payload} → 201 Created</li>
+<li>PUT user/{userId}: {payload} → 200 OK</li>
+<li>DELETE user/{userId} → 200 OK</li>
+</ul>
+<ul>
+<li>GET /users/{id}/export → 200 OK (JSON/CSV mit allen User-Daten)</li>
+<li>DELETE /users/{id}/gdpr-delete → 202 Accepted (Anonymisierung nach 30 Tagen)</li>
+</ul>
+<h4 id="auth">Auth</h4>
+<ul>
+<li>POST /auth/login {username, password} → 200 OK + JWT/Session</li>
+<li>POST /auth/register {email, username, password, ...} → 201 Created</li>
+<li>POST /auth/reset-password {email} → 200 OK (sendet Reset-Link)</li>
+<li>POST /auth/verify-email {token} → 200 OK</li>
+<li>POST /auth/logout → 200 OK (invalidates Session)</li>
+<li>GET /auth/session → 200 OK (prüft aktive Session)</li>
+</ul>
+<h4 id="groups">Groups</h4>
+<ul>
+<li>GET groups/{groupId} → 200 OK</li>
+<li>GET groups/ → 200 OK</li>
+<li>POST groups/: {payload} → 201 Created</li>
+<li>PUT groups/{groupId} → 200 OK</li>
+<li>DELETE groups/{groupId} → 200 OK</li>
+</ul>
+<ul>
+<li>GET groups/start_join/{groupId} → 200 OK</li>
+<li>PUT groups/join: {joinId} → 200 OK</li>
+<li>GET groups/{id}/invite → 200 OK</li>
+</ul>
+<ul>
+<li>GET groups/{id}/member → 200 OK</li>
+<li>GET groups/{id}/member/{id} → 200 OK</li>
+<li>POST groups/{id}/member: {payload} → 201 Created</li>
+<li>PUT groups/{id}/member/{id} → 200 OK</li>
+</ul>
+<ul>
+<li>GET groups/{id}/note → 200 OK</li>
+<li>GET groups/{id}/note/{id} → 200 OK</li>
+<li>POST groups/{id}/note/: {payload} → 201 Created</li>
+<li>PUT groups/{id}/note/{id}: {payload} → 200 OK</li>
+<li>DELETE groups/{id}/note/{id} → 200 OK</li>
+</ul>
+<ul>
+<li>GET groups/{id}/comment → 200 OK</li>
+<li>GET groups/{id}/comment/{id} → 200 OK</li>
+<li>POST groups/{id}/comment/: {payload} → 201 Created</li>
+<li>PUT groups/{id}/comment/{id}: {payload} → 200 OK</li>
+<li>DELETE groups/{id}/comment/{id} → 200 OK</li>
+</ul>
+<ul>
+<li>GET groups/{id}/survey → 200 OK</li>
+<li>GET groups/{id}/survey/{id} → 200 OK</li>
+<li>POST groups/{id}/survey {payload} → 201 Created</li>
+<li>PUT groups/{id}/survey/{id} {payload} → 200 OK</li>
+<li>DELETE groups/{id}/survey/{id} → 200 OK</li>
+<li>POST groups/{id}/survey/{id}/answer/ {payload} → 200 OK</li>
+<li>PUT /groups/{id}/survey/{id}/answer {user_id, answers} → 200 OK (Update eigener Antwort)</li>
+</ul>
+<ul>
+<li>GET groups/{id}/finance → 200 OK</li>
+<li>POST groups/{id}/finance/deposit {payload} → 200 OK</li>
+<li>POST groups/{id}/finance/withdraw {payload} → 200 OK</li>
+</ul>
+<ul>
+<li>GET groups/{id}/appointments/export (format=[google, ical]) → 200 OK</li>
+</ul>
+<ul>
+<li>GET groups/{id}/task → 200 OK</li>
+<li>GET groups/{id}/task/{id} → 200 OK</li>
+<li>POST groups/{id}/task/: {payload} → 201 Created</li>
+<li>PUT groups/{id}/task/{id}: {payload} → 200 OK</li>
+<li>DELETE groups/{id}/task/{id} → 200 OK</li>
+</ul>
+<ul>
+<li>POST /payments/webhook {provider_tx_id, amount, ...} → 200 OK (idempotent via provider_tx_id)</li>
+<li>GET /groups/{id}/finance/summary → 200 OK (Kassensturz-Übersicht)</li>
+<li>POST /groups/{id}/finance/refund {user_id, amount} → 201 Created (manuelle Rückerstattung)</li>
+</ul>
+<ul>
+<li>POST /groups/{id}/media {file, type} → 201 Created (Upload mit Virus-Scan)</li>
+<li>GET /media/{id} → 200 OK (Download)</li>
+<li>DELETE /media/{id} → 204 No Content</li>
+</ul>
+<h4 id="providers">Providers</h4>
+<ul>
+<li>GET    provider/ → 200 OK</li>
+<li>GET    provider/{id} → 200 OK</li>
+<li>POST   provider/: {payload} → 201 Created</li>
+<li>GET    provider/{id}: {payload} → 200 OK</li>
+<li>DELETE provider/{id} → 200 OK</li>
+</ul>
+<ul>
+<li>GET    provider/{id}/employee → 200 OK</li>
+<li>GET    provider/{id}/employee/{id} → 200 OK</li>
+<li>POST   provider/employee/: {payload} → 201 Created</li>
+<li>GET    provider/{id}/employee/{id}: {payload} → 200 OK</li>
+<li>DELETE provider/{id}/employee/{id} → 200 OK</li>
+</ul>
+<ul>
+<li>GET    provider/{id}/employee/{id}/appointments → 200 OK</li>
+<li>GET    provider/{id}/employee/{id}/appointments/{id} → 200 OK</li>
+<li>POST   provider/employee/{id}/appointments/: {payload} → 201 Created</li>
+<li>GET    provider/{id}/employee/{id}/appointments/{id}: {payload} → 200 OK</li>
+<li>DELETE provider/{id}/employee/{id}/appointments/{id} → 200 OK</li>
+</ul>
+<ul>
+<li>GET    provider/{id}/resource → 200 OK</li>
+<li>GET    provider/{id}/resource/{id} → 200 OK</li>
+<li>POST   provider/resource/: {payload} → 201 Created</li>
+<li>GET    provider/{id}/resource/{id}: {payload} → 200 OK</li>
+<li>DELETE provider/{id}/resource/{id} → 200 OK</li>
+</ul>
+<ul>
+<li>POST /providers/{id}/book {group_id, budget} → 201 Created</li>
+<li>POST /providers/{id}/rate {rating, comment} → 200 OK</li>
+</ul>
+<h4 id="events-managed-by-provider">Events managed by provider</h4>
+<ul>
+<li>
+<p>GET  event/</p>
+</li>
+<li>
+<p>GET  event/{id}</p>
+</li>
+<li>
+<p>POST event {payload}</p>
+</li>
+<li>
+<p>PUT  event/{id} {payload}</p>
+</li>
+<li>
+<p>POST event/application {payload}</p>
+</li>
+<li>
+<p>POST event/invoice {payload}</p>
+</li>
+</ul>
+<h2 id="54-prozess%C3%BCbersicht-laufzeit%E2%80%91architektur-messagingqueues-state%E2%80%91machines-z-b-group-lifecycle-performance%E2%80%91flows">5.4 Prozessübersicht: Laufzeit‑Architektur, Messaging/Queues, State‑Machines (z. B. Group lifecycle), Performance‑Flows</h2>
+<!--
+- Development View
+  - Komponentenübersicht (groups‑service, auth, payments, provider‑portal, ui)
+  - API‑Endpunkte (stubs) für Kernflows (Groups, Membership, Payments)
+  - Build/CI Übersicht, Dependency‑Matrix
+-->
+<h2 id="55-physical-view-deployment%E2%80%91diagramm-k8svms-netz-sizing-slosla">5.5 Physical View: Deployment‑Diagramm (K8s/VMs), Netz, Sizing, SLO/SLA</h2>
+<!--
+- Physical View
+  - Beispiel‑Deployment (k8s/VM), Netz‑Diagram, Storage/BLOB, CDN
+  - Backup/Restore, DR‑Plan, Sizing‑Annäherungen
+-->
+<ul>
+<li>Umgebung: K8s Cluster pro Region (Namespaces per environment: staging/prod)</li>
+<li>Netzwerk: Public Ingress (LoadBalancer / CDN) in DMZ; private Back‑end Subnet für Services und DB</li>
+<li>Datenhaltung: Managed RDBMS Multi‑AZ mit Read‑Replicas; Object Storage mit Lifecycle Policies</li>
+<li>Verfügbarkeit: Multi‑AZ, HPA für Pods, SLOs gemäss Kapitel 2 (z. B. 99.5% für auth/payments)</li>
+<li>Backups: tägliche Snapshots (RPO 24h), kritische RTO &lt;1h (auth/payments)</li>
+</ul>
+<hr>
+<h1 id="6-nicht%E2%80%91funktionale-anforderungen-nfr--messbar-performance-security-privacy-availability-scalability">6 Nicht‑funktionale Anforderungen (NFR) — messbar: Performance, Security, Privacy, Availability, Scalability</h1>
+<h1 id="7-security--privacy-stride-dsgvo%E2%80%91flows-key%E2%80%91management-aufbewahrung">7 Security &amp; Privacy (STRIDE, DSGVO‑Flows, Key‑Management, Aufbewahrung)</h1>
+<!--
+- NFRs & Security
+  - Messbare NFR‑Tabelle (SLO/SLA, retention, latency, throughput)
+  - STRIDE‑Kurzanalyse + Controls (Auth, KMS, Rate‑limit, CSP)
+  - DSGVO: Datenexport & Lösch‑Workflow (API + delays)
+  - 
+-->
+<ul>
+<li>Spoofing: starke Auth (OAuth2 / JWT, refresh tokens), MFA option; secure session management</li>
+<li>Tampering: input validation, HMAC/signatures für webhooks, integrity checks, WAF</li>
+<li>Repudiation: zentrale Audit‑Logs for critical actions, signed receipts for payments</li>
+<li>Information Disclosure: TLS everywhere, access controls, least privilege, encryption at rest (KMS)</li>
+<li>Denial of Service: rate limits, autoscaling, circuit breakers, WAF, traffic quotas</li>
+<li>Elevation of Privilege: RBAC, privilege separation, hardened service accounts, regular pen‑tests</li>
+</ul>
+<h1 id="8-api--integration-openapi-webhooks-idempotenz-3rd%E2%80%91party-connectors">8 API &amp; Integration (OpenAPI, Webhooks, Idempotenz, 3rd‑party connectors)</h1>
+<!--
+- API & Integration
+  - OpenAPI‑stubs für Kernressourcen
+  - Webhook contract (idempotence), retry semantics
+  - 3rd‑party integration checklist (payment, calendar sync)
+-->
+<ul>
+<li>OpenAPI Spec: <code>api.yaml</code> (Anhang D). Alle öffentlichen Endpunkte sollen eine Versionierung und Rate‑Limit haben.</li>
+<li>Webhooks: idempotency keys, replay protection, signature verification</li>
+<li>Externe Provider: Payments (Stripe/Adyen), Calendar Sync (Google/Outlook), Email/SMS (SendGrid/Twilio)</li>
+</ul>
+<h1 id="9-operations--sre-monitoring-logging-backups-runbook-incident%E2%80%91response">9 Operations &amp; SRE (Monitoring, Logging, Backups, Runbook, Incident‑Response)</h1>
+<!--
+- Operations & Testplan
+  - Monitoring KPI list, runbooks for top‑5 incidents
+  - CI/CD gates + Testmatrix (unit/integration/e2e/manual)
+-->
+<ul>
+<li>Monitoring: metrics (Prometheus), dashboards (Grafana), alerting thresholds aligned with SLOs</li>
+<li>Logging: central log pipeline (ELK/Opensearch) with 90d retention (siehe Kapitel 2)</li>
+<li>Runbooks: incident playbooks for auth outage, payment failure, data‑loss</li>
+<li>Security Ops: rotation of keys, regular vulnerability scans, dependency updates</li>
+</ul>
+<h1 id="10-testplan--qa-unit-integration-e2e-akzeptanztests-cicd%E2%80%91gates">10 Testplan / QA (Unit, Integration, E2E, Akzeptanztests, CI/CD‑Gates)</h1>
+<h1 id="11-anh%C3%A4nge">11 Anhänge</h1>
+<h2 id="anhang-a--ui-mockups">Anhang A — UI Mockups</h2>
+<h3 id="guppen-homepage">Guppen-Homepage</h3>
+<p><img src="mockups/GroupOverview.png" alt=""></p>
+<h3 id="nutzer-registrieren">Nutzer registrieren</h3>
+<p><img src="mockups/CreateUser.drawio.png" alt="Nutzer registrieren"></p>
+<h3 id="service-provider-%C3%BCbersicht">Service Provider Übersicht</h3>
+<p><img src="mockups/ProviderOverview.drawio.png" alt="Provider Übersicht"></p>
+<h2 id="anhang-b--aip">Anhang B — AIP</h2>
+<p><a href="api/openapi.yaml">api/openapi.xaml</a></p>
+<h2 id="anhang-c--initiale-traceability%E2%80%91matrix-auszug">Anhang C — initiale Traceability‑Matrix (Auszug)</h2>
+<table>
+<thead>
+<tr>
+<th>Requirement ID</th>
+<th>Kurzbezeichnung</th>
+<th>Use‑case</th>
+<th>Component</th>
+<th>API endpoint</th>
+<th>Testcase ID</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>REQ-001</td>
+<td>User login</td>
+<td>Authenticate user</td>
+<td>auth-service</td>
+<td>POST /api/v1/auth/login</td>
+<td>TC-001</td>
+</tr>
+<tr>
+<td>REQ-003</td>
+<td>Create group</td>
+<td>Create Group</td>
+<td>groups-service</td>
+<td>POST /api/v1/groups</td>
+<td>TC-010</td>
+</tr>
+<tr>
+<td>REQ-004</td>
+<td>Join group</td>
+<td>Join Group</td>
+<td>membership-service</td>
+<td>POST /api/v1/groups/{group_id}/join</td>
+<td>TC-011</td>
+</tr>
+<tr>
+<td>REQ-006</td>
+<td>Book provider</td>
+<td>Provider booking</td>
+<td>booking-service</td>
+<td>POST /api/v1/providers/{id}/book</td>
+<td>TC-030</td>
+</tr>
+<tr>
+<td>REQ-007</td>
+<td>Payment webhook idempotence</td>
+<td>Payment notification</td>
+<td>payments-service</td>
+<td>POST /api/v1/payments/webhook</td>
+<td>TC-040</td>
+</tr>
+<tr>
+<td>REQ-009</td>
+<td>Data export</td>
+<td>User data export</td>
+<td>export-service</td>
+<td>GET /api/v1/users/{id}/export</td>
+<td>TC-050</td>
+</tr>
+</tbody>
+</table>
+<p>Details / Dateien:</p>
+<ul>
+<li>Vollständige CSV (expandable): <code>SoftwareTechnik/traceability.csv</code></li>
+<li>Sequenzdiagramme (PlantUML): <code>SoftwareTechnik/diagrams/create_group.puml</code>, <code>.../book_provider.puml</code>, <code>.../payment_refund.puml</code></li>
+</ul>
+<!--
+Hinweis: das oben ist ein initialer, prüfbarer Auszug für die wichtigsten MVP‑Flows — erweitere die CSV, bis jede Story aus Kapitel 4 abgebildet ist.
+-->
+
+</body>
+</html>
