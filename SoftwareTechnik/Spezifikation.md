@@ -1,39 +1,37 @@
 
+
+Software Spezifikation
+======================
+
+**Autor:** Colin Meihöfer
+**Matrikelnummer:**  11143898
+
+## Selbständigkeitserklärung
+
+*Die Unterschrift findet sich in der beiligenden Datei: [Selbstständigkeitserklärung.pdf](Selbstständigkeitserklärung.pdf)*
+
+Die Arbeit habe ich selbstständig erledigt. Als hilfsmittel habe ich den in VS-Code integrierten Copilot verwendet. Ich habe in verwendet um meine Ergebnisse zu Prüfen (eg. alle wichtigen Requirements gefunden) und nachzuarbeiten.
+
+
+
+# 1 - Inhaltsverzeichnis
+
 1. Titelblatt, Autoren, Selbstständigkeitserklärung
 2. Zusammenfassung (Ziele, Scope, Annahmen)
 3. Glossar / Domain‑Begriffe
-4. Functional requirements (User‑Stories + zentrale Requirements‑Tabelle)
-   - 4.1 Mapping: User‑Stories → Akteure / Use‑Cases
-   - 4.2 Akzeptanztests / Test‑Cases (pro Story)
-5. 4+1 Sichten (jede Sicht: Ziel, Diagramme, Mapping zu Stories, offene Fragen)
-   - 5.1 Use‑case / Szenarien (the "+1"): Use‑case‑Diagramme, Hauptszenarien, Sequenzdiagramme, Akzeptanzkriterien
-   - 5.2 Logical View: Domänen‑Klassendiagramm, ER/DB‑Modell, CRUD‑Matrix, Entitäts‑Attribute, VIF
-   - 5.3 Development View: Komponenten/Module, Paket‑ und Repo‑Struktur, API‑Contract (OpenAPI), Build/CI
-   - 5.4 Process View: Laufzeit‑Architektur, Messaging/Queues, State‑Machines (z. B. Group lifecycle), Performance‑Flows
-   - 5.5 Physical View: Deployment‑Diagramm (K8s/VMs), Netz, Sizing, SLO/SLA
-6. Nicht‑funktionale Anforderungen (NFR) — messbar: Performance, Security, Privacy, Availability, Scalability
-7. Security & Privacy (STRIDE, DSGVO‑Flows, Key‑Management, Aufbewahrung)
-8. API & Integration (OpenAPI, Webhooks, Idempotenz, 3rd‑party connectors)
-9. Operations & SRE (Monitoring, Logging, Backups, Runbook, Incident‑Response)
-10. Testplan / QA (Unit, Integration, E2E, Akzeptanztests, CI/CD‑Gates)
-11. Open decisions / Risks / Roadmap (TODOs, Annahmen)
-12. Anhänge
-    - A: UML‑Quellen (XMI / PlantUML) — siehe `diagrams/` (PlantUML‑Quellen)
-    - B: DB‑Schema (DDL + Beispiel‑daten) — `db/schema.sql`
-    - C: Mockups / Styleguide — `mockups/`
-    - D: Beispiel‑API‑Responses (OpenAPI snippets) — `api/openapi.yaml`
-    - E: Traceability‑Matrix (Requirement → Artifact → Test)
+4. Funktionale requirements (User‑Stories + zentrale Requirements‑Tabelle)
+  - 4.1 User Stories
+  - 4.2 Funktionale Anforderungen
+5. 4+1 Sichten
+  - 5.1 Use‑case / Szenarien
+  - 5.2 Logische übersicht
+  - 5.3 Entwicklerübersicht
+  - 5.4 Prozessübersicht
+  - 5.5 Physische übersicht
+6. Nicht‑funktionale Anforderungen
+7. Security & Privacy
 
----
 
-Für jedes Kapitel (kurze Checkliste / erwartete Artefakte):
-
-- Titelblatt
-  - Pflicht: Autor(en), Matrikelnummer(n), Datum, Selbstständigkeitserklärung
-
----
-
-Hinweis zur Organisation: Die **Requirements‑Tabelle** ist die kanonische Quelle und bleibt in Kapitel 4; in den 4+1‑Sichten referenzierst du Story‑IDs (nicht kopieren). Eine Traceability‑Matrix (Anhang E) verbindet Requirements mit Use‑cases, Klassen, Endpunkten und Tests.
 
 
 # 2 - Zusammenfassung
@@ -44,11 +42,14 @@ Dieses Dokument beschreibt die Spezifikation für eine Plattform zur Planung, Or
 
 Zielsetzung: Eine sichere, skalierbare Web‑ und Mobile‑Plattform, die Gruppen‑Organisation, Zahlungsabwicklung und Dienstleister‑Management in einem integrierten Workflow unterstützt.
 
-Wichtige Kennzahlen
+Wichtige Kennzahlen. Da diese nicht weiter spezifiziert wurden, wird von üblichen Kennzahlen ausgegangen
 - Verfügbarkeit (SLA target): 99.5% (kritische Dienste: auth, payments, groups). 
 - Performance: Group‑listing — median < 150 ms, 95th‑percentile < 500 ms.
 - Durchsatz: skalierbar auf ~10k gleichzeitige aktive Nutzer pro Region (horizontale Skalierung).
-- Backup / RPO / RTO: tägliche Backups (RPO = 24 h); RTO kritisch (auth/payments) < 1 h, RTO nicht‑kritisch < 24 h.
+- Backup: 
+  + tägliche Backups (RPO = 24 h); 
+  + RTO kritisch (auth/payments) < 1 h, 
+  + RTO nicht‑kritisch < 24 h.
 - Datenschutz: Lösch‑Workflow abgeschlossen / Anonymisierung innerhalb 30 Tagen; Datenexport innerhalb 7 Tagen.
 
 Scope (konkret)
@@ -123,8 +124,36 @@ Die Plattform ist als cloud‑native, dreischichtige Web‑/Mobile‑Anwendung a
 **Hoch‑level Daten‑/Control‑Flow**
 Client (Web/Mobile) --HTTPS--> API Gateway --Auth--> Backend Service (REST/gRPC) --> RDBMS / Cache / Broker. Asynchrone Aufgaben werden über den Broker an Worker delegiert; Webhooks und externe Integrationen (Payments, Calendar, Email/SMS) laufen über dedizierte adapters mit Idempotenz‑Handling.
 
+## 4.1 — User stories
 
-## Funktionale Anforderungen
+### Gruppenübersicht
+
+Ein Nutzer möchte eine Gruppe auswählen und dann eine Übersicht über die Gruppe bekommen. Er möchte wissen, welche Mitglieder der Gruppe angehören und welche Termine als nächstes anstehen anstehen. Er möchte in der Lage sein, die Übersicht über die Informationen in einer, für ihn relevanten, Reihenfolge zu sortieren und zu filtern. Außerdem möchte er Zugriff auf die anderen Aspekte der Gruppe haben. Wie zum Beispiel Kommentare und Einstellungen
+
+![](mockups/GroupOverview.png)
+
+
+### Nutzer registrieren
+Ein Nutzer möchte sich auf unserer Platform Registrieren. Dazu muss er alle Daten eingeben, die wir benötigen, damit wir ihm unseren Service anbieten können. Der Nutzer möchte einen eigen Nutzernahmen angeben, unter dem er auf der Platform angezeigt wird. Er will ein Passwort vergebene, so dass sein Account vor Fremdzugriffen geschützt ist und er möchte seine Präferierte Kontaktmöglichkeit angeben. Außerdem benötigen wir seine E-Mail, um ihn kontaktieren zu können. Zum Beispiel um das Password zurück zu setzen.
+
+![Nutzer registrieren](mockups/CreateUser.drawio.png)
+
+
+### Dienstleister übersicht
+Ein Dienstleister benötigt eine Zeitliche übersicht über alle Events die er Organisieren soll und welche Mitarbeiter wann blockiert sind, damit er die Mitarbeiterzuweisungen planen kann. Außerdem möchte er sehen, ob er neue Anfragen erhalten hat.
+
+![Provider Übersicht](mockups/ProviderOverview.drawio.png)
+
+
+### Dienstleister auswählen
+Eine Gruppe möchte über das Portal einen Dienstleiter Beauftragen das Event zu organisieren. Dazu soll ein Gruppenmitglied eine Liste möglicher Dienstleister angezeigt bekommen. Der Nutzer möchte dabei die Bewertungen des Dienstleister sehen. Hat er einen Dienstleister Ausgewählt möchte er eine genauere Beschreibung des Dienstleisters und detaillierte Bewertungen vorheriger Leistungsnehmer sehen. Um den Dienstleister zu beauftragen möchte er eine Beschreibung verfassen, um dem Dienstleister zu beschreiben was von ihm erwartet wird.
+
+![Provider buchen](mockups/BookProvider.drawio.png)
+
+
+
+
+## 4.2 — Funktionale Anforderungen
 <!--
 - Functional requirements (canonical)
   - Vollständige User‑Stories‑Tabelle (canonical source)
@@ -283,20 +312,36 @@ UI ->> Auth : validate session
 Auth -->> UI : 200 OK
 UI ->> Groups : GET /api/v1/groups/can_join {userId}
 Groups ->> DB : SELECT user authorized to join, group info
-DB -->> Groups : authorized
-Groups -->> UI : 200 inviteProcessId, authorized, groupInfo
-UI -->> Invited : Request 'confirm join'
-Invited ->> UI : Confirm join
-UI ->> Groups : /api/v1/groups/join/{inviteProcessId}
-Groups ->> DB : INSERT groupMember
-DB -->> Groups : groupMemberId
-Groups -->> UI : 201 Created { groupMemberId }
-UI -->> Invited : Confirm joined
-Groups -->> UI : 303 forward to group { /groups/{publicGroupId} }
-UI -->> Invited : Open group
+
+alt authorized
+
+  DB -->> Groups : authorized
+  Groups -->> UI : 200 inviteProcessId, authorized, groupInfo
+  UI -->> Invited : Request 'confirm join'
+
+  opt User accepts invite
+    Invited ->> UI : Confirm join
+    UI ->> Groups : /api/v1/groups/join/{inviteProcessId}
+    Groups ->> DB : INSERT groupMember
+    DB -->> Groups : groupMemberId
+    Groups -->> UI : 201 Created { groupMemberId }
+    UI -->> Invited : Confirm joined
+    Groups -->> UI : 303 forward to group { /groups/{publicGroupId} }
+    UI -->> Invited : Open group
+  end
+
+else 
+  DB -->> Groups : unauthorized
+  Groups -->> UI : 403 User is not allowed to join group
+  UI -->> Invited : Not allowed to join
+end
 ```
 
 ### Einzahlung rückerstatten
+
+Ein Nutzer kann nicht mehr an einem Event Teilnehmen. Zum Beispiel weil er Krank geworden ist. Daher möchte der Nutzer die Einzahlung, welche er gemacht hat, um an dem Event Teilnehmen zu können, zurückerstattet bekommen.
+
+
 
 ```plantuml
 @startuml
@@ -328,13 +373,15 @@ Payments --> UI: 200 (refund scheduled)
 ```
 
 
-## 5.2 Logische Übersicht
+## 5.2 Logische Übersicht (Logical view)
 <!--
 - Logical View
   - Domänen‑Klassendiagramm (Entitäten + Schlüsselattribute)
   - ER‑Diagram + CRUD‑Matrix
   - Daten‑Retention & Privacy per Entität
 -->
+
+**Ziel:** Darstellung der logischen Strukturen
 
 ### ER - Model
 
@@ -614,10 +661,267 @@ Diese Matrix deckt alle Kernoperationen ab, die in den User Stories definiert si
 
 
 
-## 5.3 Entwicklerübersicht: Komponenten/Module, Paket‑ und Repo‑Struktur, API‑Contract (OpenAPI), Build/CI
-<!--
-- Development View
-  - Komponentenübersicht (groups‑service, auth, payments, provider‑portal, ui)
+## 5.3 Entwicklerübersicht (Development View)
+
+**Ziel:** Darstellung der modularen Struktur, der Komponenten und deren Abhängigkeiten.
+
+**Komponentenübersicht**
+- **Frontend-Layer:** Web (React/Vue), Mobile (React Native / Flutter) — shared client code wo möglich
+- **API-Gateway:** Kong / Envoy — Routing, Auth, Rate-Limiting
+- **Microservices (Backend):**
+  - Auth Service (login, sessions, 2FA, token management)
+  - Groups Service (CRUD groups, members, notes, surveys, tasks)
+  - Payments Service (payment processing, webhook handling, reconciliation)
+  - Provider Service (provider management, bookings, offers, invoices)
+  - Media Service (uploads, CDN delivery)
+  - Notification Service (email, SMS, push)
+  - Export Service (DSGVO data export, deletion)
+- **Data Layer:** PostgreSQL (primary), Redis (cache/sessions), Elasticsearch (search), S3 (object storage)
+- **Messaging:** RabbitMQ / Kafka (background jobs, event streaming)
+- **CI/CD:** GitHub Actions / GitLab CI, Docker, Helm, Terraform
+
+**Repository-Struktur (beispielhaft)**
+```
+event-platform/
+├── frontend/
+│   ├── web/          # React/Vue app
+│   ├── mobile/       # React Native/Flutter app
+│   └── shared/       # Shared UI libs, types
+├── backend/
+│   ├── api-gateway/  # Kong/Envoy config
+│   ├── services/
+│   │   ├── auth/
+│   │   ├── groups/
+│   │   ├── payments/
+│   │   ├── providers/
+│   │   ├── media/
+│   │   ├── notifications/
+│   │   └── export/
+│   ├── libs/         # Shared backend libs
+│   └── workers/      # Background jobs
+├── infra/
+│   ├── k8s/          # Helm charts, K8s manifests
+│   ├── terraform/    # IaC for cloud resources
+│   └── docker/       # Dockerfiles
+├── db/               # Database migrations, schemas
+└── api/              # OpenAPI specs
+```
+
+**API-Contract (OpenAPI)**
+- Versioning: `/api/v1/`, `/api/v2/` (future)
+- Rate Limits: 1000 req/min pro API key
+- Response format: JSON mit standard error codes
+- Spec location: `api/openapi.yaml` (Anhang D)
+
+**Build/CI/CD Pipeline**
+- Units tests auf jeden commit (Jest / Go testing)
+- Integration tests gegen test DB
+- E2E tests gegen staging (Cypress / Playwright)
+- Container build & push to registry (ECR / Docker Hub)
+- Helm deployment (staging → prod) mit approval gate
+
+
+
+## 5.4 Prozessübersicht (Process View)
+
+**Ziel:** Darstellung der Runtime-Architektur und der Kommunikationsmuster zwischen Services.
+
+**Asynchrone Kommunikation & Messaging**
+- Payment webhooks → RabbitMQ → Idempotent Handler → DB update
+- Group lifecycle events (created/cancelled) → RabbitMQ fanout → Notifications, Export-service
+- Background jobs (email, SMS, refunds) → Worker pool mit exponential backoff
+- Calendar sync (daily cron) → External APIs (Google/Outlook)
+
+**State Machines**
+- **Group Lifecycle:** Draft → Open → Confirmed → Closed/Cancelled → Archived
+  - Triggers: user action, time-based (lifecycle rules), payment threshold
+  - Side effects: notifications, auto-refunds (bei Cancel), archiving
+- **Payment State:** Pending → Processing → Completed / Failed → Refunded (optional)
+- **Task State:** Created → Assigned → In-Progress → Completed / Cancelled
+
+**Performance Flows / Caching**
+- User sessions (Redis TTL 30 min idle)
+- Group membership cache (invalidate on member change)
+- Provider listings (CDN + Redis with 5 min TTL)
+- Search index (Elasticsearch, async indexing)
+
+**Data Consistency**
+- Multi-AZ replication for primary DB (1-2 sec lag acceptable for reads)
+- Eventual consistency for caches (invalidation on write)
+- Strong consistency for payments (immediate confirmation via webhook ACK)
+
+
+
+## 5.5 Physische Übersicht & Deployment (Physical View)
+
+**Ziel:** Darstellung der Hardware-Ressourcen, Netzwerk-Topologie und Deployment-Architektur.
+
+### Deployment-Architektur (3-Tier)
+
+```mermaid
+graph LR
+    subgraph "Client Tier"
+        Web["Web Browser<br/>Chrome, Firefox, Safari, Edge<br/>React/Vue SPA"]
+        Mobile["Mobile App<br/>iOS/Android<br/>React Native/Flutter"]
+    end
+    
+    subgraph "Internet / CDN"
+        CDN["CDN / WAF<br/>Cloudflare / CloudFront<br/>DDoS Protection"]
+    end
+    
+    subgraph "AWS Region (Multi-AZ)"
+        subgraph "DMZ / Public Subnet"
+            LB["Load Balancer<br/>ALB / ELB"]
+            Ingress["K8s Ingress Controller<br/>Kong / Nginx<br/>TLS Termination<br/>Rate Limiting"]
+        end
+        
+        subgraph "Private Subnet - Kubernetes Cluster"
+            API["API Gateway Pod<br/>×3 replicas<br/>Auto-scaling<br/>CPU: 0.5-2, Memory: 512Mi-2Gi"]
+            
+            Auth["Auth Service<br/>×2 replicas<br/>JWT/Session mgmt"]
+            Groups["Groups Service<br/>×3 replicas<br/>Core business logic"]
+            Payments["Payments Service<br/>×2 replicas<br/>Webhooks, Refunds"]
+            Provider["Provider Service<br/>×2 replicas<br/>Marketplace logic"]
+            Media["Media Service<br/>×1 replica<br/>Upload/CDN proxy"]
+            Export["Export Service<br/>×1 replica<br/>DSGVO jobs (batch)"]
+            Jobs["Background Workers<br/>×2-5 replicas<br/>Email, SMS, reconciliation,<br/>reminder tasks"]
+        end
+        
+        subgraph "Private Subnet - Data Layer"
+            DB["PostgreSQL<br/>Multi-AZ RDS<br/>Primary + Read Replicas<br/>Storage: 100GB (initial),<br/>Auto-scale to 500GB<br/>Backup: daily snapshots<br/>RPO: 24h, RTO: <1h"]
+            
+            Redis["Redis Cluster<br/>Multi-AZ Elasticache<br/>Cache + Sessions<br/>TTL: 30 min sessions<br/>5 min cache expiry"]
+            
+            Search["Elasticsearch<br/>Multi-AZ<br/>Search index,<br/>Log aggregation<br/>Retention: 90d"]
+            
+            S3["S3 / Object Storage<br/>Multi-region replication<br/>Lifecycle policies<br/>(delete after 1yr)<br/>Versioning enabled"]
+        end
+        
+        subgraph "Messaging & Events"
+            Broker["RabbitMQ / Kafka<br/>Multi-AZ<br/>Queue: payments, notifications,<br/>reconciliation<br/>Topics: group-events, refunds"]
+        end
+        
+        subgraph "Observability"
+            Metrics["Prometheus<br/>×1 primary, 1 replica<br/>Scrape: 30s interval<br/>Retention: 15d"]
+            Logs["ELK Stack<br/>Elasticsearch, Logstash,<br/>Kibana<br/>Log retention: 90d<br/>Parsing: JSON, access logs"]
+            Tracing["Jaeger / Tempo<br/>Distributed tracing<br/>Sample rate: 10% (prod)<br/>Span retention: 7d"]
+            Dashboard["Grafana<br/>Dashboards for SLOs<br/>Alerting thresholds"]
+        end
+    end
+    
+    subgraph "External Services (Internet)"
+        PaymentAPI["Stripe / Adyen API<br/>Payment processing<br/>Webhooks (idempotent)"]
+        MailAPI["SendGrid / SES<br/>Email delivery<br/>Retry logic"]
+        SMSAPI["Twilio / AWS SNS<br/>SMS delivery"]
+        CalendarAPI["Google Calendar API<br/>Outlook API<br/>iCal sync"]
+    end
+    
+    Web -->|HTTPS| CDN
+    Mobile -->|HTTPS| CDN
+    CDN -->|TLS 1.3| LB
+    LB -->|Layer 7| Ingress
+    
+    Ingress -->|Rate limit, Auth| API
+    API -->|REST/gRPC| Auth
+    API -->|REST/gRPC| Groups
+    API -->|REST/gRPC| Payments
+    API -->|REST/gRPC| Provider
+    API -->|REST/gRPC| Media
+    API -->|REST/gRPC| Export
+    
+    Auth -->|Query| DB
+    Auth -->|Cache| Redis
+    Groups -->|Query, Mutation| DB
+    Groups -->|Event publish| Broker
+    Groups -->|Cache| Redis
+    Payments -->|Query, Mutation| DB
+    Payments -->|History| Search
+    Provider -->|Query, Mutation| DB
+    Provider -->|Search| Search
+    Media -->|Upload| S3
+    Export -->|Read| DB
+    Export -->|Async job| Broker
+    Jobs -->|Consume| Broker
+    Jobs -->|Update state| DB
+    Jobs -->|Send| MailAPI
+    Jobs -->|Send| SMSAPI
+    
+    Payments -->|HTTP callback| PaymentAPI
+    PaymentAPI -->|Webhook POST| Payments
+    
+    Metrics -->|Scrape| Auth
+    Metrics -->|Scrape| Groups
+    Metrics -->|Scrape| DB
+    Dashboard -->|Query| Metrics
+    Logs -->|Forward| Search
+    Tracing -->|Span data| Tracing
+```
+
+### Netzwerk-Topologie & Sicherheit
+
+| Tier | Subnet | IP-Space | Internet-zugang | Security Groups |
+|------|--------|----------|-----------------|-----------------|
+| Client | Public | 0.0.0.0/0 (Internet) | Outbound HTTPS only | Client-browser (keine SG) |
+| Ingress | Public | 10.0.1.0/24 (DMZ) | Inbound: 80/443 (public), SSH (restricted) | LB SG: Port 443 from Internet, 8080 to K8s |
+| K8s Services | Private | 10.0.2.0/23 | No direct outbound (via NAT GW) | Services SG: 8080-8090 from Ingress, 5432 to DB SG |
+| Data Layer | Private | 10.0.4.0/23 | No outbound | DB SG: 5432 from Services, 6379 from Services, 9200 from Services |
+| NAT Gateway | Public | 10.0.0.0/24 | Outbound to internet (external APIs) | — |
+
+### Sizing & Kapazität
+
+| Ressource | Instances | vCPU | Memory | Storage | Kommentar |
+|-----------|-----------|------|--------|---------|-----------|
+| API Gateway Pod | 3 | 0.5–2 | 512 Mi–2 Gi | — | HPA: 50–80% CPU |
+| Auth Service Pod | 2 | 0.5–1 | 256 Mi–1 Gi | — | Stateless |
+| Groups Service Pod | 3 | 1–2 | 1–2 Gi | — | CPU-heavy (queries) |
+| Payments Service Pod | 2 | 1–2 | 1–2 Gi | — | I/O-heavy (reconciliation) |
+| Worker Pods | 2–5 | 0.5–1 | 512 Mi–1 Gi | — | Scales on queue depth |
+| PostgreSQL | 1 primary + 1 replica (Multi-AZ) | 4–8 | 16–32 Gi | 100→500 GB | Auto-scaling snapshots |
+| Redis | 1 cluster (Multi-AZ) | 2 | 8 Gi | — | Eviction: allkeys-lru |
+| Elasticsearch | 3 nodes | 2 ea | 8 Gi ea | 50 GB | Minimum HA setup |
+| RabbitMQ | 3 nodes (cluster) | 2 ea | 2 Gi ea | 10 GB | Replication factor 2 |
+| Prometheus | 1 primary | 1 | 2 Gi | 50 GB | 15d retention |
+| Grafana | 1 | 0.5 | 512 Mi | — | Stateless (metrics only) |
+
+**Performance-Ziele (SLO)**
+- 99.5% availability for critical services (auth, payments, groups)
+- P50 latency: <100 ms, P95: <500 ms, P99: <1000 ms (for core endpoints)
+- Throughput: 10,000 concurrent active users per region
+- Horizontal scaling: scale on 50% CPU threshold (HPA)
+- Database: max 1000 QPS (read replicas for scaling)
+
+### Backup / Disaster Recovery
+
+| Asset | Frequency | Retention | RTO | RPO | Storage |
+|-------|-----------|-----------|-----|-----|---------|
+| PostgreSQL snapshots | Daily at 2 AM UTC | 30 days | <1 h | 24 h | AWS S3 (multi-region) |
+| RDS automated backups | Daily | 30 days | <30 min | 5 min | AWS native |
+| Redis dump | Weekly | 7 days | <15 min | 7 days | AWS S3 |
+| Application logs | Continuous | 90 days | N/A | — | Elasticsearch |
+| Docker images | Per build | 1 year (latest 10) | — | — | ECR |
+
+**Failover-Strategie**
+- Database: automatic RDS failover (multi-AZ) <1 min
+- Service: K8s pod auto-restart, HPA scales up if nodes fail
+- Regional: DNS failover to secondary region (setup in future)
+
+### Skalierbarkeitsplan
+
+**Horizontal Scaling (automatisch)**
+- Kubernetes HPA triggers on CPU >50% or memory >70%
+- Min replicas: Auth=2, Groups=3, Payments=2, Workers=2
+- Max replicas: API=10, Groups=10, Workers=20
+- Scale-down after 5 min of <30%
+
+**Vertical Scaling (manual)**
+- DB: add read replicas when query latency >300ms
+- Cache: increase Redis cluster size when evictions >5%
+- Storage: auto-expand S3 (simple), DB storage alert at 80%
+
+**Regional Expansion (future)**
+- Multi-region deployment (Europe, US, APAC)
+- Async replication of groups/users data
+- Regional failover via GeoDNS
   - API‑Endpunkte (stubs) für Kernflows (Groups, Membership, Payments)
   - Build/CI Übersicht, Dependency‑Matrix
 -->
@@ -774,30 +1078,6 @@ Alle Endpunkte mit Ausnahme von `login` und `register` erfordern einen gültigen
  * POST event/application {payload}
  * POST event/invoice {payload}
 
-
-## 5.4 Prozessübersicht: Laufzeit‑Architektur, Messaging/Queues, State‑Machines (z. B. Group lifecycle), Performance‑Flows
-<!--
-- Development View
-  - Komponentenübersicht (groups‑service, auth, payments, provider‑portal, ui)
-  - API‑Endpunkte (stubs) für Kernflows (Groups, Membership, Payments)
-  - Build/CI Übersicht, Dependency‑Matrix
--->
-
-
-## 5.5 Physical View: Deployment‑Diagramm (K8s/VMs), Netz, Sizing, SLO/SLA
-<!--
-- Physical View
-  - Beispiel‑Deployment (k8s/VM), Netz‑Diagram, Storage/BLOB, CDN
-  - Backup/Restore, DR‑Plan, Sizing‑Annäherungen
--->
-
-- Umgebung: K8s Cluster pro Region (Namespaces per environment: staging/prod)
-- Netzwerk: Public Ingress (LoadBalancer / CDN) in DMZ; private Back‑end Subnet für Services und DB
-- Datenhaltung: Managed RDBMS Multi‑AZ mit Read‑Replicas; Object Storage mit Lifecycle Policies
-- Verfügbarkeit: Multi‑AZ, HPA für Pods, SLOs gemäss Kapitel 2 (z. B. 99.5% für auth/payments)
-- Backups: tägliche Snapshots (RPO 24h), kritische RTO <1h (auth/payments)
-
-
 ---
 
 # 6 Nicht‑funktionale Anforderungen (NFR) — messbar: Performance, Security, Privacy, Availability, Scalability
@@ -819,74 +1099,4 @@ Alle Endpunkte mit Ausnahme von `login` und `register` erfordern einen gültigen
 - Information Disclosure: TLS everywhere, access controls, least privilege, encryption at rest (KMS)
 - Denial of Service: rate limits, autoscaling, circuit breakers, WAF, traffic quotas
 - Elevation of Privilege: RBAC, privilege separation, hardened service accounts, regular pen‑tests
-
-
-# 8 API & Integration (OpenAPI, Webhooks, Idempotenz, 3rd‑party connectors)
-
-<!--
-- API & Integration
-  - OpenAPI‑stubs für Kernressourcen
-  - Webhook contract (idempotence), retry semantics
-  - 3rd‑party integration checklist (payment, calendar sync)
--->
-
-- OpenAPI Spec: `api.yaml` (Anhang D). Alle öffentlichen Endpunkte sollen eine Versionierung und Rate‑Limit haben.
-- Webhooks: idempotency keys, replay protection, signature verification
-- Externe Provider: Payments (Stripe/Adyen), Calendar Sync (Google/Outlook), Email/SMS (SendGrid/Twilio)
-
-
-# 9 Operations & SRE (Monitoring, Logging, Backups, Runbook, Incident‑Response)
-
-<!--
-- Operations & Testplan
-  - Monitoring KPI list, runbooks for top‑5 incidents
-  - CI/CD gates + Testmatrix (unit/integration/e2e/manual)
--->
-
-- Monitoring: metrics (Prometheus), dashboards (Grafana), alerting thresholds aligned with SLOs
-- Logging: central log pipeline (ELK/Opensearch) with 90d retention (siehe Kapitel 2)
-- Runbooks: incident playbooks for auth outage, payment failure, data‑loss
-- Security Ops: rotation of keys, regular vulnerability scans, dependency updates
-
-# 10 Testplan / QA (Unit, Integration, E2E, Akzeptanztests, CI/CD‑Gates)
-
-# 11 Anhänge 
-    
-## Anhang A — UI Mockups
-
-### Guppen-Homepage
- ![](mockups/GroupOverview.png)
-
-### Nutzer registrieren
- ![Nutzer registrieren](mockups/CreateUser.drawio.png)
-
-### Service Provider Übersicht
- ![Provider Übersicht](mockups/ProviderOverview.drawio.png)
-
-## Anhang B — AIP
-[api/openapi.xaml](api/openapi.yaml)
-
-
-## Anhang C — initiale Traceability‑Matrix (Auszug)
-
-| Requirement ID | Kurzbezeichnung | Use‑case | Component | API endpoint | Testcase ID |
-|---|---|---|---|---|---|
-| REQ-001 | User login | Authenticate user | auth-service | POST /api/v1/auth/login | TC-001 |
-| REQ-003 | Create group | Create Group | groups-service | POST /api/v1/groups | TC-010 |
-| REQ-004 | Join group | Join Group | membership-service | POST /api/v1/groups/{group_id}/join | TC-011 |
-| REQ-006 | Book provider | Provider booking | booking-service | POST /api/v1/providers/{id}/book | TC-030 |
-| REQ-007 | Payment webhook idempotence | Payment notification | payments-service | POST /api/v1/payments/webhook | TC-040 |
-| REQ-009 | Data export | User data export | export-service | GET /api/v1/users/{id}/export | TC-050 |
-
-Details / Dateien:
-- Vollständige CSV (expandable): `SoftwareTechnik/traceability.csv`
-- Sequenzdiagramme (PlantUML): `SoftwareTechnik/diagrams/create_group.puml`, `.../book_provider.puml`, `.../payment_refund.puml`
-
-<!--
-Hinweis: das oben ist ein initialer, prüfbarer Auszug für die wichtigsten MVP‑Flows — erweitere die CSV, bis jede Story aus Kapitel 4 abgebildet ist.
--->
-
-
-
-
 
