@@ -95,33 +95,13 @@ Akzeptanz der Zusammenfassung
 | System        | Stellvertreten für uns als Service oder Serviceanbieter |
 | Owner         | Der Benutzer, der eine Gruppe erstellt hat |
 | Admin         | Ein Gruppenmitglied mit erhöhten rechten innerhalb einer Gruppe |
+| Provider      | Eng. Synonym für Dienstleister |
+| ServiceProvider | Eng. Synonym für Dienstleister |
 
 
 
 
 # 4 - Funktionale requirements
-
-## 1.4 Schnittstellen & Systemarchitektur
-
-**Kurzbeschreibung**
-
-Die Plattform ist als cloud‑native, dreischichtige Web‑/Mobile‑Anwendung ausgelegt: klientenseitig (Web / Mobile), API‑Layer (Gateway / Edge) und ein Backend‑Service‑Ökosystem (auth, groups, payments, provider, media, notifications, background workers). Persistente Daten liegen in einer relationalen Primärdatenbank; große Binärdaten (Fotos/Videos) werden in Object Storage abgelegt. Caching, Message‑Broker und Suchindex sind zusätzliche Komponenten zur Skalierung.
-
-**Hauptkomponenten (Übersicht)**
-- API Gateway / Ingress: TLS‑Termination, Routing, Rate‑Limiting, Authn/Z
-- Auth Service: Login, Sessions, 2FA, Token‑Issuance, Account Management
-- Groups Service: Domain‑Logik für Gruppen, Mitglieder, Notizen, Termine, Surveys
-- Payments Bridge: Integration zu Stripe/Adyen, Webhook‑Handler (idempotent)
-- Provider / Marketplace Service: Provider‑Listing, Angebote, Buchungen, Ressourcenplanung
-- Media Service / Object Storage: Uploads, Thumbnails, CDN‑Serving
-- Background Workers: E‑Mails, Push, Reconciliations, Refunds, Maintenance Jobs
-- Data Stores: Primary RDBMS (ACID), Redis (cache, sessions, rate limits), Search (Elasticsearch/Opensearch)
-- Message Broker: RabbitMQ / Kafka für asynchrone Aufgaben und Events
-- Observability: Prometheus, Grafana, ELK/Opensearch, Tracing (Jaeger)
-- CI/CD, IaC, KMS/Secrets Manager
-
-**Hoch‑level Daten‑/Control‑Flow**
-Client (Web/Mobile) --HTTPS--> API Gateway --Auth--> Backend Service (REST/gRPC) --> RDBMS / Cache / Broker. Asynchrone Aufgaben werden über den Broker an Worker delegiert; Webhooks und externe Integrationen (Payments, Calendar, Email/SMS) laufen über dedizierte adapters mit Idempotenz‑Handling.
 
 ## 4.1 — User stories
 
@@ -679,7 +659,7 @@ Diese Matrix deckt alle Kernoperationen ab, die in den User Stories definiert si
 - **Messaging:** RabbitMQ / Kafka (background jobs, event streaming)
 - **CI/CD:** GitHub Actions / GitLab CI, Docker, Helm, Terraform
 
-**Repository-Struktur (beispielhaft)**
+**Repository-Struktur**
 ```
 event-platform/
 ├── frontend/
@@ -932,10 +912,48 @@ graph TD
   - 
 -->
 
-- Spoofing: starke Auth (OAuth2 / JWT, refresh tokens), MFA option; secure session management
-- Tampering: input validation, HMAC/signatures für webhooks, integrity checks, WAF
-- Repudiation: zentrale Audit‑Logs for critical actions, signed receipts for payments
-- Information Disclosure: TLS everywhere, access controls, least privilege, encryption at rest (KMS)
-- Denial of Service: rate limits, autoscaling, circuit breakers, WAF, traffic quotas
-- Elevation of Privilege: RBAC, privilege separation, hardened service accounts, regular pen‑tests
+## Spoofing
 
+**Problem:** Der Illegale Zugriff auf den Account eines anderen Nutzers  
+**Lösung:** Die Verwendung einer Zwei-Factor Authentifizierung. Dadurch wird verbindet, dass ein Fremder auf einen Account zugriff bekommt, auch wenn er die Login Daten kennt, da ein zweiter Faktor benötigt wird.
+
+## Tampering
+ **Problem:** Nutzer können eg. einen SQL exploit in ein Textfeld eingeben und somit zugriff auf die Datenbank erhalten.  
+ **Problem:** Nutzer können exploits in ein Textfeld eingeben, welcher anderen Usern schade, indem der eingegebene Text als code ausgeführt wird.  
+ **Lösung:** Alle Nutzereingaben müssen gereinigt (sanitized) werden
+
+  + Eingaben validieren
+  + Eingaben säubern
+  + Datenintegrität überprüfen
+
+## Repudiation
+ **Problem:** Ein Nutzer bestreitet eine Aktion durchgeführt zu haben. Zum Beispiel kann er behaupten, eine Abbuchung nicht erhalten zu haben.  
+ **Lösung:** Alle kritischen stellen sollten Protokolliert werden. Transaktionen werden niemals gelöscht, es wird lediglich ihr status aktualisiert.
+
+ * Zentrale Audit-Logs
+ * Signierte Quittungen für Transaktionen
+
+## Information Disclosure 
+ **Problem:** Nutzer können auf sensible Daten zugreifen, auf die sie keinen Zugriff haben sollten.  
+ **Lösung:** Die Authentizität des Nutzers muss überprüft werden, bevor sensible Daten an ihn herausgegeben werden.  
+
+ **Problem:** Dritte könnten Daten abfangen (Man In The Middle)  
+ **Lösung:** Sämtliche Kommunikation sollte verschlüsselt stattfinden.  
+
+ * Verschlüsselte Kommunikation
+ * Zugriffskontrollen
+ * Nur die nötigsten Privilegien vergeben
+
+## Denial of Service
+ **Problem:** Ein Nutzer könnte verhindern, das sich andere Nutzer über eine Gruppe austauschen inn dem er sie schließt.  
+ **Lösung:** Nur Nutzer mit entsprechender Autorisation in einer Gruppe sollten in der Lage sein, kritische Änderungen vorzunehmen.  
+
+ **Problem:** Degradierung des services aufgrund hoher Nutzeranfragen
+ **Lösung:**
+ * Rate limits
+ * Autoscaling
+ * Circuit breaker
+
+## Elevation of Privilege
+ * Regelmäßiger Penetrationstests
+ * Privilegien separieren
