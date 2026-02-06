@@ -1,1 +1,1 @@
-"my simple \" test string \t "   ;; my comment
+("my simple \" test string \t ")   ;; my comment
