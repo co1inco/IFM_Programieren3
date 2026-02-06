@@ -20,16 +20,15 @@ Die Arbeit habe ich selbstständig erledigt. Als hilfsmittel habe ich den in VS-
 2. Zusammenfassung (Ziele, Scope, Annahmen)
 3. Glossar / Domain‑Begriffe
 4. Funktionale requirements (User‑Stories + zentrale Requirements‑Tabelle)
-  - 4.1 User Stories
-  - 4.2 Funktionale Anforderungen
+   - 4.1 User Stories
+   - 4.2 Funktionale Anforderungen
 5. 4+1 Sichten
-  - 5.1 Use‑case / Szenarien
-  - 5.2 Logische übersicht
-  - 5.3 Entwicklerübersicht
-  - 5.4 Prozessübersicht
-  - 5.5 Physische übersicht
-6. Nicht‑funktionale Anforderungen
-7. Security & Privacy
+   - 5.1 Use‑case / Szenarien
+   - 5.2 Logische übersicht
+   - 5.3 Entwicklerübersicht
+   - 5.4 Prozessübersicht
+   - 5.5 Physische übersicht
+6. Security & Privacy
 
 
 
@@ -676,7 +675,7 @@ Diese Matrix deckt alle Kernoperationen ab, die in den User Stories definiert si
   - Media Service (uploads, CDN delivery)
   - Notification Service (email, SMS, push)
   - Export Service (DSGVO data export, deletion)
-- **Data Layer:** PostgreSQL (primary), Redis (cache/sessions), Elasticsearch (search), S3 (object storage)
+- **Data Layer:** PostgreSQL
 - **Messaging:** RabbitMQ / Kafka (background jobs, event streaming)
 - **CI/CD:** GitHub Actions / GitLab CI, Docker, Helm, Terraform
 
@@ -707,256 +706,13 @@ event-platform/
 └── api/              # OpenAPI specs
 ```
 
-**API-Contract (OpenAPI)**
-- Versioning: `/api/v1/`, `/api/v2/` (future)
-- Rate Limits: 1000 req/min pro API key
-- Response format: JSON mit standard error codes
-- Spec location: `api/openapi.yaml` (Anhang D)
-
-**Build/CI/CD Pipeline**
+### Build/CI/CD Pipeline
 - Units tests auf jeden commit (Jest / Go testing)
 - Integration tests gegen test DB
 - E2E tests gegen staging (Cypress / Playwright)
 - Container build & push to registry (ECR / Docker Hub)
 - Helm deployment (staging → prod) mit approval gate
 
-
-
-## 5.4 Prozessübersicht (Process View)
-
-**Ziel:** Darstellung der Runtime-Architektur und der Kommunikationsmuster zwischen Services.
-
-**Asynchrone Kommunikation & Messaging**
-- Payment webhooks → RabbitMQ → Idempotent Handler → DB update
-- Group lifecycle events (created/cancelled) → RabbitMQ fanout → Notifications, Export-service
-- Background jobs (email, SMS, refunds) → Worker pool mit exponential backoff
-- Calendar sync (daily cron) → External APIs (Google/Outlook)
-
-**State Machines**
-- **Group Lifecycle:** Draft → Open → Confirmed → Closed/Cancelled → Archived
-  - Triggers: user action, time-based (lifecycle rules), payment threshold
-  - Side effects: notifications, auto-refunds (bei Cancel), archiving
-- **Payment State:** Pending → Processing → Completed / Failed → Refunded (optional)
-- **Task State:** Created → Assigned → In-Progress → Completed / Cancelled
-
-**Performance Flows / Caching**
-- User sessions (Redis TTL 30 min idle)
-- Group membership cache (invalidate on member change)
-- Provider listings (CDN + Redis with 5 min TTL)
-- Search index (Elasticsearch, async indexing)
-
-**Data Consistency**
-- Multi-AZ replication for primary DB (1-2 sec lag acceptable for reads)
-- Eventual consistency for caches (invalidation on write)
-- Strong consistency for payments (immediate confirmation via webhook ACK)
-
-
-
-## 5.5 Physische Übersicht & Deployment (Physical View)
-
-**Ziel:** Darstellung der Hardware-Ressourcen, Netzwerk-Topologie und Deployment-Architektur.
-
-### Deployment-Architektur (3-Tier)
-
-```mermaid
-graph LR
-    subgraph "Client Tier"
-        Web["Web Browser<br/>Chrome, Firefox, Safari, Edge<br/>React/Vue SPA"]
-        Mobile["Mobile App<br/>iOS/Android<br/>React Native/Flutter"]
-    end
-    
-    subgraph "Internet / CDN"
-        CDN["CDN / WAF<br/>Cloudflare / CloudFront<br/>DDoS Protection"]
-    end
-    
-    subgraph "AWS Region (Multi-AZ)"
-        subgraph "DMZ / Public Subnet"
-            LB["Load Balancer<br/>ALB / ELB"]
-            Ingress["K8s Ingress Controller<br/>Kong / Nginx<br/>TLS Termination<br/>Rate Limiting"]
-        end
-        
-        subgraph "Private Subnet - Kubernetes Cluster"
-            API["API Gateway Pod<br/>×3 replicas<br/>Auto-scaling<br/>CPU: 0.5-2, Memory: 512Mi-2Gi"]
-            
-            Auth["Auth Service<br/>×2 replicas<br/>JWT/Session mgmt"]
-            Groups["Groups Service<br/>×3 replicas<br/>Core business logic"]
-            Payments["Payments Service<br/>×2 replicas<br/>Webhooks, Refunds"]
-            Provider["Provider Service<br/>×2 replicas<br/>Marketplace logic"]
-            Media["Media Service<br/>×1 replica<br/>Upload/CDN proxy"]
-            Export["Export Service<br/>×1 replica<br/>DSGVO jobs (batch)"]
-            Jobs["Background Workers<br/>×2-5 replicas<br/>Email, SMS, reconciliation,<br/>reminder tasks"]
-        end
-        
-        subgraph "Private Subnet - Data Layer"
-            DB["PostgreSQL<br/>Multi-AZ RDS<br/>Primary + Read Replicas<br/>Storage: 100GB (initial),<br/>Auto-scale to 500GB<br/>Backup: daily snapshots<br/>RPO: 24h, RTO: <1h"]
-            
-            Redis["Redis Cluster<br/>Multi-AZ Elasticache<br/>Cache + Sessions<br/>TTL: 30 min sessions<br/>5 min cache expiry"]
-            
-            Search["Elasticsearch<br/>Multi-AZ<br/>Search index,<br/>Log aggregation<br/>Retention: 90d"]
-            
-            S3["S3 / Object Storage<br/>Multi-region replication<br/>Lifecycle policies<br/>(delete after 1yr)<br/>Versioning enabled"]
-        end
-        
-        subgraph "Messaging & Events"
-            Broker["RabbitMQ / Kafka<br/>Multi-AZ<br/>Queue: payments, notifications,<br/>reconciliation<br/>Topics: group-events, refunds"]
-        end
-        
-        subgraph "Observability"
-            Metrics["Prometheus<br/>×1 primary, 1 replica<br/>Scrape: 30s interval<br/>Retention: 15d"]
-            Logs["ELK Stack<br/>Elasticsearch, Logstash,<br/>Kibana<br/>Log retention: 90d<br/>Parsing: JSON, access logs"]
-            Tracing["Jaeger / Tempo<br/>Distributed tracing<br/>Sample rate: 10% (prod)<br/>Span retention: 7d"]
-            Dashboard["Grafana<br/>Dashboards for SLOs<br/>Alerting thresholds"]
-        end
-    end
-    
-    subgraph "External Services (Internet)"
-        PaymentAPI["Stripe / Adyen API<br/>Payment processing<br/>Webhooks (idempotent)"]
-        MailAPI["SendGrid / SES<br/>Email delivery<br/>Retry logic"]
-        SMSAPI["Twilio / AWS SNS<br/>SMS delivery"]
-        CalendarAPI["Google Calendar API<br/>Outlook API<br/>iCal sync"]
-    end
-    
-    Web -->|HTTPS| CDN
-    Mobile -->|HTTPS| CDN
-    CDN -->|TLS 1.3| LB
-    LB -->|Layer 7| Ingress
-    
-    Ingress -->|Rate limit, Auth| API
-    API -->|REST/gRPC| Auth
-    API -->|REST/gRPC| Groups
-    API -->|REST/gRPC| Payments
-    API -->|REST/gRPC| Provider
-    API -->|REST/gRPC| Media
-    API -->|REST/gRPC| Export
-    
-    Auth -->|Query| DB
-    Auth -->|Cache| Redis
-    Groups -->|Query, Mutation| DB
-    Groups -->|Event publish| Broker
-    Groups -->|Cache| Redis
-    Payments -->|Query, Mutation| DB
-    Payments -->|History| Search
-    Provider -->|Query, Mutation| DB
-    Provider -->|Search| Search
-    Media -->|Upload| S3
-    Export -->|Read| DB
-    Export -->|Async job| Broker
-    Jobs -->|Consume| Broker
-    Jobs -->|Update state| DB
-    Jobs -->|Send| MailAPI
-    Jobs -->|Send| SMSAPI
-    
-    Payments -->|HTTP callback| PaymentAPI
-    PaymentAPI -->|Webhook POST| Payments
-    
-    Metrics -->|Scrape| Auth
-    Metrics -->|Scrape| Groups
-    Metrics -->|Scrape| DB
-    Dashboard -->|Query| Metrics
-    Logs -->|Forward| Search
-    Tracing -->|Span data| Tracing
-```
-
-### Netzwerk-Topologie & Sicherheit
-
-| Tier | Subnet | IP-Space | Internet-zugang | Security Groups |
-|------|--------|----------|-----------------|-----------------|
-| Client | Public | 0.0.0.0/0 (Internet) | Outbound HTTPS only | Client-browser (keine SG) |
-| Ingress | Public | 10.0.1.0/24 (DMZ) | Inbound: 80/443 (public), SSH (restricted) | LB SG: Port 443 from Internet, 8080 to K8s |
-| K8s Services | Private | 10.0.2.0/23 | No direct outbound (via NAT GW) | Services SG: 8080-8090 from Ingress, 5432 to DB SG |
-| Data Layer | Private | 10.0.4.0/23 | No outbound | DB SG: 5432 from Services, 6379 from Services, 9200 from Services |
-| NAT Gateway | Public | 10.0.0.0/24 | Outbound to internet (external APIs) | — |
-
-### Sizing & Kapazität
-
-| Ressource | Instances | vCPU | Memory | Storage | Kommentar |
-|-----------|-----------|------|--------|---------|-----------|
-| API Gateway Pod | 3 | 0.5–2 | 512 Mi–2 Gi | — | HPA: 50–80% CPU |
-| Auth Service Pod | 2 | 0.5–1 | 256 Mi–1 Gi | — | Stateless |
-| Groups Service Pod | 3 | 1–2 | 1–2 Gi | — | CPU-heavy (queries) |
-| Payments Service Pod | 2 | 1–2 | 1–2 Gi | — | I/O-heavy (reconciliation) |
-| Worker Pods | 2–5 | 0.5–1 | 512 Mi–1 Gi | — | Scales on queue depth |
-| PostgreSQL | 1 primary + 1 replica (Multi-AZ) | 4–8 | 16–32 Gi | 100→500 GB | Auto-scaling snapshots |
-| Redis | 1 cluster (Multi-AZ) | 2 | 8 Gi | — | Eviction: allkeys-lru |
-| Elasticsearch | 3 nodes | 2 ea | 8 Gi ea | 50 GB | Minimum HA setup |
-| RabbitMQ | 3 nodes (cluster) | 2 ea | 2 Gi ea | 10 GB | Replication factor 2 |
-| Prometheus | 1 primary | 1 | 2 Gi | 50 GB | 15d retention |
-| Grafana | 1 | 0.5 | 512 Mi | — | Stateless (metrics only) |
-
-**Performance-Ziele (SLO)**
-- 99.5% availability for critical services (auth, payments, groups)
-- P50 latency: <100 ms, P95: <500 ms, P99: <1000 ms (for core endpoints)
-- Throughput: 10,000 concurrent active users per region
-- Horizontal scaling: scale on 50% CPU threshold (HPA)
-- Database: max 1000 QPS (read replicas for scaling)
-
-### Backup / Disaster Recovery
-
-| Asset | Frequency | Retention | RTO | RPO | Storage |
-|-------|-----------|-----------|-----|-----|---------|
-| PostgreSQL snapshots | Daily at 2 AM UTC | 30 days | <1 h | 24 h | AWS S3 (multi-region) |
-| RDS automated backups | Daily | 30 days | <30 min | 5 min | AWS native |
-| Redis dump | Weekly | 7 days | <15 min | 7 days | AWS S3 |
-| Application logs | Continuous | 90 days | N/A | — | Elasticsearch |
-| Docker images | Per build | 1 year (latest 10) | — | — | ECR |
-
-**Failover-Strategie**
-- Database: automatic RDS failover (multi-AZ) <1 min
-- Service: K8s pod auto-restart, HPA scales up if nodes fail
-- Regional: DNS failover to secondary region (setup in future)
-
-### Skalierbarkeitsplan
-
-**Horizontal Scaling (automatisch)**
-- Kubernetes HPA triggers on CPU >50% or memory >70%
-- Min replicas: Auth=2, Groups=3, Payments=2, Workers=2
-- Max replicas: API=10, Groups=10, Workers=20
-- Scale-down after 5 min of <30%
-
-**Vertical Scaling (manual)**
-- DB: add read replicas when query latency >300ms
-- Cache: increase Redis cluster size when evictions >5%
-- Storage: auto-expand S3 (simple), DB storage alert at 80%
-
-**Regional Expansion (future)**
-- Multi-region deployment (Europe, US, APAC)
-- Async replication of groups/users data
-- Regional failover via GeoDNS
-  - API‑Endpunkte (stubs) für Kernflows (Groups, Membership, Payments)
-  - Build/CI Übersicht, Dependency‑Matrix
--->
-
-**Kurzbeschreibung**
-
-Die Plattform ist als cloud‑native, dreischichtige Web‑/Mobile‑Anwendung ausgelegt: klientenseitig (Web / Mobile), API‑Layer (Gateway / Edge) und ein Backend‑Service‑Ökosystem (auth, groups, payments, provider, media, notifications, background workers). Persistente Daten liegen in einer relationalen Primärdatenbank; große Binärdaten (Fotos/Videos) werden in Object Storage abgelegt. Caching, Message‑Broker und Suchindex sind zusätzliche Komponenten zur Skalierung.
-
-**Hauptkomponenten (Übersicht)**
-- API Gateway / Ingress: TLS‑Termination, Routing, Rate‑Limiting, Authn/Z
-- Auth Service: Login, Sessions, 2FA, Token‑Issuance, Account Management
-- Groups Service: Domain‑Logik für Gruppen, Mitglieder, Notizen, Termine, Surveys
-- Payments Bridge: Integration zu Stripe/Adyen, Webhook‑Handler (idempotent)
-- Provider / Marketplace Service: Provider‑Listing, Angebote, Buchungen, Ressourcenplanung
-- Media Service / Object Storage: Uploads, Thumbnails, CDN‑Serving
-- Background Workers: E‑Mails, Push, Reconciliations, Refunds, Maintenance Jobs
-- Data Stores: Primary RDBMS (ACID), Redis (cache, sessions, rate limits), Search (Elasticsearch/Opensearch)
-- Message Broker: RabbitMQ / Kafka für asynchrone Aufgaben und Events
-- Observability: Prometheus, Grafana, ELK/Opensearch, Tracing (Jaeger)
-- CI/CD, IaC, KMS/Secrets Manager
-
-### Komponenten
-
- * Website
- * Mobile app
- * Authentication service
- * Gruppenservice
- * ProviderPortal
- * ProviderService
- * Datenbank
-  
-### Repositories
- * Website
- * Mobile app
- * Api-services
 
 ### Api-endpunkte
 
@@ -1078,12 +834,95 @@ Alle Endpunkte mit Ausnahme von `login` und `register` erfordern einen gültigen
  * POST event/application {payload}
  * POST event/invoice {payload}
 
----
-
-# 6 Nicht‑funktionale Anforderungen (NFR) — messbar: Performance, Security, Privacy, Availability, Scalability
 
 
-# 7 Security & Privacy (STRIDE, DSGVO‑Flows, Key‑Management, Aufbewahrung)
+## 5.4 Prozessübersicht (Process View)
+
+**Ziel:** Darstellung der Runtime-Architektur und der Kommunikationsmuster zwischen Services.
+
+**Asynchrone Kommunikation & Messaging**
+- Payment webhooks → RabbitMQ → Idempotent Handler → DB update
+- Group lifecycle events (created/cancelled) → RabbitMQ fanout → Notifications, Export-service
+- Background jobs (email, SMS, refunds) → Worker pool mit exponential backoff
+- Calendar sync (daily cron) → External APIs (Google/Outlook)
+
+**State Machines**
+- **Group Lifecycle:** Draft → Open → Confirmed → Closed/Cancelled → Archived
+  - Triggers: user action, time-based (lifecycle rules), payment threshold
+  - Side effects: notifications, auto-refunds (bei Cancel), archiving
+- **Payment State:** Pending → Processing → Completed / Failed → Refunded (optional)
+- **Task State:** Created → Assigned → In-Progress → Completed / Cancelled
+
+**Performance Flows / Caching**
+- User sessions (Redis TTL 30 min idle)
+- Group membership cache (invalidate on member change)
+- Provider listings (CDN + Redis with 5 min TTL)
+- Search index (Elasticsearch, async indexing)
+
+**Data Consistency**
+- Multi-AZ replication for primary DB (1-2 sec lag acceptable for reads)
+- Eventual consistency for caches (invalidation on write)
+- Strong consistency for payments (immediate confirmation via webhook ACK)
+
+
+
+## 5.5 Physische Übersicht & Deployment (Physical View)
+
+**Ziel:** Darstellung der Hardware-Ressourcen, Netzwerk-Topologie und Deployment-Architektur.
+
+### Deployment-Architektur (3-Tier)
+
+```mermaid
+graph TD
+
+  subgraph "Client"
+    Web["Web Browser<br/>Chrome, Firefox, Safari, Edge<br/>React/Vue SPA"]
+    Mobile["Mobile App<br/>iOS/Android<br/>React Native/Flutter"]
+  end
+
+  subgraph "Server"
+    ReverseProxy["Proxy and load balancer"]
+    PaymentService
+    AuthService
+    GroupService
+    ProviderService
+    MediaService
+    NotificationService 
+    ExportService
+  end
+
+  subgraph "DB"
+    Database["PostgresSQL database"]
+  end
+
+  subgraph "External"
+    PaymentProvider["Stripe"]
+  end
+
+  Web -->|https| ReverseProxy
+  Mobile -->|https| ReverseProxy
+
+  ReverseProxy -->|RESR/gRPC| AuthService
+  ReverseProxy -->|RESR/gRPC| GroupService
+  ReverseProxy -->|RESR/gRPC| PaymentService
+  ReverseProxy -->|RESR/gRPC| ProviderService
+  ReverseProxy -->|RESR/gRPC| MediaService
+  ReverseProxy -->|RESR/gRPC| NotificationService
+  ReverseProxy -->|RESR/gRPC| ExportService
+
+  PaymentService --> Database
+  AuthService --> Database
+  GroupService --> Database
+  ProviderService --> Database
+  MediaService --> Database
+  NotificationService --> Database
+  ExportService --> Database
+
+  PaymentService -->|https| PaymentProvider
+```
+
+
+# 6 Security & Privacy
 
 <!--
 - NFRs & Security
