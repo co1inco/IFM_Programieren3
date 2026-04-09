@@ -1,0 +1,441 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Document.md</title>
+<meta http-equiv="Content-type" content="text/html;charset=UTF-8">
+
+<style>
+/* https://github.com/microsoft/vscode/blob/master/extensions/markdown-language-features/media/markdown.css */
+/*---------------------------------------------------------------------------------------------
+ *  Copyright (c) Microsoft Corporation. All rights reserved.
+ *  Licensed under the MIT License. See License.txt in the project root for license information.
+ *--------------------------------------------------------------------------------------------*/
+
+body {
+	font-family: var(--vscode-markdown-font-family, -apple-system, BlinkMacSystemFont, "Segoe WPC", "Segoe UI", "Ubuntu", "Droid Sans", sans-serif);
+	font-size: var(--vscode-markdown-font-size, 14px);
+	padding: 0 26px;
+	line-height: var(--vscode-markdown-line-height, 22px);
+	word-wrap: break-word;
+}
+
+#code-csp-warning {
+	position: fixed;
+	top: 0;
+	right: 0;
+	color: white;
+	margin: 16px;
+	text-align: center;
+	font-size: 12px;
+	font-family: sans-serif;
+	background-color:#444444;
+	cursor: pointer;
+	padding: 6px;
+	box-shadow: 1px 1px 1px rgba(0,0,0,.25);
+}
+
+#code-csp-warning:hover {
+	text-decoration: none;
+	background-color:#007acc;
+	box-shadow: 2px 2px 2px rgba(0,0,0,.25);
+}
+
+body.scrollBeyondLastLine {
+	margin-bottom: calc(100vh - 22px);
+}
+
+body.showEditorSelection .code-line {
+	position: relative;
+}
+
+body.showEditorSelection .code-active-line:before,
+body.showEditorSelection .code-line:hover:before {
+	content: "";
+	display: block;
+	position: absolute;
+	top: 0;
+	left: -12px;
+	height: 100%;
+}
+
+body.showEditorSelection li.code-active-line:before,
+body.showEditorSelection li.code-line:hover:before {
+	left: -30px;
+}
+
+.vscode-light.showEditorSelection .code-active-line:before {
+	border-left: 3px solid rgba(0, 0, 0, 0.15);
+}
+
+.vscode-light.showEditorSelection .code-line:hover:before {
+	border-left: 3px solid rgba(0, 0, 0, 0.40);
+}
+
+.vscode-light.showEditorSelection .code-line .code-line:hover:before {
+	border-left: none;
+}
+
+.vscode-dark.showEditorSelection .code-active-line:before {
+	border-left: 3px solid rgba(255, 255, 255, 0.4);
+}
+
+.vscode-dark.showEditorSelection .code-line:hover:before {
+	border-left: 3px solid rgba(255, 255, 255, 0.60);
+}
+
+.vscode-dark.showEditorSelection .code-line .code-line:hover:before {
+	border-left: none;
+}
+
+.vscode-high-contrast.showEditorSelection .code-active-line:before {
+	border-left: 3px solid rgba(255, 160, 0, 0.7);
+}
+
+.vscode-high-contrast.showEditorSelection .code-line:hover:before {
+	border-left: 3px solid rgba(255, 160, 0, 1);
+}
+
+.vscode-high-contrast.showEditorSelection .code-line .code-line:hover:before {
+	border-left: none;
+}
+
+img {
+	max-width: 100%;
+	max-height: 100%;
+}
+
+a {
+	text-decoration: none;
+}
+
+a:hover {
+	text-decoration: underline;
+}
+
+a:focus,
+input:focus,
+select:focus,
+textarea:focus {
+	outline: 1px solid -webkit-focus-ring-color;
+	outline-offset: -1px;
+}
+
+hr {
+	border: 0;
+	height: 2px;
+	border-bottom: 2px solid;
+}
+
+h1 {
+	padding-bottom: 0.3em;
+	line-height: 1.2;
+	border-bottom-width: 1px;
+	border-bottom-style: solid;
+}
+
+h1, h2, h3 {
+	font-weight: normal;
+}
+
+table {
+	border-collapse: collapse;
+}
+
+table > thead > tr > th {
+	text-align: left;
+	border-bottom: 1px solid;
+}
+
+table > thead > tr > th,
+table > thead > tr > td,
+table > tbody > tr > th,
+table > tbody > tr > td {
+	padding: 5px 10px;
+}
+
+table > tbody > tr + tr > td {
+	border-top: 1px solid;
+}
+
+blockquote {
+	margin: 0 7px 0 5px;
+	padding: 0 16px 0 10px;
+	border-left-width: 5px;
+	border-left-style: solid;
+}
+
+code {
+	font-family: Menlo, Monaco, Consolas, "Droid Sans Mono", "Courier New", monospace, "Droid Sans Fallback";
+	font-size: 1em;
+	line-height: 1.357em;
+}
+
+body.wordWrap pre {
+	white-space: pre-wrap;
+}
+
+pre:not(.hljs),
+pre.hljs code > div {
+	padding: 16px;
+	border-radius: 3px;
+	overflow: auto;
+}
+
+pre code {
+	color: var(--vscode-editor-foreground);
+	tab-size: 4;
+}
+
+/** Theming */
+
+.vscode-light pre {
+	background-color: rgba(220, 220, 220, 0.4);
+}
+
+.vscode-dark pre {
+	background-color: rgba(10, 10, 10, 0.4);
+}
+
+.vscode-high-contrast pre {
+	background-color: rgb(0, 0, 0);
+}
+
+.vscode-high-contrast h1 {
+	border-color: rgb(0, 0, 0);
+}
+
+.vscode-light table > thead > tr > th {
+	border-color: rgba(0, 0, 0, 0.69);
+}
+
+.vscode-dark table > thead > tr > th {
+	border-color: rgba(255, 255, 255, 0.69);
+}
+
+.vscode-light h1,
+.vscode-light hr,
+.vscode-light table > tbody > tr + tr > td {
+	border-color: rgba(0, 0, 0, 0.18);
+}
+
+.vscode-dark h1,
+.vscode-dark hr,
+.vscode-dark table > tbody > tr + tr > td {
+	border-color: rgba(255, 255, 255, 0.18);
+}
+
+</style>
+
+<style>
+/* Tomorrow Theme */
+/* http://jmblog.github.com/color-themes-for-google-code-highlightjs */
+/* Original theme - https://github.com/chriskempson/tomorrow-theme */
+
+/* Tomorrow Comment */
+.hljs-comment,
+.hljs-quote {
+	color: #8e908c;
+}
+
+/* Tomorrow Red */
+.hljs-variable,
+.hljs-template-variable,
+.hljs-tag,
+.hljs-name,
+.hljs-selector-id,
+.hljs-selector-class,
+.hljs-regexp,
+.hljs-deletion {
+	color: #c82829;
+}
+
+/* Tomorrow Orange */
+.hljs-number,
+.hljs-built_in,
+.hljs-builtin-name,
+.hljs-literal,
+.hljs-type,
+.hljs-params,
+.hljs-meta,
+.hljs-link {
+	color: #f5871f;
+}
+
+/* Tomorrow Yellow */
+.hljs-attribute {
+	color: #eab700;
+}
+
+/* Tomorrow Green */
+.hljs-string,
+.hljs-symbol,
+.hljs-bullet,
+.hljs-addition {
+	color: #718c00;
+}
+
+/* Tomorrow Blue */
+.hljs-title,
+.hljs-section {
+	color: #4271ae;
+}
+
+/* Tomorrow Purple */
+.hljs-keyword,
+.hljs-selector-tag {
+	color: #8959a8;
+}
+
+.hljs {
+	display: block;
+	overflow-x: auto;
+	color: #4d4d4c;
+	padding: 0.5em;
+}
+
+.hljs-emphasis {
+	font-style: italic;
+}
+
+.hljs-strong {
+	font-weight: bold;
+}
+</style>
+
+<style>
+/*
+ * Markdown PDF CSS
+ */
+
+ body {
+	font-family: -apple-system, BlinkMacSystemFont, "Segoe WPC", "Segoe UI", "Ubuntu", "Droid Sans", sans-serif, "Meiryo";
+	padding: 0 12px;
+}
+
+pre {
+	background-color: #f8f8f8;
+	border: 1px solid #cccccc;
+	border-radius: 3px;
+	overflow-x: auto;
+	white-space: pre-wrap;
+	overflow-wrap: break-word;
+}
+
+pre:not(.hljs) {
+	padding: 23px;
+	line-height: 19px;
+}
+
+blockquote {
+	background: rgba(127, 127, 127, 0.1);
+	border-color: rgba(0, 122, 204, 0.5);
+}
+
+.emoji {
+	height: 1.4em;
+}
+
+code {
+	font-size: 14px;
+	line-height: 19px;
+}
+
+/* for inline code */
+:not(pre):not(.hljs) > code {
+	color: #C9AE75; /* Change the old color so it seems less like an error */
+	font-size: inherit;
+}
+
+/* Page Break : use <div class="page"/> to insert page break
+-------------------------------------------------------- */
+.page {
+	page-break-after: always;
+}
+
+</style>
+
+<script src="https://unpkg.com/mermaid@10.4.0/dist/mermaid.min.js"></script>
+</head>
+<body>
+  <script>
+    mermaid.initialize({
+      startOnLoad: true,
+      theme: document.body.classList.contains('vscode-dark') || document.body.classList.contains('vscode-high-contrast')
+          ? 'dark'
+          : 'default'
+    });
+  </script>
+<h2 id="clock">Clock</h2>
+<p>Unter der Clock versteht man den Impulsgeber eines Prozessors. Mit jedem Impuls der Clock führt der Prozessor einen Schritt aus. Dadurch gibt die Clock auch die Geschwindigkeit des Prozessors aus. Jeh schneller die Clock, desto schneller der Prozessor. Man kann die Geschwindigkeit der Clock allerdings nicht unbegrenzt erhöhen, da die restlichen Komponenten des Prozessors nur begrenzt schnell arbeiten können. Man muss daher die schellst-mögliche Frequenz finden, bei der die Restlichen Komponenten weiterhin zuverlässig arbeiten. Außerdem steigt mit der erhöhten Rechengeschwindigkeit auch der Strombedarf des Prozessors. Eine geringere Frequenz kann also Vorteilhaft sein, wenn man Energie Sparen möchte. Zum Beispiel weil die maximale mögliche Energieaufnahme begrenzt ist.
+Als Clock signal kann Grundsätzlich jedes Rechtecksignal verwendet werden. üblicherweise verwendet man jedoch einen Quarz, wodurch die Impulse eine sehr genaue Frequenz haben. Der Prozessor kann anhand der Zyklen die genaue Vergangene zeit bestimmen. Ein Quarz wird aber nicht zwingen gefordert. Häufig besitzen Mikroprozessoren eine eingebaute RC Schaltung, die zur Erzeugung des Clock Impulses verwendet werden kann. Diese ist jedoch nicht so genau wie ein Quarz. (Sie kann sich zB. bei Temperatur Änderungen verändern). Theoretisch ist es sogar möglich, einen Taster zu verwenden, wodurch eine Art Schritt-Betrieb erreicht wird. Das ist aber lediglich wür experimentelle / forschende Zwecke sinnvoll. Zu dem haben moderne Prozessoren eine Mindestgeschwindigkeit und Arbeiten nicht mehr richtig, wenn die Clock zu langsam ist.</p>
+<h2 id="register">Register</h2>
+<p>Ein Register ist die schellst Speicherart in einem Prozessor und halten die Daten, mit denen der Prozessor im augenblick arbeitet.</p>
+<h2 id="programmz%C3%A4hler">Programmzähler</h2>
+<p>Der Programmzähler enthält die Speicheradresse der nächsten, aufzuführenden Instruktion dar. Am Anfang eines Instruktionszyklus wird die Instruktion, an der, von dem Programmzähler vorgegebene Speicheradresse in das Steuerwerk geladen. Anschließend wird der Programmzähler um 1 erhöht, so das er auf den nächsten Wert im Speicher zeigt. Manche Instruktionen sind größer als eine Speichereinheit. In dem fall wird der Programmzähler mehrfach innerhalb eines Zyklus inkrementiert.
+Sprung Instruktionen (JMP, RET, BNE, etc.) Funktionieren, in dem die Ziel Addresses der Instruktion in den Programmzähler geladen wird (2, s: 179). Im nächsten Schritt wird also nicht mehr die &quot;nächste&quot; Instruktion abgerufen, sondern die, an der angegebenen Zieladresse.
+<em>Note: Bei einer return Instruktion wird die Zieladresse vom Stack gepoppt.</em></p>
+<h2 id="bus">Bus</h2>
+<p>Ein Bus verbindet die einzelnen Komponenten eines Prozessors untereinander. Welche Komponente grade auf den Bus ausgibt und welche von dem Bus lesen wird durch das Steuerwerk bestimmt.</p>
+<ul>
+<li><strong>Daten Bus</strong>: Über diesen Bus werden Daten Transferiert.</li>
+<li><strong>Address Bus</strong>: Über diesen Bus werden Speicheradressen übermittelt. Die größe dieses Busses gibt an, wie viel Speicher von dem Prozessor direkt angesprochen werden kann. So kann ein Prozessor mit einem 16-bit Address-Bus maximal 65.535 Speichereinheiten ansprechen.</li>
+</ul>
+<p><em>Daten und Adressen können den gleichen physischen Bus übermittelt verwenden. Was allerdings die Geschwindigkeit des Prozessors verringert, da der Bus immer abwechselnd für Adressen und Daten verwendet werden muss</em>
+(2, s: 225)</p>
+<h2 id="speicher">Speicher</h2>
+<p>Als Speicher versteht man den gesamten Speicher eines Prozessors. Dies umfasst so wohl den Programmspeicher (ROM), der die Ausführbaren Instruktionen enthält als auch den Arbeitsspeicher (RAM), den der Prozessor zum Speichern temporärer Daten enthält und meist flüchtig ist. Der Speicher wird über die Speicheradressen adressiert.
+Bei der Verarbeitung von Speicheradressen kommt häufig Schaltlogik zum einsatz.
+Beispiel: Angenommen ein Prozessor hat einen Address Größe von 8bit, dann könnte der Prozessor insgesamt 256 Werte adressieren. Man kan nun einen RAM und einen ROM chip so an den Prozessor anschließen, das der RAM chip aktiv ist, wenn das MSB der Addresses HIGH ist. Wenn das bit LOW ist wird stadtessen der ROM chip aktiviert. Die ersten 128 Werte kommen dann aus dem ROM Chip, die Werte an den Adressen 128-255 aus dem RAM Chip. Der Prozessor selbst bekommt davon aber nichts mit.
+Der vorhandene Speicher hängt von dem Prozessor ab. Heutige Mikrocontroller haben üblicherweise einen integrierten RAM und Flash Speicher. Letzterer dient als Programm speicher. Mikroprozessoren (zb. x86) haben stattdessen lediglich einen Arbeitsspeicher. Das Programm, dass ausgeführt werden soll wird vor dem Ausführen aus einem externen Speicher in den RAM geladen.</p>
+<h3 id="stack">Stack</h3>
+<p>Der Stack ist ein Speicherbereich der nach dem FIFO (FirstIn-FirstOut) Prinzip arbeitet. Neue Daten werden immer nur an den Anfang des Stacks angefügt und auch immer nur vom Anfang des Stapels entnommen. Bewerkstelligt wird dies durch das <em>Stackpointer</em> Register, welches auf den Anfang (neuste Element) des Stacks zeigt. Der Stack befindet sich im Arbeitsspeicher des Prozessors. Um ein Element dem Stack hinzu zu fügen wird der Stackpointer Inkrementiert und das Datum an die neue, vom Stackpointer vorgegebene Adresse geschrieben. Um ein Element aus dem Stack zu entfernen wird das Datum aus der, vom Stackpointer vorgegebenen Adresse ausgelesen und der Stackpointer danach dekrementiert.
+Das Program greift entweder explizit durch PUSH und POP Instruktionen auf den Stack zu, oder implizit durch Instruktionen wie CALL und RET (return). (2, s: 229)</p>
+<p><em>Note: Jeh nach Architektur kann der Stackpointer auch auf das nächste, freie, Element zeigen, anstatt wie beschrieben, auf das neuste. Außerdem ist es nicht unüblich das der Stackpointer bei einem push dekrementiert, statt inkrementiert wird</em></p>
+<h3 id="vektoren">Vektoren</h3>
+<p>Vektoren sind spezielle Adressen, die der Prozessor in bestimmten Situationen anspringt. Dies sind unter anderem der Start- oder Resetvektor, welcher bei einem Reset angesprungen wird und ist somit der Einstiegspunkt des Programms. Und die Interrupt Vektoren, die durch bestimmte Auslöser angesprungen werden und den normalen Programmablauf unterbrechen. Solche Interrupts können unter anderem durch Timer oder externe Signale (GPIO) ausgelöst werden.
+Die Adressen unterscheiden sich jeh nach Prozessor. So ist der Reset Vektor bei einem ATmega (zb. Arduino) an Adresse $0000 während er bei einem 6502 an Adresse $FFFFFFFFFFFFFFFC liegt.
+Da die Vektoren meist direkt aufeinander folgen, bietet ein Vektor lediglich platz für eine einzige Instruktion, mit der dann zu der tatsächlichen Routine gesprungen wird. (5) (6)</p>
+<h2 id="rechenwerk">Rechenwerk</h2>
+<p>Das Rechenwerk (auch ALU - Arithmetic logic unit) führt Arithmetische und Logische Operationen aus. In modernen Prozessoren werden kann man üblicherweise Register angeben, die verrechnet werden sollen. Das Ergebnis wird häufig in eines der Ausgangsregister geschrieben. Es gibt aber auch Architekturen, bei denen man ein Ausgangsregister angeben kann (1). Bei älteren Prozessoren kann man die Eingaberegister üblicherweise nicht frei wählen. Hier gibt es ein Akkumulator (Akku / A) Register welches als Festes Ein-/ und Ausgabe register fungiert. Jeh nach Architektur kann man entweder das 2. Register auswählen oder es gibt ein festes B Register für den 2. Operanden (2, s: 142).</p>
+<h2 id="steuerwerk">Steuerwerk</h2>
+<p>Ein Instruktion-zyklus besteht aus 3 Phasen.</p>
+<ul>
+<li>Fetch:
+Die nächste Instruktion wird aus der Addresses, die der Programmzähler angibt in das Instruktionsregister geladen.</li>
+<li>Decode:
+Das Steuerwerk dekodiert die geladene Instruktion. Das heist, das die die Instruktion, welche als Binäre Zahl im Instruktionsregister liegt in ein einzelnes Signal für jede mögliche Instruktion aufteilt. (Beispiel: Ist die ADD &lt;0x87&gt; Instruktion geladen worden schaltet der Decoder die ADD Signalleitung ein und alle anderen aus) (2, s: 158). Diese Signal wird nun durch die Steuermatrix und mithilfe eines Ringzählers weiterverarbeitet. Ein Ringzähler ist ein Zähler der nicht Binär zählt, sondern seine Ausgänge der Reihe nach ein schaltet. Nach der letzten Zahl beginnt der Zähler wieder mit der ersten Zahl. Es ist immer nur ein Ausgang aktiv (2, s: 159). Die Steuermatrix decodiert die Instruktion + Ringpuffer in die einzelnen Steuersignale der CPU (2, s: 161).</li>
+<li>Execute:
+Mit jedem Schritt der Clock wird der Ringbuffer inkrementiert, wodurch die Instruktion Schrittweise ausgeführt wird.</li>
+</ul>
+<p><em>Hinweis: Die größe und Komplexität der Decoder und Steuermatrix wächst mit einer steigenden Anzahl der Instruktionen stark an. Dies ist auf einem Chip kein Problem. Implementiert man einen Prozessor aber auf einem Breadboard wird dies schnell unhandlich. Statt dessen kann man hier einen EEPROM verwenden. In dem fall gibt man den zustand des Zählers (Binärer Zähler anstelle eines Ringzählers) und die Instruktion als Addresse in den EEPROM. Der EEPROM muss vorher so Programmiert werden, dass die Steuersignale entsprechend geschaltet werden.</em></p>
+<h2 id="optimierungen">Optimierungen</h2>
+<h3 id="pipelining">Pipelining</h3>
+<p>Die Teile des Prozessors, auf die die Fetch, Decode und Execute Schritte zugreifen, sind unabhängig voneinander. Daher gibt es keine Konflikte, wenn die Schritte Parallel ausgeführt würden.
+Diesen Prozess nennt man Pipelining. Während eine Instruktion ausgeführt wird, wird bereits die nächste Instruktion Decodiert und die übernächste geladen. (3, ...)</p>
+<h3 id="reordering">Reordering</h3>
+<p>Die Anzahl an Zyklen, die eine CPU benötigt, um eine Instruktion auszuführen, variiert jeh nach Instruktion. Moderne Prozessoren optimieren den Programmablauf, in dem sie die Reihenfolge der Instruktionen verändern. So starten sie eine zeitaufwändige Instruktion früher gestartet wird, vorausgesetzt die erforderten Parameter für die Instruktion sind bereits vorhanden.</p>
+<h2 id="referenz-architekturen">Referenz Architekturen</h2>
+<p>Die heutigen Prozessoren nutzen üblicherweise die von Neumann oder die Havard Architektur. Die beiden Architekturen unterscheiden sich primär darin, wie sie Programm und Datenspeicher ansprechen. Bei der von Neumann Architektur liegen Programm und Daten in dem selben speicher. Die Harvard Architektur trennt den Programm und Arbeitsreicher und bindet sie über dedizierte Busse an. Dadurch ist der Prozessor in der Lage, Programm und Datenspeicher abfragen parallel durchzuführen, wodurch der Prozessor schneller und effizienter ist. Außerdem ist es möglich, den Programmspeicher schreibgeschützt (ROM) anzubinden, wodurch der Prozessor nicht in der Lage ist, das Programm zur laufzeit zu verändern, was unter anderem Sicherheitstechnische vorteile hat. Diese Architektur erfordert allerdings einen extrem hohen aufwand, weswegen sie hauptsächlich in Echtzeitanwendungen wie Mikrokontrollren und Signalprozessoren Anwendung findet (4).
+Die meisten Prozessoren (wie ua. x86) verwenden die von Neumann Architektur auf Grund ihrer Einfachheit.</p>
+<h2 id="beispielprozessor">Beispielprozessor</h2>
+<p><img src="file:///g:/dev/IFM-Semester3/Wissenschaftliches arbeiten/ShortPaper/IMG_20260407_124245.jpg" alt=""></p>
+<ul>
+<li><strong>Speicher:</strong>
+Stellt ROM (EEPROM, großer Chip in der Mitte) und RAM (leicht verdeckter Chip). Der angesprochene Chip wird durch das MSB der Adresse bestimmt.</li>
+<li><strong>Daten / Adressbus:</strong>
+Daten und Adressen liegen auf dem selben Bus. Das reduziert den benötigten Platz, reduziert aber auch die Prozessorgeschwindigkeit. Der Bus ist 16-bit Breit, für Daten werden aber lediglich 8-bits verwendet.</li>
+<li><strong>Clock:</strong>
+Die Clock wird entweder manuell über einen Knopf betätigt oder läuft automatisch, wobei die Geschwindigkeit über ein Poti geregelt werden kann. Das Taktsignal wird über einen Gelben Draht an alle Komponenten des Prozessors geleitet.</li>
+<li><strong>Steuerlogik:</strong>
+Die Steuerlogik wurde über EEPROMs realisiert. Die Signale des Steuerregisters</li>
+</ul>
+<h1 id="quellen">Quellen</h1>
+<p>(1) <a href="https://www.elektronik-kompendium.de/sites/com/1310171.htm">elektronik-kompendium.de</a>
+(2) Buch: Digital Computer electronics
+(3) <a href="https://www.youtube.com/watch?v=BVNx3wtJ9vs">Computerphile - CPU Pipeline</a>
+(4) <a href="http://www.kreissl.info/ra.php">www.kreissl.info</a>
+(5) <a href="https://onlinedocs.microchip.com/oxy/GUID-AAB4173A-6BB6-4A4B-A053-1ED838585692-en-US-4/GUID-EC3B67E3-BF11-4E9B-AB9D-8D20942E5434.html">microchip.com</a> 09.04.2026 17:01
+(6) <a href="https://6502.org/users/andre/65k/af65002/af65002int.html#reset">6502.org</a> 09.04.2026 17:08</p>
+
+</body>
+</html>

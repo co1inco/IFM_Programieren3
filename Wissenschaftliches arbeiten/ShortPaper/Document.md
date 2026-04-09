@@ -39,7 +39,9 @@ Das Program greift entweder explizit durch PUSH und POP Instruktionen auf den St
 
 
 ### Vektoren
-... TODO
+Vektoren sind spezielle Adressen, die der Prozessor in bestimmten Situationen anspringt. Dies sind unter anderem der Start- oder Resetvektor, welcher bei einem Reset angesprungen wird und ist somit der Einstiegspunkt des Programms. Und die Interrupt Vektoren, die durch bestimmte Auslöser angesprungen werden und den normalen Programmablauf unterbrechen. Solche Interrupts können unter anderem durch Timer oder externe Signale (GPIO) ausgelöst werden. 
+Die Adressen unterscheiden sich jeh nach Prozessor. So ist der Reset Vektor bei einem ATmega (zb. Arduino) an Adresse $0000 während er bei einem 6502 an Adresse $FFFFFFFFFFFFFFFC liegt.
+Da die Vektoren meist direkt aufeinander folgen, bietet ein Vektor lediglich platz für eine einzige Instruktion, mit der dann zu der tatsächlichen Routine gesprungen wird. (5) (6)
 
 
 ## Rechenwerk
@@ -71,6 +73,19 @@ Die Anzahl an Zyklen, die eine CPU benötigt, um eine Instruktion auszuführen, 
 Die heutigen Prozessoren nutzen üblicherweise die von Neumann oder die Havard Architektur. Die beiden Architekturen unterscheiden sich primär darin, wie sie Programm und Datenspeicher ansprechen. Bei der von Neumann Architektur liegen Programm und Daten in dem selben speicher. Die Harvard Architektur trennt den Programm und Arbeitsreicher und bindet sie über dedizierte Busse an. Dadurch ist der Prozessor in der Lage, Programm und Datenspeicher abfragen parallel durchzuführen, wodurch der Prozessor schneller und effizienter ist. Außerdem ist es möglich, den Programmspeicher schreibgeschützt (ROM) anzubinden, wodurch der Prozessor nicht in der Lage ist, das Programm zur laufzeit zu verändern, was unter anderem Sicherheitstechnische vorteile hat. Diese Architektur erfordert allerdings einen extrem hohen aufwand, weswegen sie hauptsächlich in Echtzeitanwendungen wie Mikrokontrollren und Signalprozessoren Anwendung findet (4). 
 Die meisten Prozessoren (wie ua. x86) verwenden die von Neumann Architektur auf Grund ihrer Einfachheit.
 
+## Beispielprozessor
+
+![](IMG_20260407_124245.jpg)
+
+ * **Speicher:**
+   Stellt ROM (EEPROM, großer Chip in der Mitte) und RAM (leicht verdeckter Chip). Der angesprochene Chip wird durch das MSB der Adresse bestimmt.
+ * **Daten / Adressbus:**
+   Daten und Adressen liegen auf dem selben Bus. Das reduziert den benötigten Platz, reduziert aber auch die Prozessorgeschwindigkeit. Der Bus ist 16-bit Breit, für Daten werden aber lediglich 8-bits verwendet.
+ * **Clock:**
+   Die Clock wird entweder manuell über einen Knopf betätigt oder läuft automatisch, wobei die Geschwindigkeit über ein Poti geregelt werden kann. Das Taktsignal wird über einen Gelben Draht an alle Komponenten des Prozessors geleitet.
+ * **Steuerlogik:**
+   Die Steuerlogik wurde über EEPROMs realisiert. Die Signale des Steuerregisters 
+
 
 
 # Quellen
@@ -78,3 +93,5 @@ Die meisten Prozessoren (wie ua. x86) verwenden die von Neumann Architektur auf 
 (2) Buch: Digital Computer electronics
 (3) [Computerphile - CPU Pipeline](https://www.youtube.com/watch?v=BVNx3wtJ9vs)
 (4) [www.kreissl.info](http://www.kreissl.info/ra.php)
+(5) [microchip.com](https://onlinedocs.microchip.com/oxy/GUID-AAB4173A-6BB6-4A4B-A053-1ED838585692-en-US-4/GUID-EC3B67E3-BF11-4E9B-AB9D-8D20942E5434.html) 09.04.2026 17:01
+(6) [6502.org](https://6502.org/users/andre/65k/af65002/af65002int.html#reset) 09.04.2026 17:08 
