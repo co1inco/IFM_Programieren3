@@ -3,11 +3,7 @@
 
 ## Clock
 Unter der Clock versteht man den Impulsgeber eines Prozessors. Mit jedem Impuls der Clock führt der Prozessor einen Schritt aus. Dadurch gibt die Clock auch die Geschwindigkeit des Prozessors aus. Jeh schneller die Clock, desto schneller der Prozessor. Man kann die Geschwindigkeit der Clock allerdings nicht unbegrenzt erhöhen, da die restlichen Komponenten des Prozessors nur begrenzt schnell arbeiten können. Man muss daher die schellst-mögliche Frequenz finden, bei der die Restlichen Komponenten weiterhin zuverlässig arbeiten. Außerdem steigt mit der erhöhten Rechengeschwindigkeit auch der Strombedarf des Prozessors. Eine geringere Frequenz kann also Vorteilhaft sein, wenn man Energie Sparen möchte. Zum Beispiel weil die maximale mögliche Energieaufnahme begrenzt ist. 
-Als Clock signal kann Grundsätzlich jedes Rechtecksignal verwendet werden. üblicherweise verwendet man jedoch einen Quarz, wodurch die Impulse eine sehr genaue Frequenz haben. Der Prozessor kann anhand der Zyklen die genaue Vergangene zeit bestimmen. Ein Quarz wird aber nicht zwingen gefordert. Häufig besitzen Mikroprozessoren eine eingebaute RC Schaltung, die zur Erzeugung des Clock Impulses verwendet werden kann. Diese ist jedoch nicht so genau wie ein Quarz. (Sie kann sich zB. bei Temperatur Änderungen verändern). Theoretisch ist es sogar möglich, einen Taster zu verwenden, wodurch eine Art Schritt-Betrieb erreicht wird. Das ist aber lediglich wür experimentelle / forschende Zwecke sinnvoll. Zu dem haben moderne Prozessoren eine Mindestgeschwindigkeit und Arbeiten nicht mehr richtig, wenn die Clock zu langsam ist.
-
-## Register
-Ein Register ist die schellst Speicherart in einem Prozessor und halten die Daten, mit denen der Prozessor im augenblick arbeitet.
-
+Als Clock signal kann Grundsätzlich jedes Rechtecksignal verwendet werden. Üblicherweise verwendet man jedoch einen Quarz, wodurch die Impulse eine sehr genaue Frequenz haben. Der Prozessor kann anhand der Zyklen die genaue Vergangene zeit bestimmen. Ein Quarz wird aber nicht zwingen gefordert. Häufig besitzen Mikroprozessoren eine eingebaute RC Schaltung, die zur Erzeugung des Clock Impulses verwendet werden kann. Diese ist jedoch nicht so genau wie ein Quarz. (Sie kann sich zB. bei Temperatur Änderungen verändern). Theoretisch ist es sogar möglich, einen Taster zu verwenden, wodurch eine Art Schritt-Betrieb erreicht wird. Das ist aber lediglich wür experimentelle / forschende Zwecke sinnvoll. Zu dem haben moderne Prozessoren eine Mindestgeschwindigkeit und Arbeiten nicht mehr richtig, wenn die Clock zu langsam ist. (2, S: 93, 158)
 
 
 ## Programmzähler
@@ -30,6 +26,12 @@ Als Speicher versteht man den gesamten Speicher eines Prozessors. Dies umfasst s
 Bei der Verarbeitung von Speicheradressen kommt häufig Schaltlogik zum einsatz. 
 Beispiel: Angenommen ein Prozessor hat einen Address Größe von 8bit, dann könnte der Prozessor insgesamt 256 Werte adressieren. Man kan nun einen RAM und einen ROM chip so an den Prozessor anschließen, das der RAM chip aktiv ist, wenn das MSB der Addresses HIGH ist. Wenn das bit LOW ist wird stadtessen der ROM chip aktiviert. Die ersten 128 Werte kommen dann aus dem ROM Chip, die Werte an den Adressen 128-255 aus dem RAM Chip. Der Prozessor selbst bekommt davon aber nichts mit. 
 Der vorhandene Speicher hängt von dem Prozessor ab. Heutige Mikrocontroller haben üblicherweise einen integrierten RAM und Flash Speicher. Letzterer dient als Programm speicher. Mikroprozessoren (zb. x86) haben stattdessen lediglich einen Arbeitsspeicher. Das Programm, dass ausgeführt werden soll wird vor dem Ausführen aus einem externen Speicher in den RAM geladen.
+
+
+### Register
+Die Register sind die schnellste Speicherart in einem Prozessor. Sie werden direkt über eigene Instruktionen angesprochen und müssen somit nicht durch den üblichen Speicheraddressierungsprozess. Sie halten Daten für die Unmittelbare Verwendung oder zur Steuerung des Prozessors. So können bei einem ATmega durch die register DDRx, PINx und PORTx die IO Pins des Prozessors gesteuert werden (7, s: 59). Andere register dienen wiederum als eingabe für die ALU (7, s: 10).
+
+Jeh nach Prozessor können register auch eine Speicheraddresse haben, auch wenn sie nicht Physisch im RAM liegen (7, s: 12)
 
 ### Stack
 Der Stack ist ein Speicherbereich der nach dem FIFO (FirstIn-FirstOut) Prinzip arbeitet. Neue Daten werden immer nur an den Anfang des Stacks angefügt und auch immer nur vom Anfang des Stapels entnommen. Bewerkstelligt wird dies durch das *Stackpointer* Register, welches auf den Anfang (neuste Element) des Stacks zeigt. Der Stack befindet sich im Arbeitsspeicher des Prozessors. Um ein Element dem Stack hinzu zu fügen wird der Stackpointer Inkrementiert und das Datum an die neue, vom Stackpointer vorgegebene Adresse geschrieben. Um ein Element aus dem Stack zu entfernen wird das Datum aus der, vom Stackpointer vorgegebenen Adresse ausgelesen und der Stackpointer danach dekrementiert. 
@@ -95,3 +97,4 @@ Die meisten Prozessoren (wie ua. x86) verwenden die von Neumann Architektur auf 
 (4) [www.kreissl.info](http://www.kreissl.info/ra.php)
 (5) [microchip.com](https://onlinedocs.microchip.com/oxy/GUID-AAB4173A-6BB6-4A4B-A053-1ED838585692-en-US-4/GUID-EC3B67E3-BF11-4E9B-AB9D-8D20942E5434.html) 09.04.2026 17:01
 (6) [6502.org](https://6502.org/users/andre/65k/af65002/af65002int.html#reset) 09.04.2026 17:08 
+(7) [microchip.com] (https://ww1.microchip.com/downloads/en/DeviceDoc/Atmel-7810-Automotive-Microcontrollers-ATmega328P_Datasheet.pdf) 10.04.2026 11:57 - ATMega datasheet
